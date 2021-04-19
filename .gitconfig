@@ -1,0 +1,44 @@
+[user]
+    name = Mohamed Ali Abuelwafa
+    email = mohamed.abuelwafa@gmail.com
+[color]
+    ui = true
+[color "diff"]
+    meta = yellow bold
+    frag = magenta bold
+    old = black red
+    new = black green
+[core]
+    editor = vim
+    pager = delta
+    # pager = less -x4
+    autocrlf = input
+    askPass = false
+[push]
+    default = simple
+[status]
+    showUntrackedFiles = all
+[merge]
+    tool = vimdiff
+[diff]
+    tool = vimdiff
+    guitool = meld
+    colorMoved = default
+    context = 12
+[difftool]
+    prompt = false
+    trustExitCode = true
+[interactive]
+    diffFilter = delta --color-only
+[delta]
+    features = line-numbers decorations
+    whitespace-error-style = 22 reverse
+    plus-style = bold normal "#008400"
+    minus-style = bold normal "#3f0001"
+[delta "decorations"]
+    commit-decoration-style = bold yellow
+    file-style = bold yellow
+    file-decoration-style = ul ol cyan
+    hunk-header-style = black black
+    hunk-header-decoration-style = ol blue
+

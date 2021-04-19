@@ -1,0 +1,107 @@
+snippet shebang
+	#!/usr/bin/env node
+snippet diseslint
+	// eslint-disable-next-line
+snippet log
+	console.log({ ${0} });
+snippet alert
+	alert('${0}');
+snippet describe
+	describe('${1}', function() {
+		test('${0}');
+	});
+snippet test
+	test('${0}');
+snippet ''
+	${1}: ${0}
+snippet ''
+	'${1}': '${0}'
+snippet ret
+	return${0};
+snippet class
+	class ${1} {${0}
+	}
+snippet constructor
+	constructor(${1}) {${0}
+	}
+snippet im
+	import ${1:*} from '${2}';${0}
+# Immediately invoked function expression
+snippet iife
+	(() => {
+		${0}
+	})()
+# if
+snippet if
+	if (${0}) {
+	}
+# else
+snippet el
+	else {${0}
+	}
+# else if
+snippet elif
+	else if (${0:true}) {
+	}
+# switch
+snippet switch
+	switch (${1:expression}) {
+		case '${2:case}':
+			${3}
+			break;
+		${0}
+		default: {
+			${4}
+			break;
+		}
+	}
+# case
+snippet case
+	case '${1:case}': {
+		${0}
+		break;
+	}
+# # for (...) {...}
+# snippet for
+# 	for(let ${2:i} = 0, l = ${1:arr}.length; $2 < l; $2++) {
+# 		let ${3:item} = $1[$2];${0:}
+# 	}
+# snippet fori
+# 	for(let ${1:i} = 0; $1 < ${2:10}; $1++) {${0:}
+# 	}
+# snippet for1
+# 	for(let ${1:i} = 1; $1 <= ${2:10}; $1++) {${0:}
+# 	}
+# # while (...) {...}
+# snippet while
+# 	while(${1:false}) {${0}
+# 	}
+# # try
+# snippet try
+# 	try {${0}
+# 	} catch(${1:error}) {
+# 		// handle error
+# 	}
+# # do...while
+# snippet do
+# 	do {${0}
+# 	} while(${1});
+# # for (property in object ) { ... }
+# snippet forin
+# 	for(let ${1:prop} in ${2:Things}) {
+# 		${0:$2[$1]}
+# 	}
+# snippet forof
+# 	for(let ${1:item} of ${2:items}) {
+# 		${0}
+# 	}
+# docblock
+snippet /**
+	/**
+	 * ${0:description}
+	 *
+	 */
+snippet param
+	@param {${1:type}} ${2:name} - ${0:description}
+snippet return
+	@returns {${1:type}} ${0:description}

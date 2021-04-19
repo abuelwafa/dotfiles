@@ -1,0 +1,74 @@
+general {
+    colors = true
+    interval = 5
+}
+
+order += "disk /"
+order += "path_exists VPN"
+order += "load"
+order += "volume master"
+order += "battery 0"
+order += "cpu_usage"
+order += "memory"
+order += "time"
+# order += "read_file uptime"
+
+load {
+    format = "Load %1min"
+}
+
+battery 0 {
+    format = "%status %percentage"
+    integer_battery_capacity = true
+    last_full_capacity = true
+    format_down = "No battery"
+    status_chr = "⚡"
+    status_bat = "🔋"
+    status_unk = "🔋"
+    status_full = "🔋"
+    path = "/sys/class/power_supply/BAT%d/uevent"
+    low_threshold = 20
+    threshold_type = percentage
+}
+
+path_exists VPN {
+    # path exists when a VPN tunnel launched by nmcli/nm-applet is active
+    path = "/proc/sys/net/ipv4/conf/tun0"
+    format = "%title"
+}
+
+time {
+    format = "%a %d/%m/%Y %I:%M %p"
+}
+
+cpu_usage {
+    format = "CPU %usage"
+    max_threshold = 90
+    degraded_threshold = 80
+}
+
+memory {
+    format = "MEM %used/%total"
+    threshold_degraded = "10%"
+    format_degraded = "MEMORY: %free"
+}
+
+volume master {
+    format = "🔉 %volume"
+    format_muted = "🔇 %volume"
+    device = "default"
+    mixer = "Master"
+    mixer_idx = 0
+
+}
+
+# read_file uptime {
+#     format = "UP %content "
+#     format_bad = "%title - %errno: %error"
+#     path = "/proc/uptime"
+#     Max_characters = 5
+# }
+
+disk "/" {
+    format = "%avail available"
+}

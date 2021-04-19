@@ -1,0 +1,171 @@
+snippet php
+	<?php${0}
+	?>
+snippet phpec
+	<?= $${0} ?>
+snippet ec
+	echo '${0}';
+snippet dd
+	dd(${0});
+snippet wpd
+	wp_die(var_dump(${0}));
+snippet du
+	echo '<hr><pre>'; var_dump(${0}); echo '</pre><hr>';
+snippet dud
+	echo '<hr><pre>'; var_dump(${0}); echo '</pre>'; die();
+snippet ddd
+	die(var_dump(${0}));
+# log the variable to the error log
+snippet log
+	error_log(json_encode(${0}));
+# snippet log
+# 	ob_start();print_r(${0});$contents=ob_get_contents();ob_end_clean();error_log($contents);
+snippet ''
+	'${1}' => '${0}'
+# end comment
+snippet end
+	 // end of ${0}
+# Function
+snippet fun
+	function ${0}(){
+	}
+# function_exists
+snippet fexist
+	function_exists('${0}')
+# return
+snippet ret
+	return ${0};
+# Anonymous Function
+snippet cb
+	function(${0}){
+	}
+# if
+snippet if
+	if(${0}){
+	}
+# else
+snippet el
+	else {${0}
+	}
+# else if
+snippet elif
+	else if(${0:true}){
+	}
+# switch
+snippet switch
+	switch($${1:expression}){
+		case '${2:case}':
+			${3}
+			break;
+		${0}
+		default:
+			${4}
+			break;
+	}
+# case
+snippet case
+	case '${1:case}':
+		${2}
+		break;
+	${0}
+snippet while
+	while(${1:false}){
+		${0}
+	}
+# try
+snippet try
+	try {
+		${0}
+	} catch(${1:Exception $e}){
+		// handle exception
+	}
+# do...while
+snippet do
+	do {
+		${0}
+	} while(${1});
+snippet for
+	for ($${2:i} = 0; $$2 < ${1:count}; $$2${3:++}){
+		${0}
+	}
+snippet fore
+	foreach ($${0} as $item){
+	}
+snippet forek
+	foreach($${0} as $key => $value){
+	}
+snippet ns
+	namespace ${0};
+snippet use
+	use ${0};
+snippet class
+	class `Filename()` {
+
+		${0}
+
+	}
+snippet construct
+	public function __construct(){
+		${0}
+	}
+snippet interface
+	interface `Filename()` {
+
+		${0}
+
+	}
+snippet th
+	$this->
+# method
+snippet method
+	${1:public|private|protected} function ${2:function_name}(${3}){
+		${0}
+	}
+snippet require
+	require_once '${1:file}';
+snippet define
+	define('${1}', '${2}');
+	${0}
+snippet http_redirect
+	header ('HTTP/1.1 301 Moved Permanently');
+	header ('Location: ' . URL);
+	exit();
+# Start Docblock
+snippet /**
+	/**
+	 * ${0}
+	 */
+# phpunit
+snippet testclass
+	class `Filename()` extends PHPUnitFramworkTestCase {
+
+		${0}
+
+	}
+snippet test
+	public function test${1}(){
+		${0}
+	}
+snippet ase
+	$this->assertEquals(${1:expected}, ${2:actual});
+snippet asne
+	$this->assertNotEquals(${1:expected}, ${2:actual});
+snippet asf
+	$this->assertFalse(${1:Something});
+snippet ast
+	$this->assertTrue(${1:Something});
+snippet asfex
+	$this->assertFileExists(${1:path/to/file});
+snippet asfnex
+	$this->assertFileNotExists(${1:path/to/file});
+snippet ascon
+	$this->assertContains(${1:Search Value}, ${2:Array or Iterator});
+snippet ashk
+	$this->assertArrayHasKey(${1:key}, ${2:array});
+snippet asnhk
+	this->assertArrayNotHasKey(${1:value}, ${2:array});
+snippet ascha
+	$this->assertClassHasAttribute('${1:Attribute Name}', '${2:ClassName}');
+snippet asi
+	$this->assertInstanceOf(${1:expected}, ${2:actual});
+

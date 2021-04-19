@@ -1,0 +1,71 @@
+snippet php
+	<?php${0}
+	?>
+snippet phpec
+	<?= $${0} ?>
+snippet ec
+	echo '${0}';
+snippet dd
+	dd(${0});
+snippet wpd
+	wp_die(var_dump(${0}));
+snippet du
+	<pre>{${0}|@var_dump}</pre>
+snippet ''
+	'${1}' => '${0}'
+# end comment
+snippet end
+	 // end of ${0}
+# Function
+snippet fexist
+	function_exists('${0}')
+# Anonymous Function
+# if
+snippet if
+	{if ${0}}
+	{/if}
+# else
+snippet el
+	{else}
+# else if
+snippet elif
+	else if(${0:true}){
+	}
+# switch
+snippet switch
+# case
+snippet case
+	case '${1:case}':
+		${2}
+		break;
+	${0}
+snippet while
+	while(${1:false}){
+		${0}
+	}
+# try
+snippet try
+	try {
+		${0}
+	} catch(${1:Exception $e}){
+		// handle exception
+	}
+# do...while
+snippet do
+	do {
+		${0}
+	} while(${1});
+snippet for
+	for ($${2:i} = 0; $$2 < ${1:count}; $$2${3:++}){
+		${0}
+	}
+snippet fore
+	{foreach $${0} as $value}
+	{/foreach}
+snippet forek
+	{foreach $${0} as $key => $value}
+	{/foreach}
+snippet ns
+	namespace ${0};
+snippet use
+	use ${0};

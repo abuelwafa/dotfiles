@@ -1,0 +1,53 @@
+{
+    "coc.preferences.extensionUpdateCheck": "weekly",
+    "coc.preferences.silentAutoupdate": false,
+    "coc.preferences.formatOnSaveFiletypes": [
+        "json",
+        "jsonc",
+        "css",
+        "scss",
+        "html",
+        "vue",
+        "yaml",
+        "graphql",
+        "javascript",
+        "javascriptreact",
+        "typescript",
+        "typescript.tsx",
+        "typescriptreact"
+    ],
+
+    "snippets.triggerCharacters": ["kj"],
+    "snippets.loadFromExtensions": true,
+    "snippets.ultisnips.enable": true,
+
+    "eslint.autoFixOnSave": false,
+    "eslint.run": "onSave",
+
+    "pairs.enableBackspace": true,
+    "typescript.suggest.paths": true,
+
+    "prettier.requireConfig": false,
+    "prettier.printWidth": 100,
+    "prettier.tabWidth": 4,
+    "prettier.useTabs": false,
+    "prettier.endOfLine": "lf",
+    "prettier.trailingComma": "all",
+    "prettier.semi": true,
+    "prettier.singleQuote": true,
+    "prettier.jsxBracketSameLine": false,
+    "prettier.jsxSingleQuote": false,
+    "prettier.arrowParens": "avoid",
+    "prettier.bracketSpacing": true,
+    "prettier.disableSuccessMessage": false,
+    "prettier.statusItemText": "Prettier",
+    "prettier.eslintIntegration": false,
+    "prettier.disableLanguages": ["vue"],
+    "prettier.onlyUseLocalVersion": false,
+
+    "rust.build_on_save": true,
+    "rust-client.updateOnStartup": true,
+
+    "go.checkForUpdates": "inform",
+    "clangd.checkUpdates": true
+}
