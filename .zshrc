@@ -33,9 +33,9 @@ plugins=(
     docker-compose
     themes
     yarn
-    # timer
-    # zsh-autosuggestions
-    # kubectl
+    kubectl
+    helm
+    terraform
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -59,14 +59,9 @@ alias md='mkdir -vp'
 alias p='popd'
 alias tree='tree -a -h -f --du'
 function drop() { pushd ~/Dropbox/$1; }
-function www() { pushd ~/Dropbox/htdocs/$1; }
-function sites() { pushd ~/Sites/$1; }
 function dev() { pushd ~/Dropbox/development/$1; }
-function desk() { pushd ~/Desktop/$1; }
 function dtop() { pushd ~/Desktop/$1; }
-function work() { pushd ~/Dropbox/work/$1; }
-function temp() { pushd ~/Dropbox/temp/$1; }
-function tempd() { pushd ~/Dropbox/temp/$1; }
+function work() { pushd ~/projects/$1; }
 function dtemp() { pushd ~/Desktop/temp/$1; }
 function doc() { pushd ~/Documents/$1; }
 function me() { pushd ~/$1; }
