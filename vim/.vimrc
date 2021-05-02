@@ -85,7 +85,7 @@ set ignorecase
 " set gdefault
 set showmatch
 
-set colorcolumn=101
+set colorcolumn=121
 " set relativenumber
 
 " disable code folding
