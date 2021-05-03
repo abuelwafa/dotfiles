@@ -412,7 +412,6 @@ au Syntax * RainbowParenthesesLoadBraces
 " enable jsx for .js files
 let g:jsx_ext_required = 0
 
-let g:editorconfig_Beautifier = $HOME.'/projects/dotfiles/vim/.editorconfig'
 let g:EditorConfig_exclude_patterns = ['fugitive://.*', 'scp://.*']
 
 set tags=./tags
