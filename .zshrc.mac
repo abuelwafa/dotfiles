@@ -6,6 +6,9 @@ source ~/projects/dotfiles/.zshrc
 alias ql='qlmanage -p'
 alias copy='pbcopy'
 
+export JAVA_HOME=/Users/abuelwafa/.sdkman/candidates/java/current
+export PATH=$JAVA_HOME:$PATH
+
 export ANDROID_HOME=$HOME/Library/Android/Sdk
 export PATH=$PATH:$ANDROID_HOME/emulator
 export PATH=$PATH:$ANDROID_HOME/tools
@@ -13,3 +16,8 @@ export PATH=$PATH:$ANDROID_HOME/tools/bin
 export PATH=$PATH:$ANDROID_HOME/platform-tools
 
 export PATH="/usr/local/sbin:$PATH"
+
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="/Users/abuelwafa/.sdkman"
+[[ -s "/Users/abuelwafa/.sdkman/bin/sdkman-init.sh" ]] && source "/Users/abuelwafa/.sdkman/bin/sdkman-init.sh"
+export PATH="/usr/local/opt/node@16/bin:$PATH"

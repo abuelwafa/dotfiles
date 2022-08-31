@@ -59,12 +59,9 @@ alias md='mkdir -vp'
 alias p='popd'
 alias tree='tree -a -h -f --du'
 function drop() { pushd ~/Dropbox/$1; }
-function dev() { pushd ~/Dropbox/development/$1; }
 function dtop() { pushd ~/Desktop/$1; }
-function work() { pushd ~/projects/$1; }
 function dtemp() { pushd ~/Desktop/temp/$1; }
 function doc() { pushd ~/Documents/$1; }
-function me() { pushd ~/$1; }
 
 function ..() { cd ../$1; }
 function ...() { cd ../../$1; }

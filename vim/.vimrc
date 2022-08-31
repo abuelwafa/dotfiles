@@ -14,52 +14,35 @@ endif
 
 " initiate vim-plug
 call plug#begin('~/projects/dotfiles/vim/plugged')
-Plug 'scrooloose/nerdtree'
+Plug 'preservim/nerdtree'
 Plug 'Xuyuanp/nerdtree-git-plugin'
-Plug 'Lokaltog/vim-easymotion'
-Plug 'tpope/vim-surround'
-Plug 'tpope/vim-repeat'
-Plug 'tpope/vim-fugitive'
-Plug 'junegunn/gv.vim'
-Plug 'tpope/vim-dadbod'
-Plug 'kristijanhusak/vim-dadbod-ui'
-Plug 'kevinoid/vim-jsonc'
-Plug 'airblade/vim-gitgutter'
 Plug 'ctrlpvim/ctrlp.vim'
-Plug 'psliwka/vim-smoothie'
-Plug 'sheerun/vim-polyglot'
-Plug 'leafgarland/typescript-vim'
-Plug 'peitalin/vim-jsx-typescript'
-Plug 'hail2u/vim-css3-syntax'
-Plug 'styled-components/vim-styled-components', { 'branch': 'main' }
-Plug 'jparise/vim-graphql'
-Plug 'othree/yajs.vim'
-Plug 'jiangmiao/auto-pairs'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-" Plug 'dense-analysis/ale' " removed in favor of coc
-Plug 'kien/rainbow_parentheses.vim'
-Plug 'tpope/vim-git'
-Plug 'mileszs/ack.vim'
-Plug 'christoomey/vim-system-copy'
-Plug 'editorconfig/editorconfig-vim'
-Plug 'Yggdroot/indentLine'
-Plug 'tomtom/tcomment_vim'
-Plug 'mattn/emmet-vim'
+Plug 'sheerun/vim-polyglot'
 Plug 'christoomey/vim-tmux-navigator'
+Plug 'editorconfig/editorconfig-vim'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-git'
+Plug 'christoomey/vim-system-copy'
+Plug 'mileszs/ack.vim'
+Plug 'Lokaltog/vim-easymotion'
+Plug 'tomtom/tcomment_vim'
+Plug 'airblade/vim-gitgutter'
+Plug 'jiangmiao/auto-pairs'
+Plug 'Yggdroot/indentLine'
 Plug 'bronson/vim-trailing-whitespace'
 Plug 'terryma/vim-multiple-cursors'
-Plug 'MarcWeber/vim-addon-mw-utils'
 Plug 'tomtom/tlib_vim'
-Plug 'Raimondi/delimitMate'
-Plug 'xolox/vim-misc'
 Plug 'chriskempson/base16-vim'
-Plug 'ayu-theme/ayu-vim'
-Plug 'morhetz/gruvbox'
-Plug 'rainglow/vim'
-Plug 'rust-lang/rust.vim'
-Plug 'fatih/vim-go'
+Plug 'MarcWeber/vim-addon-mw-utils'
+Plug 'jparise/vim-graphql'
+Plug 'mattn/emmet-vim'
+Plug 'kien/rainbow_parentheses.vim'
+" Plug 'fatih/vim-go'
 
 call plug#end()
 
@@ -85,7 +68,7 @@ set ignorecase
 " set gdefault
 set showmatch
 
-set colorcolumn=121
+set colorcolumn=101
 " set relativenumber
 
 " disable code folding
@@ -125,7 +108,7 @@ set scrolloff=4
 
 " set encoding
 set fileencoding=utf8
-set encoding=utf8
+set encoding=utf-8
 
 " remember more commands and search history
 set history=1000
@@ -162,7 +145,7 @@ set wildignore+=*.swp,*~,._*
 set signcolumn=yes
 
 " Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable delays and poor user experience. try experimenting with decreasing it to 200ms and check the performance
-set updatetime=300
+set updatetime=200
 
 " don't give |ins-completion-menu| messages.
 set shortmess+=c
@@ -218,11 +201,6 @@ nnoremap -- <C-w>3- " decrease vertically
 nnoremap <leader>] <C-w>4> " increase horizontally
 nnoremap <leader>[ <C-w>4< " decrease horizontally
 
-
-" let g:indent_guides_enable_on_vim_startup = 1
-" let g:indent_guides_guide_size=1
-" let g:indent_guides_start_level=2
-
 " nerdtree plugin configuration
 let NERDTreeShowHidden=1 " show hidden files in nerdtree file plugin
 let NERDTreeQuitOnOpen=0
@@ -232,21 +210,38 @@ let NERDTreeNaturalSort=1
 " let NERDTreeWinPos="right"
 let NERDTreeAutoDeleteBuffer=1
 let NERDTreeDirArrows=1
-let NERDTreeMinimalUI=1
+" let NERDTreeMinimalUI=1
 let NERDTreeCascadeOpenSingleChildDir=1
 let NERDTreeCascadeSingleChildDir=0
 let NERDTreeIgnore=['.DS_Store']
 
-" make sure not to open buffers on the nerdtree buffer
-autocmd BufEnter * if bufname('#') =~# "^NERD_tree_" && winnr('$') > 1 | b# | endif
-let g:plug_window = 'noautocmd vertical topleft new'
+" If another buffer tries to replace NERDTree, put it in the other window, and bring back NERDTree.
+autocmd BufEnter * if bufname('#') =~ 'NERD_tree_\d\+' && bufname('%') !~ 'NERD_tree_\d\+' && winnr('$') > 1 |
+    \ let buf=bufnr() | buffer# | execute "normal! \<C-W>w" | execute 'buffer'.buf | endif
 
-" open nerdtree on opening vim
-" autocmd StdinReadPre * let s:std_in=1
-" autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+" Check if NERDTree is open or active
+function! IsNERDTreeOpen()
+  return exists("t:NERDTreeBufName") && (bufwinnr(t:NERDTreeBufName) != -1)
+endfunction
+
+" Call NERDTreeFind iff NERDTree is active, current window contains a modifiable
+" file, and we're not in vimdiff
+function! SyncTree()
+  if &modifiable && IsNERDTreeOpen() && strlen(expand('%')) > 0 && !&diff
+    NERDTreeFind
+    wincmd p
+  endif
+endfunction
+
+" Highlight currently open buffer in NERDTree
+autocmd BufRead * call SyncTree()
+
+" Start NERDTree and put the cursor back in the other window.
+autocmd VimEnter * NERDTree | wincmd p
+" autocmd VimEnter * NERDTree
 
 " close vim if nerdtree is the only buffer left
-" autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
 " nerdtree toggle mapping
 nnoremap ff :NERDTreeToggle<CR>
@@ -319,22 +314,11 @@ endif
 let g:tmux_navigator_no_mappings = 1
 let g:tmux_navigator_disable_when_zoomed = 1
 
-" nnoremap <ctrl-h> :TmuxNavigateLeft<cr>
-" nnoremap <ctrl-d> :TmuxNavigateDown<cr>
-" nnoremap <ctrl-u> :TmuxNavigateUp<cr>
-" nnoremap <ctrl-l> :TmuxNavigateRight<cr>
-" nnoremap <ctrl-\> :TmuxNavigatePrevious<cr>
-
-" enable gitgutter
-let g:gitgutter_enabled = 1
-" let g:gitgutter_sign_column_always = 1
-" if exists('&signcolumn')  " Vim 7.4.2201
-"     set signcolumn=yes
-" endif
-" let g:gitgutter_override_sign_column_highlight = 0
-:sign define dummy
-:execute 'sign place 9999 line=1 name=dummy buffer=' . bufnr('')
-
+nnoremap <ctrl-h> :TmuxNavigateLeft<cr>
+nnoremap <ctrl-d> :TmuxNavigateDown<cr>
+nnoremap <ctrl-u> :TmuxNavigateUp<cr>
+nnoremap <ctrl-l> :TmuxNavigateRight<cr>
+nnoremap <ctrl-\> :TmuxNavigatePrevious<cr>
 
 " vim airline configuration
 set fillchars+=stl:\ ,stlnc:\
@@ -344,70 +328,46 @@ set ttimeoutlen=20
 let g:airline#extensions#coc#enabled = 1
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#branch#displayed_head_limit = 14
 " let g:airline#extensions#tabline#fnamemod = ':t'
 let g:airline#extensions#tabline#buffers_label = 'b'
 let g:airline#extensions#tabline#tabs_label = 't'
 let g:airline#extensions#tabline#show_tab_type = 1
 let g:airline#extensions#whitespace#enabled = 1
-" let g:airline#extensions#tabline#left_sep = ''
-" let g:airline#extensions#tabline#left_alt_sep = ''
-" let g:airline#extensions#tabline#right_sep = ''
-" let g:airline#extensions#tabline#right_alt_sep = ''
-" let g:airline_theme='light'
+let g:airline#extensions#tabline#left_sep = ''
+let g:airline#extensions#tabline#left_alt_sep = ''
+let g:airline#extensions#tabline#right_sep = ''
+let g:airline#extensions#tabline#right_alt_sep = ''
 let g:airline_theme='powerlineish'
-" let g:airline_theme='dark'
-" let g:airline_theme='luna'
 let g:airline_inactive_collapse=1
 let g:airline_skip_empty_sections = 1
 let g:airline_highlighting_cache = 1
-" let g:airline_section_b = ''
-" let g:airline_section_z = '%4l%#__restore__#%#__accent_bold#/%L%{g:airline_symbols.maxlinenr}%#__restore__# :%3v'
+let g:airline_left_sep=' '
+let g:airline_right_sep=' '
 
-" let g:airline_left_sep=''
-" let g:airline_right_sep=''
-
-" rainbow parentheses
-let g:rbpt_colorpairs = [
-    \ ['brown',       'RoyalBlue3'],
-    \ ['Darkblue',    'SeaGreen3'],
-    \ ['darkgray',    'DarkOrchid3'],
-    \ ['darkgreen',   'firebrick3'],
-    \ ['darkcyan',    'RoyalBlue3'],
-    \ ['darkred',     'SeaGreen3'],
-    \ ['darkmagenta', 'DarkOrchid3'],
-    \ ['brown',       'firebrick3'],
-    \ ['darkmagenta', 'DarkOrchid3'],
-    \ ['Darkblue',    'firebrick3'],
-    \ ['darkgreen',   'RoyalBlue3'],
-    \ ['darkcyan',    'SeaGreen3'],
-    \ ['darkred',     'DarkOrchid3'],
-    \ ['red',         'firebrick3'],
-    \ ]
-
+" " rainbow parentheses
+" let g:rbpt_colorpairs = [
+"     \ ['brown',       'RoyalBlue3'],
+"     \ ['Darkblue',    'SeaGreen3'],
+"     \ ['darkgray',    'DarkOrchid3'],
+"     \ ['darkgreen',   'firebrick3'],
+"     \ ['darkcyan',    'RoyalBlue3'],
+"     \ ['darkred',     'SeaGreen3'],
+"     \ ['darkmagenta', 'DarkOrchid3'],
+"     \ ['brown',       'firebrick3'],
+"     \ ['darkmagenta', 'DarkOrchid3'],
+"     \ ['Darkblue',    'firebrick3'],
+"     \ ['darkgreen',   'RoyalBlue3'],
+"     \ ['darkcyan',    'SeaGreen3'],
+"     \ ['darkred',     'DarkOrchid3'],
+"     \ ['red',         'firebrick3'],
+"     \ ]
+"
 " rainbow parentheses
 au VimEnter * RainbowParenthesesToggle
 au Syntax * RainbowParenthesesLoadRound
 au Syntax * RainbowParenthesesLoadSquare
 au Syntax * RainbowParenthesesLoadBraces
-
-" " ale plugin configuration
-" let g:ale_linters = {
-" \   'javascript': ['eslint'],
-" \   'javascript.jsx': ['eslint'],
-" \   'typescript': ['eslint'],
-" \   'typescriptreact': ['eslint'],
-" \}
-" let g:ale_fixers = {
-" \   '*': ['remove_trailing_lines', 'trim_whitespace'],
-" \   'javascript': ['prettier'],
-" \   'javascript.jsx': ['prettier'],
-" \   'typescript': ['prettier'],
-" \   'typescriptreact': ['prettier'],
-" \}
-" let g:ale_fix_on_save = 1
-" let g:ale_completion_enabled = 1
-" let g:ale_sign_column_always = 1
-" let g:airline#extensions#ale#enabled = 1
 
 " enable jsx for .js files
 let g:jsx_ext_required = 0
@@ -436,6 +396,7 @@ augroup END
 "===============================================================================
 " COC configuration
 
+  " \ 'coc-java',
 let g:coc_global_extensions = [
   \ 'coc-prettier',
   \ 'coc-tsserver',
@@ -445,19 +406,16 @@ let g:coc_global_extensions = [
   \ 'coc-styled-components',
   \ 'coc-snippets',
   \ 'coc-eslint',
-  \ 'coc-pairs',
   \ 'coc-db',
   \ 'coc-sql',
   \ 'coc-highlight',
   \ 'coc-clangd',
   \ 'coc-sh',
   \ 'coc-rls',
-  \ 'coc-go',
-  \ 'coc-java',
-  \ 'coc-phpls',
   \ 'coc-svg',
   \ 'coc-yaml',
-  \ 'coc-cfn-lint',
+  \ 'coc-xml',
+  \ 'coc-swagger',
   \ 'coc-vimlsp',
   \ ]
 
@@ -465,19 +423,20 @@ let g:vim_json_syntax_conceal = 0
 let g:vim_markdown_conceal = 0
 let g:vim_markdown_conceal_code_blocks = 0
 
+" Use tab for trigger completion with characters ahead and navigate.
+" NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
+" other plugin before putting this into your config.
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
 function! s:check_back_space() abort
   let col = col('.') - 1
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
-" Use tab for trigger completion with characters ahead and navigate.
-" Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
 " map leader+space to omni completion in insert mode
 " inoremap <leader><space> <C-x><C-o>
@@ -485,6 +444,11 @@ inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 " Use <c-space> to trigger completion.
 inoremap <silent><expr> <c-@> coc#refresh()
 inoremap <silent><expr> <c-space> coc#refresh()
+
+" Make <CR> auto-select the first completion item and notify coc.nvim to
+" format on enter, <cr> could be remapped by other vim plugin
+inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
+                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 
 " Use <cr> to confirm completion, `<C-g>u` means break undo chain at current
 " position. Coc only does snippet and additional edit on confirm.
@@ -510,8 +474,10 @@ nmap <silent> gr <Plug>(coc-references)
 function! s:show_documentation()
   if (index(['vim','help'], &filetype) >= 0)
     execute 'h '.expand('<cword>')
+  elseif (coc#rpc#ready())
+    call CocActionAsync('doHover')
   else
-    call CocAction('doHover')
+    execute '!' . &keywordprg . " " . expand('<cword>')
   endif
 endfunction
 
@@ -537,6 +503,12 @@ xmap <leader>ac <Plug>(coc-codeaction-selected)
 
 " Add `:Format` command to format current buffer.
 " command! -nargs=0 Format :call CocAction('format')
+
+" Add `:Fold` command to fold current buffer.
+command! -nargs=? Fold :call CocAction('fold', <f-args>)
+
+" Add `:OR` command for organize imports of the current buffer.
+command! -nargs=0 OR   :call CocAction('runCommand', 'editor.action.organizeImport')
 
 " add prettier command
 command! -nargs=0 Prettier :CocCommand prettier.formatFile
@@ -655,11 +627,15 @@ inoremap <leader>v <esc>:set<space>invpaste<cr>
 vnoremap <leader>v <esc>:set<space>invpaste<cr>
 
 " arrow mappings
-:autocmd FileType php,smarty,blade inoremap ,, ->
-:autocmd FileType php,js,javascript,smarty,blade,typescript,javascriptreact,typescriptreact,rust inoremap << =>
-:autocmd FileType js,javascript,typescript,javascriptreact,typescriptreact inoremap afkj () => {}
+:autocmd FileType js,javascript,smarty,blade,typescript,javascriptreact,typescriptreact,rust,php inoremap >> =>
+:autocmd FileType js,javascript,smarty,blade,typescript,javascriptreact,typescriptreact,rust,php inoremap ,, =>
+:autocmd FileType js,javascript,typescript,javascriptreact,typescriptreact imap afkj () => {
+:autocmd FileType js,javascript,typescript,javascriptreact,typescriptreact imap logkj console.log(
+:autocmd FileType js,javascript,typescript,javascriptreact,typescriptreact imap imkj import  from '
+:autocmd FileType js,javascript,typescript,javascriptreact,typescriptreact imap ifkj if () {
 
-:autocmd FileType php,js,javascript,scss,html,smarty,blade,typescript,sh imap xx $
+:autocmd FileType js,javascript,scss,html,smarty,blade,typescript,sh,php,javascriptreact,typescriptreact inoremap xx $
+
 
 " folding
 nnoremap <C-i> za
@@ -695,93 +671,8 @@ nnoremap <C-i> za
 " hi Normal term=none cterm=none ctermbg=none
 " set background=light
 
-" set background=light
-" let g:solarized_termcolors=256
-" colorscheme solarized
-" highlight SignColumn ctermbg=none
-" let g:airline_theme='solarized'
-
-" colorscheme kolor
-" " hi Normal ctermbg=235
-" " hi Normal term=none cterm=none ctermbg=none
-" hi Cursorline term=none cterm=none ctermbg=234
-
-" colorscheme molokai
-
-" colorscheme gotham256
-" set background=dark
-" let g:airline_theme='gotham256'
-
-" colorscheme dracula
-" set background=dark
-
 set background=dark
 if filereadable(expand("~/.vimrc_background"))
     let base16colorspace=256
     source ~/.vimrc_background
 endif
-
-
-" set background=dark
-" colorscheme atom-dark-256
-" hi Normal term=none cterm=none ctermbg=none
-
-" set background=light
-" colorscheme summerfruit256
-" hi Cursorline term=none cterm=none ctermbg=254
-" " add a rule for styling visula mode select since its not appearing on the mac
-
-" colorscheme lucius
-" hi Normal ctermbg=233
-" set background=dark
-
-" colorscheme hemisu
-" set background=light
-
-" set background=dark
-" " colorscheme seti
-" colorscheme base16-seti-ui
-
-" set background=dark
-" colorscheme xoria256
-" " hi Normal ctermbg=none
-" hi Normal ctermbg=232
-" hi Cursorline term=none cterm=none ctermbg=234
-
-" colorscheme PaperColor
-" let g:airline_theme='papercolor'
-" " set background=light
-" set background=dark
-" " hi Cursorline term=none cterm=none ctermbg=232
-
-" colorscheme jellybeans
-" set background=dark
-" hi Cursorline term=none cterm=none ctermbg=236
-" let g:airline_theme='jellybeans'
-
-" " seoul256 (dark):
-" "   Range:   233 (darkest) ~ 239 (lightest)
-" "   Default: 237
-" set background=dark
-" let g:seoul256_background = 234
-" colo seoul256
-
-" seoul256 (light):
-"   Range:   252 (darkest) ~ 256 (lightest)
-"   Default: 253
-"let g:seoul256_background = 256
-"colo seoul256
-
-"============================================================================
-" old configurations
-
-" " ycm configuration
-" let g:ycm_collect_identifiers_from_tags_files = 1
-" let g:ycm_seed_identifiers_with_syntax = 1
-" let g:ycm_collect_identifiers_from_comments_and_strings = 1
-" let g:ycm_key_list_select_completion = ['<TAB>', '<Down>', '<Enter>']
-"
-" " " change ultisnips default trigger
-" " let g:UltiSnipsExpandTrigger="kj"
-" let g:UltiSnipsExpandTrigger="<c-space>"
-" imap kj <c-space>
