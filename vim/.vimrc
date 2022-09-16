@@ -13,7 +13,7 @@ if empty(glob('~/projects/dotfiles/vim/autoload/plug.vim'))
 endif
 
 " initiate vim-plug
-call plug#begin('~/projects/dotfiles/vim/plugged')
+call plug#begin()
 Plug 'preservim/nerdtree'
 Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'ctrlpvim/ctrlp.vim'
@@ -27,6 +27,7 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-git'
+Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install' }
 Plug 'christoomey/vim-system-copy'
 Plug 'mileszs/ack.vim'
 Plug 'Lokaltog/vim-easymotion'
@@ -37,7 +38,7 @@ Plug 'Yggdroot/indentLine'
 Plug 'bronson/vim-trailing-whitespace'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'tomtom/tlib_vim'
-Plug 'chriskempson/base16-vim'
+Plug 'base16-project/base16-vim'
 Plug 'MarcWeber/vim-addon-mw-utils'
 Plug 'jparise/vim-graphql'
 Plug 'mattn/emmet-vim'
@@ -204,7 +205,7 @@ nnoremap <leader>[ <C-w>4< " decrease horizontally
 " nerdtree plugin configuration
 let NERDTreeShowHidden=1 " show hidden files in nerdtree file plugin
 let NERDTreeQuitOnOpen=0
-let NERDTreeWinSize=32
+let NERDTreeWinSize=36
 let NERDTreeCaseSensitiveSort=1
 let NERDTreeNaturalSort=1
 " let NERDTreeWinPos="right"
@@ -237,7 +238,7 @@ endfunction
 autocmd BufRead * call SyncTree()
 
 " Start NERDTree and put the cursor back in the other window.
-autocmd VimEnter * NERDTree | wincmd p
+" autocmd VimEnter * NERDTree | wincmd p
 " autocmd VimEnter * NERDTree
 
 " close vim if nerdtree is the only buffer left
@@ -412,11 +413,13 @@ let g:coc_global_extensions = [
   \ 'coc-clangd',
   \ 'coc-sh',
   \ 'coc-rls',
+  \ 'coc-go',
   \ 'coc-svg',
   \ 'coc-yaml',
   \ 'coc-xml',
   \ 'coc-swagger',
   \ 'coc-vimlsp',
+  \ 'coc-restclient',
   \ ]
 
 let g:vim_json_syntax_conceal = 0
@@ -424,19 +427,25 @@ let g:vim_markdown_conceal = 0
 let g:vim_markdown_conceal_code_blocks = 0
 
 " Use tab for trigger completion with characters ahead and navigate.
+" NOTE: There's always complete item selected by default, you may want to enable
+" no select by `"suggest.noselect": true` in your configuration file.
 " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
 " other plugin before putting this into your config.
 inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+  \ coc#pum#visible() ? coc#pum#next(1) :
+  \ CheckBackspace() ? "\<Tab>" :
+  \ coc#refresh()
+inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
 
-function! s:check_back_space() abort
+" Make <CR> to accept selected completion item or notify coc.nvim to format
+" <C-g>u breaks current undo, please make your own choice.
+inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
+  \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+
+function! CheckBackspace() abort
   let col = col('.') - 1
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
-
 
 " map leader+space to omni completion in insert mode
 " inoremap <leader><space> <C-x><C-o>

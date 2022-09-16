@@ -18,6 +18,5 @@ export PATH=$PATH:$ANDROID_HOME/platform-tools
 export PATH="/usr/local/sbin:$PATH"
 
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
-export SDKMAN_DIR="/Users/abuelwafa/.sdkman"
-[[ -s "/Users/abuelwafa/.sdkman/bin/sdkman-init.sh" ]] && source "/Users/abuelwafa/.sdkman/bin/sdkman-init.sh"
-export PATH="/usr/local/opt/node@16/bin:$PATH"
+export SDKMAN_DIR="$HOME/.sdkman"
+[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"

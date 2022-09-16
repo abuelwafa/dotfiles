@@ -172,9 +172,8 @@ function clone() { cp -iR $1 $2; }
 # function move() { mv -i $1 $2; echo "Done moving $1 -> $2"; }
 function move() { mv -i $1 $2; }
 
-
 # Base16 Shell
-BASE16_SHELL="$HOME/projects/base16-shell/"
+BASE16_SHELL_PATH="$HOME/projects/base16-shell"
 [ -n "$PS1" ] && \
-    [ -s "$BASE16_SHELL/profile_helper.sh" ] && \
-        eval "$("$BASE16_SHELL/profile_helper.sh")"
+    [ -s "$BASE16_SHELL_PATH/profile_helper.sh" ] && \
+        source "$BASE16_SHELL_PATH/profile_helper.sh"

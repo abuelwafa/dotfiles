@@ -1,5 +1,6 @@
 {
   "suggest.timeout": 5000,
+  "suggest.noselect": true,
   "codeLens.enable": false,
   "coc.preferences.formatOnType": false,
   "coc.preferences.extensionUpdateCheck": "weekly",
@@ -41,7 +42,6 @@
   "eslint.autoFixOnSave": false,
   "eslint.run": "onSave",
 
-  "pairs.enableBackspace": true,
   "typescript.suggest.paths": true,
   "typescript.validate.enable": false,
   "typescript.implementationsCodeLens.enable": false,
@@ -57,7 +57,7 @@
   "prettier.trailingComma": "all",
   "prettier.semi": true,
   "prettier.singleQuote": true,
-  "prettier.jsxBracketSameLine": false,
+  "prettier.bracketSameLine": false,
   "prettier.jsxSingleQuote": false,
   "prettier.arrowParens": "avoid",
   "prettier.bracketSpacing": true,
