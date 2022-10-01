@@ -1,0 +1,144 @@
+# system preferences configurations:
+- enable firewall in the settings
+- keyboard settings: increase the key repeating frequency (delay untill repeat: short, key repeat: fat)
+- Keyboard -> input sources -> add "Arabic - PC" language input source
+- Keyboard -> input sources -> check show input menu in menu bar
+- keyboard -> shortcuts -> input sources -> select the previous input source -> option+space
+- keyboard -> Text -> uncheck "Correct spelling automatically"
+- keyboard -> Text -> uncheck "Capitalize words automatically"
+- keyboard -> Text -> uncheck "Add full stop with double-space"
+- trackpad: enable tap to click
+- general: show scrollbars always
+- general: click in the scroll bar jump to the next page
+- mission control: uncheck automatically rearrange spaces based on most recent use.
+- mission control: check group windows by application.
+- Bluetooth: show bluetooth in menu bar
+- sound: check show sound in menu bar -> always
+=============================================================
+login with your apple id
+install i stat menus, magnet, xcode from app store
+=============================================================
+change default shell to zsh
+chsh -s /bin/zsh
+=============================================================
+install Homebrew from it's website
+https://brew.sh/
+=============================================================
+download the ios simulator from Xcode preferences
+=============================================================
+install jdk from sdkman
+https://sdkman.io/
+=============================================================
+# install latest essentials using homebrew
+# install nodejs lts from homebrew
+# install bat https://github.com/sharkdp/bat
+brew install vim git tmux ack tree htop watchman fzf git-delta node@18 bat kubernetes-cli
+=============================================================
+# switching node versions using Homebrew when installing more than one version
+brew unlink node
+brew link node@18 --force --overwrite
+=============================================================
+# download and install powerline fonts
+https://github.com/powerline/fonts
+=============================================================
+terminal preferences: change font to be Meslo LG M Regular for Powerline 16
+=============================================================
+/* generate ssh keys */
+ssh-keygen -t rsa -b 2048 -C "mohamed.abuelwafa@gmail.com"
+=============================================================
+clone our dotfiles repo
+cd ~/projects
+git clone git@github.com:abuelwafa/dotfiles.git
+git clone https://github.com/ohmyzsh/ohmyzsh.git
+git clone https://github.com/bigH/git-fuzzy.git
+git clone https://github.com/base16-project/base16-shell.git
+=============================================================
+# create ssh config file with config to use ssh keys without password
+ln -s ~/projects/dotfiles/ssh-config ~/.ssh/config
+=============================================================
+# zsh shell
+ln -s ~/projects/dotfiles/.zshrc.mac ~/.zshrc
+=============================================================
+# base16_theme
+mkdir -p ~/.config/base16-project
+ln -s ~/projects/base16-shell/scripts/base16-seti.sh ~/.config/base16-project/base16_shell_theme
+=============================================================
+# git configuration
+ln -s ~/projects/dotfiles/.gitconfig ~/.gitconfig
+=============================================================
+# vim coc config
+mkdir ~/.vim
+ln -s ~/projects/dotfiles/vim/coc-settings.json ~/.vim/coc-settings.json
+=============================================================
+# tmux
+ln -s ~/projects/dotfiles/tmux.conf ~/.tmux.conf
+=============================================================
+# vimrc
+ln -s ~/projects/dotfiles/vim/.vimrc.mac ~/.vimrc
+ln -s ~/projects/dotfiles/vim/.vimrc_background ~/.vimrc_background
+=============================================================
+install android studio
+=============================================================
+# optional: disable accented characters (key press and hold to view accents)
+defaults write -g ApplePressAndHoldEnabled -bool false
+=============================================================
+=============================================================
+# optional: add spaces to the mac osx dock
+defaults write com.apple.dock persistent-apps -array-add '{tile-data={}; tile-type="spacer-tile";}'
+# repeat the command for the number of spaces wanted, then restart the dockwith the command
+killall Dock
+=============================================================
+# optional: install OSXfuse for dealing with NTFS and external hard disk drives
+https://github.com/osxfuse/osxfuse
+=============================================================
+optional as needed from their websites:
+mysql workbench or DBeaver from debeaver.io
+Google Chrome
+Alfred
+vlc
+iTerm
+zoom desktop client
+NordVPN
+POedit
+ImageOptim
+VSCode
+thunderbird
+docker
+OBS
+the unarchiver
+slack
+flipper
+meld
+=============================================================
+# showing hidden files on mac
+defaults write com.apple.finder AppleShowAllFiles YES && killall Finder
+=============================================================
+gimp through Homebrew
+=============================================================
+# clear nordvpn application defaults after every upgrade
+# might consider adding them to an alias
+defaults delete com.nordvpn.osx-apple
+defaults delete com.nordvpn.osx
+
+# setting dns servers for nord vpn - for Egypt
+# https://support.nordvpn.com/Connectivity/macOS/1088046792/Change-your-DNS-servers-on-macOS.htm
+=============================================================
+optional: install meetingBar using HomeBrew
+brew install meetingbar
+https://github.com/leits/MeetingBar
+=============================================================
+helpful chrome extensions
+https://chrome.google.com/webstore/detail/video-speed-controller/nffaoalbilbmmfgbnbgppjihopabppdk
+https://chrome.google.com/webstore/detail/papier/hhjeaokafplhjoogdemakihhdhffacia
+https://chrome.google.com/webstore/detail/gofullpage-full-page-scre/fdpohaocaechififmbbbbbknoalclacl
+vimium
+react developer tools
+redux developer tools
+react-query developer tools
+google translate
+json formatter
+grammarly
+pixelzoomer
+=============================================================
+# install aws cli from amazon website
+=============================================================

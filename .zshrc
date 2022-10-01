@@ -1,17 +1,23 @@
+#!/bin/zsh
+
+# Path to your oh-my-zsh installation.
+export ZSH="$HOME/projects/ohmyzsh"
+
 # If you come from bash you might have to change your $PATH.
-export PATH=$HOME/bin:/usr/local/bin:$PATH
-export PATH=$HOME/projects/git-fuzzy/bin:$PATH
+export PATH="$HOME/bin:/usr/local/bin:$PATH"
+export PATH="$HOME/projects/git-fuzzy/bin:$PATH"
+
+export ANDROID_SDK_ROOT="$ANDROID_HOME"
+export PATH="$PATH:$ANDROID_HOME/emulator"
+export PATH="$PATH:$ANDROID_HOME/platform-tools"
 
 ZSH_THEME="amuse"
 # ZSH_THEME="frontcube"
 # ZSH_THEME="macovsky"
 # ZSH_THEME="tjkirch"
 
-# Uncomment the following line to enable command auto-correction.
-# ENABLE_CORRECTION="true"
-
-# Uncomment the following line to display red dots whilst waiting for completion.
-# COMPLETION_WAITING_DOTS="true"
+# display red dots while waiting for completion.
+COMPLETION_WAITING_DOTS="true"
 
 # Uncomment the following line if you want to disable marking untracked files
 # under VCS as dirty. This makes repository status check for large repositories
@@ -20,6 +26,8 @@ ZSH_THEME="amuse"
 
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 plugins=(
+    adb
+    aws
     git
     git-prompt
     node
@@ -36,6 +44,7 @@ plugins=(
     kubectl
     helm
     terraform
+    gradle
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -177,3 +186,11 @@ BASE16_SHELL_PATH="$HOME/projects/base16-shell"
 [ -n "$PS1" ] && \
     [ -s "$BASE16_SHELL_PATH/profile_helper.sh" ] && \
         source "$BASE16_SHELL_PATH/profile_helper.sh"
+
+
+# company specific config
+[[ -s "$HOME/projects/.work-company-config" ]] && source "$HOME/projects/.work-company-config"
+
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="$HOME/.sdkman"
+[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"

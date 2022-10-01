@@ -1,22 +1,11 @@
-# Path to your oh-my-zsh installation.
-export ZSH="/Users/abuelwafa/projects/ohmyzsh"
+#!/bin/zsh
+
+# Android SDK path installed by Android Studio
+export ANDROID_HOME="$HOME/Library/Android/sdk"
 
 source ~/projects/dotfiles/.zshrc
 
 alias ql='qlmanage -p'
 alias copy='pbcopy'
 
-export JAVA_HOME=/Users/abuelwafa/.sdkman/candidates/java/current
-export PATH=$JAVA_HOME:$PATH
-
-export ANDROID_HOME=$HOME/Library/Android/Sdk
-export PATH=$PATH:$ANDROID_HOME/emulator
-export PATH=$PATH:$ANDROID_HOME/tools
-export PATH=$PATH:$ANDROID_HOME/tools/bin
-export PATH=$PATH:$ANDROID_HOME/platform-tools
-
 export PATH="/usr/local/sbin:$PATH"
-
-#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
-export SDKMAN_DIR="$HOME/.sdkman"
-[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"

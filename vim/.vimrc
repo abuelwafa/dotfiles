@@ -238,7 +238,7 @@ endfunction
 autocmd BufRead * call SyncTree()
 
 " Start NERDTree and put the cursor back in the other window.
-" autocmd VimEnter * NERDTree | wincmd p
+autocmd VimEnter * NERDTree | wincmd p
 " autocmd VimEnter * NERDTree
 
 " close vim if nerdtree is the only buffer left
@@ -258,29 +258,21 @@ inoremap <leader>w <esc>:w<cr>
 
 
 " close current buffer without messing up with splits
-nnoremap <leader>q :NERDTreeClose<CR>:bp<CR>:bd #<cr>
-vnoremap <leader>q <esc>:NERDTreeClose<CR>:bp<CR>:bd #<cr>
-inoremap <leader>q <esc>:NERDTreeClose<CR>:bp<CR>:bd #<cr>
+nnoremap <leader>q :bp<CR>:bd #<cr>
+vnoremap <leader>q <esc>:bp<CR>:bd #<cr>
+inoremap <leader>q <esc>:bp<CR>:bd #<cr>
 
 " force close current buffer without saving and without messing up with splits
-nnoremap <leader>z :NERDTreeClose<CR>:bn<CR>:bd! #<cr>
-vnoremap <leader>z <esc>:NERDTreeClose<CR>:bn<CR>:bd! #<cr>
-inoremap <leader>z <esc>:NERDTreeClose<CR>:bn<CR>:bd! #<cr>
-
-" nnoremap <leader>q :NERDTreeClose<CR>:bd<cr>
-" vnoremap <leader>q <esc>:NERDTreeClose<CR>:bd<cr>
-" inoremap <leader>q <esc>:NERDTreeClose<CR>:bd<cr>
-"
-" nnoremap <leader>z :NERDTreeClose<CR>:bd!<cr>
-" vnoremap <leader>z <esc>:NERDTreeClose<CR>:bd!<cr>
-" inoremap <leader>z <esc>:NERDTreeClose<CR>:bd!<cr>
+nnoremap <leader>z :bn<CR>:bd! #<cr>
+vnoremap <leader>z <esc>:bn<CR>:bd! #<cr>
+inoremap <leader>z <esc>:bn<CR>:bd! #<cr>
 
 " quit vim
-nnoremap qqq :NERDTreeClose<CR>:q<CR>
+nnoremap qqq :q<CR>
 
 " force quit vim
 " nnoremap <leader>fq <esc>:NERDTreeClose<CR>:q!<CR>
-nnoremap <leader>fq :NERDTreeClose<CR>:qa!<CR>
+nnoremap <leader>fq :qa!<CR>
 
 "make < > keep selection after indentenation
 vnoremap < <gv
