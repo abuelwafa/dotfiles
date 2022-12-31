@@ -9,7 +9,7 @@
     old = black red
     new = black green
 [core]
-    editor = vim
+    editor = nvim
     pager = delta
     # pager = less -x4
     autocrlf = input
@@ -20,6 +20,7 @@
     showUntrackedFiles = all
 [merge]
     tool = vimdiff
+    conflictstyle = diff3
 [diff]
     tool = vimdiff
     guitool = meld
@@ -35,6 +36,7 @@
     whitespace-error-style = 22 reverse
     plus-style = bold normal "#008400"
     minus-style = bold normal "#3f0001"
+
 [delta "decorations"]
     commit-decoration-style = bold yellow
     file-style = bold yellow

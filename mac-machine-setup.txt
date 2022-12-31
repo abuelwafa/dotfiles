@@ -26,17 +26,24 @@ https://brew.sh/
 =============================================================
 download the ios simulator from Xcode preferences
 =============================================================
-install jdk from sdkman
+# install sdk and jdk from sdkman
 https://sdkman.io/
+sdk install java
+sdk install gradle
+sdk install kotlin
 =============================================================
 # install latest essentials using homebrew
 # install nodejs lts from homebrew
 # install bat https://github.com/sharkdp/bat
-brew install vim git tmux ack tree htop watchman fzf git-delta node@18 bat kubernetes-cli
+brew install neovim git tmux ack tree btop watchman fzf git-delta node@20 yarn bat kubernetes-cli helm ripgrep fd youtube-dl
 =============================================================
-# switching node versions using Homebrew when installing more than one version
-brew unlink node
-brew link node@18 --force --overwrite
+# test that this section is required before installing
+# after install the above essentials using home brew, open a new
+# terminal and install python support and nodejs client for neovim
+pip3 install --user pynvim
+npm install -g neovim
+=============================================================
+install k9s cli from homebrew
 =============================================================
 # download and install powerline fonts
 https://github.com/powerline/fonts
@@ -66,15 +73,14 @@ ln -s ~/projects/base16-shell/scripts/base16-seti.sh ~/.config/base16-project/ba
 # git configuration
 ln -s ~/projects/dotfiles/.gitconfig ~/.gitconfig
 =============================================================
-# vim coc config
-mkdir ~/.vim
-ln -s ~/projects/dotfiles/vim/coc-settings.json ~/.vim/coc-settings.json
-=============================================================
 # tmux
 ln -s ~/projects/dotfiles/tmux.conf ~/.tmux.conf
 =============================================================
-# vimrc
-ln -s ~/projects/dotfiles/vim/.vimrc.mac ~/.vimrc
+# neovim config
+ln -s ~/projects/dotfiles/nvim/init.vim ~/.config/nvim/init.vim
+mkdir -p ~/.nvim/_temp
+mkdir -p ~/.nvim/_backup
+ln -s ~/projects/dotfiles/coc-settings.json ~/.config/nvim/coc-settings.json
 ln -s ~/projects/dotfiles/vim/.vimrc_background ~/.vimrc_background
 =============================================================
 install android studio
@@ -141,4 +147,14 @@ grammarly
 pixelzoomer
 =============================================================
 # install aws cli from amazon website
+=============================================================
+# switching node versions using Homebrew when installing more than one version
+brew unlink node
+brew link node@20 --force --overwrite
+=============================================================
+#--- deprecated - now using neovim ---
+# vimrc
+mkdir ~/.vim
+ln -s ~/projects/dotfiles/vim/.vimrc.mac ~/.vimrc
+ln -s ~/projects/dotfiles/coc-settings.json ~/.vim/coc-settings.json
 =============================================================

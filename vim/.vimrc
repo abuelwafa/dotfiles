@@ -1,16 +1,17 @@
-"Abuelwafa's vim.rc file"
+"Abuelwafa's vimrc file
 
 set nocompatible
-
-set runtimepath+=~/projects/dotfiles/vim
-set runtimepath+=~/projects/dotfiles/vim/after
 
 " download vim-plug if its not present
 if empty(glob('~/projects/dotfiles/vim/autoload/plug.vim'))
   silent !curl -fLo ~/projects/dotfiles/vim/autoload/plug.vim --create-dirs
     \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
+
+" Run PlugInstall if there are missing plugins
+autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
+  \| PlugInstall --sync | source $MYVIMRC
+\| endif
 
 " initiate vim-plug
 call plug#begin()
@@ -27,6 +28,8 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-git'
+" to be analyzed
+" Plug 'mg979/vim-visual-multi', {'branch': 'master'}
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install' }
 Plug 'christoomey/vim-system-copy'
 Plug 'mileszs/ack.vim'
@@ -38,12 +41,10 @@ Plug 'Yggdroot/indentLine'
 Plug 'bronson/vim-trailing-whitespace'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'tomtom/tlib_vim'
-Plug 'base16-project/base16-vim'
+Plug 'tinted-theming/base16-vim'
 Plug 'MarcWeber/vim-addon-mw-utils'
 Plug 'jparise/vim-graphql'
 Plug 'mattn/emmet-vim'
-Plug 'kien/rainbow_parentheses.vim'
-" Plug 'fatih/vim-go'
 
 call plug#end()
 
@@ -152,7 +153,7 @@ set updatetime=200
 set shortmess+=c
 
 " Better display for messages
-set cmdheight=2
+" set cmdheight=2
 
 " set nolist
 set list
@@ -175,19 +176,14 @@ set splitbelow
 set splitright
 
 " ctrlp plugin configuration
-" let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn|vendor|node_modules)$'
-let g:ctrlp_custom_ignore = '\v[\/](node_modules|vendor|bower_components|build)|(\.(swp|ico|git|hg|svn|jpg|png|gif|ttf|otf|woff|pdf))$'
+let g:ctrlp_custom_ignore = '\v[\/](node_modules|vendor|build|dist)|(\.(swp|ico|git|hg|svn|jpg|png|gif|ttf|otf|woff|pdf))$'
 let g:ctrlp_match_window = 'order:ttb,results:100,max:10'
 let g:ctrlp_show_hidden = 1
 let g:ctrlp_follow_symlinks = 1
 let g:ctrlp_lazy_update = 1
 let g:ctrlp_cache_dir = $HOME.'/.cache/ctrlp'
 
-nnoremap <C-r> :CtrlPBufTagAll<cr>
 nnoremap <C-o> :CtrlPBuffer<cr>
-
-" rustlang formatting on save
-let g:rustfmt_autosave = 1
 
 " mappings for easy window navigation
 " don't have much of an effect now because they are configured by tmux navigation
@@ -205,7 +201,7 @@ nnoremap <leader>[ <C-w>4< " decrease horizontally
 " nerdtree plugin configuration
 let NERDTreeShowHidden=1 " show hidden files in nerdtree file plugin
 let NERDTreeQuitOnOpen=0
-let NERDTreeWinSize=36
+let NERDTreeWinSize=32
 let NERDTreeCaseSensitiveSort=1
 let NERDTreeNaturalSort=1
 " let NERDTreeWinPos="right"
@@ -311,21 +307,23 @@ nnoremap <ctrl-h> :TmuxNavigateLeft<cr>
 nnoremap <ctrl-d> :TmuxNavigateDown<cr>
 nnoremap <ctrl-u> :TmuxNavigateUp<cr>
 nnoremap <ctrl-l> :TmuxNavigateRight<cr>
-nnoremap <ctrl-\> :TmuxNavigatePrevious<cr>
+
+" easymotion config
+let g:EasyMotion_do_mapping = 0 " Disable default mappings
+nmap <leader><leader>w <Plug>(easymotion-overwin-w)
 
 " vim airline configuration
 set fillchars+=stl:\ ,stlnc:\
 " Always show status line
 set laststatus=2
 set ttimeoutlen=20
-let g:airline#extensions#coc#enabled = 1
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#branch#displayed_head_limit = 14
 " let g:airline#extensions#tabline#fnamemod = ':t'
 let g:airline#extensions#tabline#buffers_label = 'b'
 let g:airline#extensions#tabline#tabs_label = 't'
-let g:airline#extensions#tabline#show_tab_type = 1
+let g:airline#extensions#tabline#show_tab_type = 0
 let g:airline#extensions#whitespace#enabled = 1
 let g:airline#extensions#tabline#left_sep = ''
 let g:airline#extensions#tabline#left_alt_sep = ''
@@ -337,30 +335,6 @@ let g:airline_skip_empty_sections = 1
 let g:airline_highlighting_cache = 1
 let g:airline_left_sep=' '
 let g:airline_right_sep=' '
-
-" " rainbow parentheses
-" let g:rbpt_colorpairs = [
-"     \ ['brown',       'RoyalBlue3'],
-"     \ ['Darkblue',    'SeaGreen3'],
-"     \ ['darkgray',    'DarkOrchid3'],
-"     \ ['darkgreen',   'firebrick3'],
-"     \ ['darkcyan',    'RoyalBlue3'],
-"     \ ['darkred',     'SeaGreen3'],
-"     \ ['darkmagenta', 'DarkOrchid3'],
-"     \ ['brown',       'firebrick3'],
-"     \ ['darkmagenta', 'DarkOrchid3'],
-"     \ ['Darkblue',    'firebrick3'],
-"     \ ['darkgreen',   'RoyalBlue3'],
-"     \ ['darkcyan',    'SeaGreen3'],
-"     \ ['darkred',     'DarkOrchid3'],
-"     \ ['red',         'firebrick3'],
-"     \ ]
-"
-" rainbow parentheses
-au VimEnter * RainbowParenthesesToggle
-au Syntax * RainbowParenthesesLoadRound
-au Syntax * RainbowParenthesesLoadSquare
-au Syntax * RainbowParenthesesLoadBraces
 
 " enable jsx for .js files
 let g:jsx_ext_required = 0
@@ -390,21 +364,22 @@ augroup END
 " COC configuration
 
   " \ 'coc-java',
+  " \ 'coc-snippets',
 let g:coc_global_extensions = [
   \ 'coc-prettier',
   \ 'coc-tsserver',
   \ 'coc-json',
+  \ 'coc-eslint',
   \ 'coc-html',
   \ 'coc-css',
   \ 'coc-styled-components',
-  \ 'coc-snippets',
   \ 'coc-eslint',
   \ 'coc-db',
   \ 'coc-sql',
   \ 'coc-highlight',
   \ 'coc-clangd',
   \ 'coc-sh',
-  \ 'coc-rls',
+  \ 'coc-rust-analyzer',
   \ 'coc-go',
   \ 'coc-svg',
   \ 'coc-yaml',
@@ -513,6 +488,9 @@ command! -nargs=0 OR   :call CocAction('runCommand', 'editor.action.organizeImpo
 
 " add prettier command
 command! -nargs=0 Prettier :CocCommand prettier.formatFile
+
+autocmd User EasyMotionPromptBegin :let b:coc_diagnostic_disable = 1
+autocmd User EasyMotionPromptEnd :let b:coc_diagnostic_disable = 0
 
 "===============================================================================
 "===============================================================================
@@ -628,12 +606,12 @@ inoremap <leader>v <esc>:set<space>invpaste<cr>
 vnoremap <leader>v <esc>:set<space>invpaste<cr>
 
 " arrow mappings
-:autocmd FileType js,javascript,smarty,blade,typescript,javascriptreact,typescriptreact,rust,php inoremap >> =>
-:autocmd FileType js,javascript,smarty,blade,typescript,javascriptreact,typescriptreact,rust,php inoremap ,, =>
+:autocmd FileType js,javascript,smarty,blade,typescript,javascriptreact,typescriptreact,rust,php,go inoremap >> =>
+:autocmd FileType js,javascript,smarty,blade,typescript,javascriptreact,typescriptreact,rust,php,go inoremap ,, =>
 :autocmd FileType js,javascript,typescript,javascriptreact,typescriptreact imap afkj () => {
 :autocmd FileType js,javascript,typescript,javascriptreact,typescriptreact imap logkj console.log(
 :autocmd FileType js,javascript,typescript,javascriptreact,typescriptreact imap imkj import  from '
-:autocmd FileType js,javascript,typescript,javascriptreact,typescriptreact imap ifkj if () {
+:autocmd FileType js,javascript,typescript,javascriptreact,typescriptreact,rust,php,go,java imap ifkj if () {
 
 :autocmd FileType js,javascript,scss,html,smarty,blade,typescript,sh,php,javascriptreact,typescriptreact inoremap xx $
 
@@ -648,29 +626,11 @@ nnoremap <C-i> za
 " Z
 " g
 " ,
-" <leader>g
 " <leader>s
 " <leader>h
 " <leader>,
 " <leader>i
 " <leader>c
-
-"====================================
-" Colorschemes configurations
-"====================================
-
-" set background=dark
-" let g:gruvbox_italicize_comments=0
-" let g:gruvbox_contrast_dark = 'hard'
-" let g:gruvbox_contrast_light = 'hard'
-" let g:airline_theme='gruvbox'
-" colorscheme gruvbox
-" " cursor line color
-" hi Cursorline term=none cterm=none ctermbg=236
-" " change background color to black or none for transparent, better for my eyes
-" hi Normal term=none cterm=none ctermbg=black
-" hi Normal term=none cterm=none ctermbg=none
-" set background=light
 
 set background=dark
 if filereadable(expand("~/.vimrc_background"))

@@ -53,7 +53,7 @@ PROMPT='$(rule)
 %{$fg_bold[green]%}%~%{$reset_color%}$(git_prompt_info) %{$fg_bold[red]%}%*%{$reset_color%}
 -> '
 
-export EDITOR='vim'
+export EDITOR='nvim'
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 
@@ -67,16 +67,16 @@ alias la='ls -ahp'
 alias md='mkdir -vp'
 alias p='popd'
 alias tree='tree -a -h -f --du'
-function drop() { pushd ~/Dropbox/$1; }
-function dtop() { pushd ~/Desktop/$1; }
-function dtemp() { pushd ~/Desktop/temp/$1; }
-function doc() { pushd ~/Documents/$1; }
+alias vim='nvim'
+alias vi='nvim'
 
 function ..() { cd ../$1; }
 function ...() { cd ../../$1; }
 function ....() { cd ../../../$1; }
 function .....() { cd ../../../../$1; }
 function ......() { cd ../../../../../$1; }
+function .......() { cd ../../../../../../$1; }
+function ........() { cd ../../../../../../../$1; }
 
 alias yarn-upgrade='yarn upgrade-interactive --latest'
 # alias npm-upgrade='npm --depth 9999 update && npm outdated'

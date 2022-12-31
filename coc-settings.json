@@ -1,0 +1,74 @@
+{
+    "suggest.noselect": true,
+    "suggest.timeout": 5000,
+    "diagnostic.checkCurrentLine": true,
+    "codeLens.enable": false,
+    "coc.preferences.formatOnType": false,
+    "eslint.run": "onSave"",
+    "eslint.autoFixOnSave": false,
+    "eslint.alwaysShowStatus": true,
+
+    "[json][jsonc]": {
+        "coc.preferences.formatOnSave": true
+    },
+    "[html][css][scss]": {
+        "coc.preferences.formatOnSave": true
+    },
+    "[vue]": {
+        "coc.preferences.formatOnSave": true
+    },
+    "[yaml]": {
+        "coc.preferences.formatOnSave": true
+    },
+    "[graphql]": {
+        "coc.preferences.formatOnSave": true
+    },
+    "[javascript][javascriptreact][typescript][typescriptreact]": {
+        "coc.preferences.formatOnSave": true
+    },
+    "[rust]": {
+        "coc.preferences.formatOnSave": true,
+    },
+    "[go]": {
+        "coc.preferences.formatOnSave": true,
+    },
+
+    "go.checkForUpdates": "ask",
+    "clangd.checkUpdates": true,
+    "rust-analyzer.updates.channel": "stable"",
+    "rust-analyzer.enable": true,
+    "rust-analyzer.updates.prompt": true,
+
+    "rest-client.enable": true,
+    "rest-client.timeoutinmilliseconds": 40000,
+    "suggest.snippetsSupport": false,
+
+    "prettier.requireConfig": false,
+    "prettier.printWidth": 100,
+    "prettier.tabWidth": 4,
+    "prettier.useTabs": false,
+    "prettier.endOfLine": "lf",
+    "prettier.trailingComma": "all",
+    "prettier.semi": true,
+    "prettier.singleQuote": true,
+    "prettier.bracketSameLine": false,
+    "prettier.jsxSingleQuote": false,
+    "prettier.arrowParens": "avoid",
+    "prettier.bracketSpacing": true,
+    "prettier.statusItemText": "Prettier",
+    "prettier.disableLanguages": [],
+    "languageserver": {
+        "graphql": {
+            "command": "graphql-lsp",
+            "args": ["server", "-m", "stream"],
+            // customize filetypes to your needs
+            "filetypes": [
+                "typescript",
+                "typescriptreact",
+                "graphql",
+                "javascript",
+                "javascriptreact"
+            ]
+        }
+    },
+}
