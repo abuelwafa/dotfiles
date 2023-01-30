@@ -9,3 +9,8 @@ alias ql='qlmanage -p'
 alias copy='pbcopy'
 
 export PATH="/usr/local/sbin:$PATH"
+
+# setting up nodejs from homebrew
+export PATH="/opt/homebrew/opt/node@18/bin:$PATH"
+export LDFLAGS="-L/opt/homebrew/opt/node@18/lib"
+export CPPFLAGS="-I/opt/homebrew/opt/node@18/include"

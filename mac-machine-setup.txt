@@ -35,13 +35,17 @@ sdk install kotlin
 # install latest essentials using homebrew
 # install nodejs lts from homebrew
 # install bat https://github.com/sharkdp/bat
-brew install neovim git tmux ack tree btop watchman fzf git-delta node@20 yarn bat kubernetes-cli helm ripgrep fd youtube-dl
+# docker runtime using colima
+brew install neovim git tmux ack tree btop watchman fzf git-delta node@20 yarn bat docker colima kubernetes-cli helm ripgrep fd youtube-dl
 =============================================================
 # test that this section is required before installing
 # after install the above essentials using home brew, open a new
 # terminal and install python support and nodejs client for neovim
 pip3 install --user pynvim
 npm install -g neovim
+=============================================================
+# language server when using graphql for use with nvim and coc
+npm i -g graphql-language-service-cli
 =============================================================
 install k9s cli from homebrew
 =============================================================
@@ -109,7 +113,6 @@ POedit
 ImageOptim
 VSCode
 thunderbird
-docker
 OBS
 the unarchiver
 slack

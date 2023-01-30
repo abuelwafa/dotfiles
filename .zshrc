@@ -34,7 +34,6 @@ plugins=(
     npm
     urltools
     encode64
-    web-search
     cp
     colored-man-pages
     docker
@@ -79,8 +78,7 @@ function .......() { cd ../../../../../../$1; }
 function ........() { cd ../../../../../../../$1; }
 
 alias yarn-upgrade='yarn upgrade-interactive --latest'
-# alias npm-upgrade='npm --depth 9999 update && npm outdated'
-alias npm-upgrade='npm outdated && npx npm-upgrade check'
+alias npm-upgrade='npx npm-upgrade check && npm update --save'
 function newreactnative() { npx react-native init $1 --template react-native-template-typescript }
 
 rule() {
@@ -148,10 +146,6 @@ alias gsavestash='git stash save'
 # function show(){ bat "$1"; }
 alias show=bat
 
-alias shutdown='sudo shutdown'
-alias restart='sudo shutdown -r'
-alias reboot='sudo shutdown -r'
-
 function serve() {
     docker run --rm -p $1:80/tcp -v $(pwd):/usr/share/nginx/html:ro nginx:stable-alpine;
 }
@@ -173,13 +167,9 @@ function download(){
 
 # remember when copying directories, adding a slash to the directory name like directory/
 # makes the copying action to perform on the contents of the directory and not the directory itself
-# function remove() { rm -rf $1 $2 $3 $4 $5 $6 $7 $8 $9; echo "Removed $1"; }
-function remove() { rm -rf "$1" "$2" "$3" "$4" "$5" "$6" "$7" "$8" "$9"; }
-# function clone() { cp -iR $1 $2; echo "Done copying $1 -> $2"; }
-function clone() { cp -iR $1 $2; }
-# function rename() { mv -i $1 $2; echo "Renamed $1 -> $2"; }
-# function move() { mv -i $1 $2; echo "Done moving $1 -> $2"; }
-function move() { mv -i $1 $2; }
+alias cp='cp -iR'
+alias mv='mv -i'
+alias remove='rm -rf'
 
 # Base16 Shell
 BASE16_SHELL_PATH="$HOME/projects/base16-shell"

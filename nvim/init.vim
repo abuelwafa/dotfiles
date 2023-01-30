@@ -24,16 +24,17 @@ Plug 'ZhiyuanLck/smart-pairs'
 Plug 'phaazon/hop.nvim'
 Plug 'mg979/vim-visual-multi', {'branch': 'master'}
 Plug 'christoomey/vim-tmux-navigator'
+Plug 'rest-nvim/rest.nvim'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-git'
 Plug 'moll/vim-bbye'
-Plug 'bronson/vim-trailing-whitespace'
+Plug 'ntpeters/vim-better-whitespace'
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install' }
 Plug 'christoomey/vim-system-copy'
-Plug 'mileszs/ack.vim'
+" Plug 'mileszs/ack.vim' // replaced in favor of telescope live_grep
 Plug 'numToStr/Comment.nvim'
 Plug 'airblade/vim-gitgutter'
 Plug 'tinted-theming/base16-vim'
@@ -177,7 +178,6 @@ set splitright
 
 let g:coc_global_extensions = [
     \ 'coc-swagger',
-    \ 'coc-restclient',
     \ 'coc-java',
     \ 'coc-html',
     \ 'coc-styled-components',
@@ -211,10 +211,7 @@ inoremap <silent><expr> <TAB>
       \ coc#refresh()
 inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
 
-" Make <CR> to accept selected completion item or notify coc.nvim to format
-" <C-g>u breaks current undo, please make your own choice
-inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
-                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+lua vim.keymap.set("i", "<cr>", [[coc#pum#visible() ? coc#pum#confirm() : "<cmd>lua require('pairs.enter').type()<cr>"]], { silent = true, noremap = true, expr = true, replace_keycodes = false })
 
 function! CheckBackspace() abort
   let col = col('.') - 1
@@ -222,11 +219,7 @@ function! CheckBackspace() abort
 endfunction
 
 " Use <c-space> to trigger completion
-if has('nvim')
-  inoremap <silent><expr> <c-space> coc#refresh()
-else
-  inoremap <silent><expr> <c-@> coc#refresh()
-endif
+inoremap <silent><expr> <c-space> coc#refresh()
 
 " Use K to show documentation in preview window
 nnoremap <silent> K :call ShowDocumentation()<CR>
@@ -288,10 +281,6 @@ augroup end
 if has('nvim-0.4.0') || has('patch-8.2.0750')
   nnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
   nnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
-  inoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(1)\<cr>" : "\<Right>"
-  inoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(0)\<cr>" : "\<Left>"
-  vnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
-  vnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
 endif
 
 "====================================================================
@@ -339,6 +328,10 @@ if filereadable(expand("~/.vimrc_background"))
     source ~/.vimrc_background
 endif
 
+" ===================================================================================
+" ===================================================================================
+" lua configuration
+" ===================================================================================
 lua << EOF
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
@@ -348,7 +341,7 @@ require'hop'.setup()
 
 -- require('neogen').setup { enabled = true }
 require('Comment').setup()
-require('pairs'):setup()
+require('pairs'):setup({ enter = { enable_mapping = false } })
 require('numb').setup()
 
 require('nvim-treesitter.configs').setup({
@@ -364,6 +357,24 @@ require('nvim-treesitter.configs').setup({
     indent = {
         enable = true
     }
+})
+
+require("rest-nvim").setup({
+    result_split_horizontal = true,
+    result_split_in_place = true,
+    skip_ssl_verification = true,
+    encode_url = true,
+    highlight = { enabled = true, timeout = 150 },
+    result = {
+        show_url = true,
+        show_http_info = true,
+        show_headers = true,
+        formatters = { json = false, html = false }
+    },
+    jump_to_request = false,
+    env_file = '.env',
+    custom_dynamic_variables = {},
+    yank_dry_run = true,
 })
 
 vim.diagnostic.config({ virtual_text = true })
@@ -385,11 +396,16 @@ require('telescope').setup({
 
 -- nvim-tree setup
 require("nvim-tree").setup {
-    open_on_setup = true,
+    open_on_setup = false,
+    open_on_setup_file = false,
     hijack_cursor = true,
     reload_on_bufenter = true,
     update_focused_file = {
         enable = true,
+    },
+    git = {
+        ignore = false,
+        timeout = 999
     },
     actions = {
         expand_all = {
@@ -418,8 +434,8 @@ require("nvim-tree").setup {
             list = {
                 { key = { "<CR>", "o", "<2-LeftMouse>", ">" }, action = "edit_no_picker" },
                 { key = "O", action = "edit" },
-                { key = "<C-v>", action = "vsplit" },
-                { key = "<C-s>", action = "split" },
+                { key = {"<C-v>", "v" }, action = "vsplit" },
+                { key = {"<C-s>", "s" }, action = "split" },
                 { key = "[", action = "parent_node" },
                 { key = "]", action = "cd" },
                 { key = {"x", "<"} , action = "close_node" },
@@ -427,10 +443,10 @@ require("nvim-tree").setup {
                 { key = "a", action = "create" },
                 { key = "d", action = "remove" },
                 { key = "r", action = "rename" },
-                { key = "cc", action = "cut" },
-                { key = "c", action = "copy" },
+                { key = "c", action = "cut" },
+                { key = "y", action = "copy" },
                 { key = "p", action = "paste" },
-                { key = "s", action = "system_open" },
+                -- { key = "s", action = "system_open" },
                 { key = "X", action = "collapse_all" },
                 { key = "E", action = "expand_all" },
                 { key = "K", action = "toggle_file_info" },
@@ -440,9 +456,12 @@ require("nvim-tree").setup {
     },
     renderer = {
         highlight_git = false,
+        add_trailing = true,
+        full_name = true,
         group_empty = false,
-        highlight_opened_files = "none",
+        highlight_opened_files = "name",
         root_folder_label = ":t:r",
+        special_files = {},
         indent_markers = {
             enable = true,
         },
@@ -489,6 +508,11 @@ vim.o.winbar = "%{expand(\"%:~:.\")} %m%=%{coc#status()} "
 -- status line setup
 require('lualine').setup {
     options = {
+        -- theme = '16color',
+        -- theme = 'gruvbox_dark',
+        theme = 'material',
+        -- theme = 'powerline',
+        -- theme = 'papercolor_dark',
         icons_enabled = false,
         section_separators = { left = '', right = '' },
         component_separators = { left = '', right = '' }
@@ -690,9 +714,8 @@ tnoremap <ESC><ESC> <C-\><C-N>
 nnoremap <silent> <leader>h <c-w>H
 nnoremap <silent> <leader>u <c-w>K
 
-" plugin mappings
-
 nnoremap <C-p> <cmd>Telescope find_files<cr>
+nnoremap <C-o> <cmd>Telescope buffers<cr>
 nnoremap <C-o> <cmd>Telescope buffers<cr>
 
 nnoremap ff :NvimTreeToggle<cr>
@@ -715,3 +738,5 @@ highlight IndentBlanklineIndent3 guifg=#98C379 gui=nocombine
 highlight IndentBlanklineIndent4 guifg=#56B6C2 gui=nocombine
 highlight IndentBlanklineIndent5 guifg=#61AFEF gui=nocombine
 highlight IndentBlanklineIndent6 guifg=#C678DD gui=nocombine
+
+let g:better_whitespace_filetypes_blacklist=['NvimTree', 'diff', 'git', 'gitcommit', 'unite', 'qf', 'help', 'markdown', 'fugitive']
