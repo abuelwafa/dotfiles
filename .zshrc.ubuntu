@@ -5,9 +5,10 @@ export ANDROID_HOME="$HOME/Android/Sdk"
 
 source ~/projects/dotfiles/.zshrc
 
-alias shutdown='sudo shutdown & exit'
-alias restart='sudo shutdown -r & exit'
-alias reboot='sudo shutdown -r & exit'
+# TODO: not needed in ubuntu, but consider adding working ones
+# alias shutdown
+# alias restart
+# alias reboot
 
 if [ "$TERM" = "xterm" ]; then
     export TERM=xterm-256color

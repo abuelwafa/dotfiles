@@ -347,7 +347,7 @@ require('numb').setup()
 require('nvim-treesitter.configs').setup({
     ensure_installed = "all",
     auto_install = true,
-    sync_install = true,
+    sync_install = false,
     ignore_install = {},
     highlight = {
         enable = true,
@@ -396,8 +396,6 @@ require('telescope').setup({
 
 -- nvim-tree setup
 require("nvim-tree").setup {
-    open_on_setup = false,
-    open_on_setup_file = false,
     hijack_cursor = true,
     reload_on_bufenter = true,
     update_focused_file = {
@@ -407,6 +405,7 @@ require("nvim-tree").setup {
         ignore = false,
         timeout = 999
     },
+    modified = { enable = true },
     actions = {
         expand_all = {
             exclude = { ".git", "node_modules", "dist", "build" }
@@ -417,12 +416,6 @@ require("nvim-tree").setup {
         enable = true,
         show_on_dirs = true,
         show_on_open_dirs = true,
-        icons = {
-            hint = "✗",
-            info = "✗",
-            warning = "✗",
-            error = "✗",
-        },
     },
     view = {
         adaptive_size = false,
@@ -446,7 +439,6 @@ require("nvim-tree").setup {
                 { key = "c", action = "cut" },
                 { key = "y", action = "copy" },
                 { key = "p", action = "paste" },
-                -- { key = "s", action = "system_open" },
                 { key = "X", action = "collapse_all" },
                 { key = "E", action = "expand_all" },
                 { key = "K", action = "toggle_file_info" },
@@ -467,24 +459,10 @@ require("nvim-tree").setup {
         },
         icons = {
             git_placement = "after",
+            modified_placement = "before",
             show = {
                 file = false,
                 folder = false,
-            },
-            glyphs = {
-                folder = {
-                    arrow_closed = "⏵",
-                    arrow_open = "⏷",
-                },
-                git = {
-                  unstaged = "✗",
-                  staged = "✓",
-                  unmerged = "",
-                  renamed = "➜",
-                  untracked = "★",
-                  deleted = "",
-                  ignored = "◌",
-                },
             },
         },
     },

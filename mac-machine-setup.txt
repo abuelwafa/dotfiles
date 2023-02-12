@@ -18,51 +18,7 @@
 login with your apple id
 install i stat menus, magnet, xcode from app store
 =============================================================
-change default shell to zsh
-chsh -s /bin/zsh
-=============================================================
-install Homebrew from it's website
-https://brew.sh/
-=============================================================
 download the ios simulator from Xcode preferences
-=============================================================
-# install sdk and jdk from sdkman
-https://sdkman.io/
-sdk install java
-sdk install gradle
-sdk install kotlin
-=============================================================
-# install latest essentials using homebrew
-# install nodejs lts from homebrew
-# install bat https://github.com/sharkdp/bat
-# docker runtime using colima
-brew install neovim git tmux ack tree btop watchman fzf git-delta node@20 yarn bat docker colima kubernetes-cli helm ripgrep fd youtube-dl
-=============================================================
-# test that this section is required before installing
-# after install the above essentials using home brew, open a new
-# terminal and install python support and nodejs client for neovim
-pip3 install --user pynvim
-npm install -g neovim
-=============================================================
-# language server when using graphql for use with nvim and coc
-npm i -g graphql-language-service-cli
-=============================================================
-install k9s cli from homebrew
-=============================================================
-# download and install powerline fonts
-https://github.com/powerline/fonts
-=============================================================
-terminal preferences: change font to be Meslo LG M Regular for Powerline 16
-=============================================================
-/* generate ssh keys */
-ssh-keygen -t rsa -b 2048 -C "mohamed.abuelwafa@gmail.com"
-=============================================================
-clone our dotfiles repo
-cd ~/projects
-git clone git@github.com:abuelwafa/dotfiles.git
-git clone https://github.com/ohmyzsh/ohmyzsh.git
-git clone https://github.com/bigH/git-fuzzy.git
-git clone https://github.com/base16-project/base16-shell.git
 =============================================================
 # create ssh config file with config to use ssh keys without password
 ln -s ~/projects/dotfiles/ssh-config ~/.ssh/config
@@ -70,28 +26,8 @@ ln -s ~/projects/dotfiles/ssh-config ~/.ssh/config
 # zsh shell
 ln -s ~/projects/dotfiles/.zshrc.mac ~/.zshrc
 =============================================================
-# base16_theme
-mkdir -p ~/.config/base16-project
-ln -s ~/projects/base16-shell/scripts/base16-seti.sh ~/.config/base16-project/base16_shell_theme
-=============================================================
-# git configuration
-ln -s ~/projects/dotfiles/.gitconfig ~/.gitconfig
-=============================================================
-# tmux
-ln -s ~/projects/dotfiles/tmux.conf ~/.tmux.conf
-=============================================================
-# neovim config
-ln -s ~/projects/dotfiles/nvim/init.vim ~/.config/nvim/init.vim
-mkdir -p ~/.nvim/_temp
-mkdir -p ~/.nvim/_backup
-ln -s ~/projects/dotfiles/coc-settings.json ~/.config/nvim/coc-settings.json
-ln -s ~/projects/dotfiles/vim/.vimrc_background ~/.vimrc_background
-=============================================================
-install android studio
-=============================================================
 # optional: disable accented characters (key press and hold to view accents)
 defaults write -g ApplePressAndHoldEnabled -bool false
-=============================================================
 =============================================================
 # optional: add spaces to the mac osx dock
 defaults write com.apple.dock persistent-apps -array-add '{tile-data={}; tile-type="spacer-tile";}'
@@ -101,23 +37,11 @@ killall Dock
 # optional: install OSXfuse for dealing with NTFS and external hard disk drives
 https://github.com/osxfuse/osxfuse
 =============================================================
-optional as needed from their websites:
-mysql workbench or DBeaver from debeaver.io
-Google Chrome
+install from their respective websites:
 Alfred
-vlc
 iTerm
-zoom desktop client
-NordVPN
-POedit
 ImageOptim
-VSCode
-thunderbird
-OBS
 the unarchiver
-slack
-flipper
-meld
 =============================================================
 # showing hidden files on mac
 defaults write com.apple.finder AppleShowAllFiles YES && killall Finder
@@ -135,29 +59,4 @@ defaults delete com.nordvpn.osx
 optional: install meetingBar using HomeBrew
 brew install meetingbar
 https://github.com/leits/MeetingBar
-=============================================================
-helpful chrome extensions
-https://chrome.google.com/webstore/detail/video-speed-controller/nffaoalbilbmmfgbnbgppjihopabppdk
-https://chrome.google.com/webstore/detail/papier/hhjeaokafplhjoogdemakihhdhffacia
-https://chrome.google.com/webstore/detail/gofullpage-full-page-scre/fdpohaocaechififmbbbbbknoalclacl
-vimium
-react developer tools
-redux developer tools
-react-query developer tools
-google translate
-json formatter
-grammarly
-pixelzoomer
-=============================================================
-# install aws cli from amazon website
-=============================================================
-# switching node versions using Homebrew when installing more than one version
-brew unlink node
-brew link node@20 --force --overwrite
-=============================================================
-#--- deprecated - now using neovim ---
-# vimrc
-mkdir ~/.vim
-ln -s ~/projects/dotfiles/vim/.vimrc.mac ~/.vimrc
-ln -s ~/projects/dotfiles/coc-settings.json ~/.vim/coc-settings.json
 =============================================================

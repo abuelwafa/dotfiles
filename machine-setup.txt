@@ -1,0 +1,105 @@
+# make the projects folder
+mkdir -p ~/projects
+=============================================================
+# install Homebrew from it's website
+https://brew.sh/
+=============================================================
+# install latest essentials using homebrew
+# install nodejs lts from homebrew
+# install bat https://github.com/sharkdp/bat
+# docker runtime using colima
+brew install neovim git tmux gcc tree btop watchman go git-delta node@20 yarn bat docker colima kubernetes-cli helm ripgrep fd youtube-dl
+=============================================================
+# language server when using graphql for use with nvim and coc
+npm i -g graphql-language-service-cli
+=============================================================
+install k9s cli from homebrew
+=============================================================
+# download and install meslo font from nerd font releases
+https://github.com/ryanoasis/nerd-fonts
+# terminal preferences: change font to be Meslo LG L Regular
+=============================================================
+install from their respective websites
+Google Chrome
+Zoom
+VSCode
+slack (from snap store for Ubuntu)
+Dropbox
+Thunderbird from thunderbird.net
+OBS from https://obsproject.com/
+DBeaver from debeaver.io (mac -> homebrew, Ubuntu -> snap store )
+vlc videolan.org/vlc (snap store for Ubuntu)
+flipper
+NordVPN
+Virtual box
+Discord
+android studio and android sdk
+Spotify (snap store for Ubuntu)
+=============================================================
+# install latest stable ruby using rvm
+==================================================================
+# install jdk, gradle and kotlin from sdkman
+https://sdkman.io/
+sdk install java
+sdk install gradle
+sdk install kotlin
+=============================================================
+/* generate ssh keys */
+ssh-keygen -t rsa -b 2048 -C "mohamed.abuelwafa@gmail.com"
+=============================================================
+clone essential repos
+cd ~/projects
+git clone git@github.com:abuelwafa/dotfiles.git
+git clone git@github.com:ohmyzsh/ohmyzsh.git
+git clone git@github.com:bigH/git-fuzzy.git
+git clone git@github.com:tinted-theming/base16-shell.git
+=============================================================
+# base16_theme
+mkdir -p ~/.config/base16-project
+ln -s ~/projects/base16-shell/scripts/base16-seti.sh ~/.config/base16-project/base16_shell_theme
+=============================================================
+# git configuration
+ln -s ~/projects/dotfiles/.gitconfig ~/.gitconfig
+=============================================================
+# tmux
+ln -s ~/projects/dotfiles/tmux.conf ~/.tmux.conf
+=============================================================
+# neovim config
+mkdir -p ~/.config/nvim
+ln -s ~/projects/dotfiles/nvim/init.vim ~/.config/nvim/init.vim
+mkdir -p ~/.nvim/_temp
+mkdir -p ~/.nvim/_backup
+ln -s ~/projects/dotfiles/coc-settings.json ~/.config/nvim/coc-settings.json
+ln -s ~/projects/dotfiles/vim/.vimrc_background ~/.vimrc_background
+=============================================================
+# change the default shell to be zsh
+chsh -s $(which zsh)
+# then logout and log back in
+
+# to change back to bash
+chsh -s $ /usr/bin/bash
+=============================================================
+# install aws cli from amazon website
+=============================================================
+# install rust from the website
+==================================================================
+# switching node versions using Homebrew when installing more than one version
+brew unlink node
+brew link node@20 --force --overwrite
+=============================================================
+helpful chrome extensions
+https://chrome.google.com/webstore/detail/video-speed-controller/nffaoalbilbmmfgbnbgppjihopabppdk
+https://chrome.google.com/webstore/detail/papier/hhjeaokafplhjoogdemakihhdhffacia
+https://chrome.google.com/webstore/detail/gofullpage-full-page-scre/fdpohaocaechififmbbbbbknoalclacl
+vimium
+react developer tools
+redux developer tools
+react-query developer tools
+google translate
+json formatter
+grammarly
+pixelzoomer
+=============================================================
+
+=============================================================
+

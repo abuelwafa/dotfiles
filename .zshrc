@@ -38,12 +38,6 @@ plugins=(
     colored-man-pages
     docker
     docker-compose
-    themes
-    yarn
-    kubectl
-    helm
-    terraform
-    gradle
 )
 
 source $ZSH/oh-my-zsh.sh

@@ -1,0 +1,64 @@
+# apt packages
+curl git xclip build-essential gnome-shell-extension-manager zsh meld
+================================================================
+# zshrc
+ln -s ~/projects/dotfiles/.zshrc.ubuntu ~/.zshrc
+================================================================
+install gnome extensions from extensions manager
+- time++
+- resource monitor
+- hide activities button
+- refresh wifi connections
+================================================================
+# click to minimize on the dock
+gsettings set org.gnome.shell.extensions.dash-to-dock click-action 'minimize'
+================================================================
+# install and setup nordvpn
+# download the latest .deb package, the following is the link of the latest version as of 16 feb 2020
+https://repo.nordvpn.com/deb/nordvpn/debian/pool/main/nordvpn-release_1.0.0_all.deb
+# follow instructions as in the following link or in the accompanied picture
+https://support.nordvpn.com/Connectivity/Linux/1325531132/Installing-and-using-NordVPN-on-Debian-Ubuntu-and-Linux-Mint.htm
+
+# once setup, configure it
+sudo apt install nordvpn
+nordvpn login
+nordvpn set notify on
+nordvpn set cybersec on
+nordvpn set protocol udp
+nordvpn set obfuscate on
+nordvpn set autoconnect on
+nordvpn set killswitch on
+nordvpn set dns 8.8.8.8 8.8.4.4
+nordvpn connect
+nordvpn status
+nordvpn help
+===============================================================
+# i3 setup - optional -
+# follow the instructions to add the i3 apt
+# repository from the i3 website. then install and link config
+sudo apt install i3
+ln -s ~/projects/dotfiles/i3 ~/.config/i3
+
+# i3 status bar config
+ln -s ~/projects/dotfiles/i3status ~/.config/i3status
+
+# enable natural scrolling for the touchpad on i3
+edit /usr/share/X11/xorg.conf.d/40-libinput.conf
+and change the touchpad section by adding the 4 lines marked below to be as follows
+
+```
+-----------------------------------------------------
+ |Section "InputClass"
+ |        Identifier "libinput touchpad catchall"
+ |        MatchIsTouchpad "on"
+ |        MatchDevicePath "/dev/input/event*"
+ |        Driver "libinput"
++|        Option "NaturalScrolling" "True"
++|        Option "MiddleEmulation" "on"
++|        Option "Tapping" "on"
++|        Option "DisableWhileTyping" "on"
+ |EndSection
+-----------------------------------------------------
+```
+================================================================
+

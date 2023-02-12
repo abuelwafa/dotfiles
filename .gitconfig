@@ -19,10 +19,10 @@
 [status]
     showUntrackedFiles = all
 [merge]
-    tool = vimdiff
+    tool = nvim -d
     conflictstyle = diff3
 [diff]
-    tool = vimdiff
+    tool = nvim -d
     guitool = meld
     colorMoved = default
     context = 12
