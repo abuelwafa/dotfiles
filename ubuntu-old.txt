@@ -1,0 +1,76 @@
+# old - now using homebrew
+# install delta for diffs using cargo
+cargo install git-delta
+================================================================
+# old - now using homebrew
+# install neovim from snap store
+# ppa and default apt package are not updated
+sudo snap install nvim --classic
+================================================================
+sudo add-apt-repository ppa:maarten-baert/simplescreenrecorder
+sudo apt install simplescreenrecorder
+================================================================
+sudo add-apt-repository ppa:peek-developers/stable
+sudo apt install peek
+================================================================
+ffmpeg
+exuberant-ctags
+ubuntu-restricted-extras
+gcc
+make
+fzf
+gufw
+gnome-shell-pomodoro
+================================================================
+# install gimp from snap store instead
+sudo apt install gimp
+sudo snap install gimp
+==================================================================
+# install inkscape from snap
+sudo snap install inkscape
+sudo add-apt-repository ppa:inkscape.dev/stable
+sudo apt install inkscape
+==================================================================
+install gnome-tweaks from software center
+==================================================================
+docker pull couchbase
+docker pull cassandra
+docker pull rethinkdb
+docker pull couchdb
+docker pull neo4j
+docker pull orientdb
+docker pull memcached
+docker pull varnish
+docker pull mongo-express
+docker pull adminer
+docker pull phpmyadmin
+docker pull nginx
+docker pull nginx:alpine
+docker pull haproxy
+docker pull registry
+docker pull elasticsearch
+docker pull logstash
+docker pull kibana
+docker pull owncloud/server
+docker pull docker
+docker pull debian
+docker pull ubuntu
+docker pull amazonlinux
+docker pull rocket.chat
+docker pull matomo
+docker pull vault
+docker pull sonarqube
+docker pull gitlab/gitlab-ce
+==================================================================
+increase ubuntu inotify watchers for dropbox sync and for projects file watching
+echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
+==================================================================
+# ubuntu - nautilus hide the sidebar by default when opening a new window
+gsettings set org.gnome.nautilus.window-state start-with-sidebar false
+===========================================================
+simple screen recorder - http://www.maartenbaert.be/simplescreenrecorder/
+smuxi - from software center -
+transmageddon video transcoder
+openshot video editor
+arista transcoder
+=================================
