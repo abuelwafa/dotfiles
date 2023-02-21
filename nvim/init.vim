@@ -328,6 +328,12 @@ if filereadable(expand("~/.vimrc_background"))
     source ~/.vimrc_background
 endif
 
+if !executable('pbcopy') && executable('xclip')
+    " change system-copy plugin copy commands to use xclip when not on macos
+    let g:system_copy#copy_command='xclip -sel clipboard'
+    let g:system_copy#paste_command='xclip -sel clipboard -o'
+endif
+
 " ===================================================================================
 " ===================================================================================
 " lua configuration

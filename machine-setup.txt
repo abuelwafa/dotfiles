@@ -8,7 +8,10 @@ https://brew.sh/
 # install nodejs lts from homebrew
 # install bat https://github.com/sharkdp/bat
 # docker runtime using colima
-brew install neovim git tmux gcc tree btop watchman go git-delta node@20 yarn bat docker colima kubernetes-cli helm ripgrep fd youtube-dl
+brew install neovim git tmux gcc cmake tree btop watchman go git-delta node@20 yarn bat docker colima kubernetes-cli helm ripgrep fd youtube-dl
+=============================================================
+install lazygit using homebrew
+https://github.com/jesseduffield/lazygit
 =============================================================
 # language server when using graphql for use with nvim and coc
 npm i -g graphql-language-service-cli
