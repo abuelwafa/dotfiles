@@ -8,7 +8,14 @@ https://brew.sh/
 # install nodejs lts from homebrew
 # install bat https://github.com/sharkdp/bat
 # docker runtime using colima
-brew install neovim git tmux gcc cmake tree btop watchman go git-delta node@20 yarn bat docker colima kubernetes-cli helm ripgrep fd youtube-dl
+brew install the following:
+neovim git tmux gcc cmake tree btop git-delta node@20 yarn bat ripgrep fd
+youtube-dl
+watchman
+go
+python
+docker colima kubernetes-cli helm
+rbenv ruby-build
 =============================================================
 install lazygit using homebrew
 https://github.com/jesseduffield/lazygit
@@ -57,9 +64,10 @@ git clone git@github.com:ohmyzsh/ohmyzsh.git
 git clone git@github.com:bigH/git-fuzzy.git
 git clone git@github.com:tinted-theming/base16-shell.git
 =============================================================
-# base16_theme
-mkdir -p ~/.config/base16-project
-ln -s ~/projects/base16-shell/scripts/base16-seti.sh ~/.config/base16-project/base16_shell_theme
+# base16_theme: run the base16 theme command with the colorscheme you want
+base16_gruvbox-dark-hard
+base16_seti
+base16_material-darker
 =============================================================
 # git configuration
 ln -s ~/projects/dotfiles/.gitconfig ~/.gitconfig

@@ -28,23 +28,11 @@ COMPLETION_WAITING_DOTS="true"
 plugins=(
     adb
     aws
-    git
     git-prompt
-    node
-    npm
-    urltools
-    encode64
-    cp
     colored-man-pages
     docker
     docker-compose
 )
-
-source $ZSH/oh-my-zsh.sh
-
-PROMPT='$(rule)
-%{$fg_bold[green]%}%~%{$reset_color%}$(git_prompt_info) %{$fg_bold[red]%}%*%{$reset_color%}
--> '
 
 export EDITOR='nvim'
 export LANG=en_US.UTF-8
@@ -102,7 +90,6 @@ alias gaa='git add .'
 alias gpull='git fetch --all --prune && git pull --rebase'
 alias gshow='git show'
 alias gfetch='git fetch --all --prune'
-# alias gbranch='git branch --all | less -R'
 alias gbranch='git branch --all'
 alias gnewbranch='git checkout -b'
 alias gdelbranch='git branch -d'
@@ -110,8 +97,7 @@ alias gswitchbranch='git checkout'
 alias greset='git checkout --'
 alias gunstage='git reset HEAD --'
 alias gclean='git clean -ifd'
-unalias gsta
-unalias gstaa
+
 function gstash() {
     if [ -z $1 ]; then
         git stash list;
@@ -119,6 +105,7 @@ function gstash() {
         git stash show stash@{$1} -p;
     fi
 }
+
 function gdropstash() {
     if [ -z $1 ]; then
         echo "Specify the id of the stash you want to drop."
@@ -126,6 +113,7 @@ function gdropstash() {
         git stash drop stash@{$1};
     fi
 }
+
 function gpopstash() {
     if [ -z $1 ]; then
         echo "Specify the id of the stash you want to apply."
@@ -143,7 +131,6 @@ alias show=bat
 function serve() {
     docker run --rm -p $1:80/tcp -v $(pwd):/usr/share/nginx/html:ro nginx:stable-alpine;
 }
-
 
 # make an alias for compressing and extracting zip files
 # new alternative: just use zip and unzip
@@ -171,10 +158,26 @@ BASE16_SHELL_PATH="$HOME/projects/base16-shell"
     [ -s "$BASE16_SHELL_PATH/profile_helper.sh" ] && \
         source "$BASE16_SHELL_PATH/profile_helper.sh"
 
-
 # company specific config
 [[ -s "$HOME/projects/.work-company-config" ]] && source "$HOME/projects/.work-company-config"
+
+source $ZSH/oh-my-zsh.sh
+
+PROMPT='$(rule)
+%{$fg_bold[green]%}%~%{$reset_color%}$(git_prompt_info) %{$fg_bold[red]%}%*%{$reset_color%}
+-> '
+
+# setting up correct paths and variables from homebrew
+export PATH="$(brew --prefix python)/libexec/bin:$PATH"
+export PATH="$(brew --prefix node@18)/bin:$PATH"
+export LDFLAGS="-L$(brew --prefix node@18)/lib"
+export CPPFLAGS="-I$(brew --prefix node@18)/include"
 
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+
+if command -v rbenv &> /dev/null
+then
+    eval "$(rbenv init - zsh)"
+fi
