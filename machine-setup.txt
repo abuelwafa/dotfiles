@@ -20,6 +20,11 @@ rbenv ruby-build
 install lazygit using homebrew
 https://github.com/jesseduffield/lazygit
 =============================================================
+install pgcli using either homebrew (instructions on website)
+or using pip
+pip install pgcli
+pip install mycli
+=============================================================
 # language server when using graphql for use with nvim and coc
 npm i -g graphql-language-service-cli
 =============================================================

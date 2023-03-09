@@ -38,13 +38,21 @@ export EDITOR='nvim'
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 
+# company specific config
+[[ -s "$HOME/projects/.work-company-config" ]] && source "$HOME/projects/.work-company-config"
+
+source $ZSH/oh-my-zsh.sh
+
+PROMPT='$(rule)
+%{$fg_bold[green]%}%~%{$reset_color%}$(git_prompt_info) %{$fg_bold[red]%}%*%{$reset_color%}
+-> '
+
 # My aliases
 alias cls='clear'
 alias l='ls -lahp'
-alias ll='ls -lahp --color | less -R'
+alias la='ls -lahp'
 unalias ll
-function ll() { ls -lahp --color  $1 | less -R; }
-alias la='ls -ahp'
+alias ll='ls -lahp --color | less -R'
 alias md='mkdir -vp'
 alias p='popd'
 alias tree='tree -a -h -f --du'
@@ -60,6 +68,7 @@ function .......() { cd ../../../../../../$1; }
 function ........() { cd ../../../../../../../$1; }
 
 alias yarn-upgrade='yarn upgrade-interactive --latest'
+alias y='yarn'
 alias npm-upgrade='npx npm-upgrade check && npm update --save'
 function newreactnative() { npx react-native init $1 --template react-native-template-typescript }
 
@@ -158,26 +167,17 @@ BASE16_SHELL_PATH="$HOME/projects/base16-shell"
     [ -s "$BASE16_SHELL_PATH/profile_helper.sh" ] && \
         source "$BASE16_SHELL_PATH/profile_helper.sh"
 
-# company specific config
-[[ -s "$HOME/projects/.work-company-config" ]] && source "$HOME/projects/.work-company-config"
-
-source $ZSH/oh-my-zsh.sh
-
-PROMPT='$(rule)
-%{$fg_bold[green]%}%~%{$reset_color%}$(git_prompt_info) %{$fg_bold[red]%}%*%{$reset_color%}
--> '
-
 # setting up correct paths and variables from homebrew
 export PATH="$(brew --prefix python)/libexec/bin:$PATH"
 export PATH="$(brew --prefix node@18)/bin:$PATH"
 export LDFLAGS="-L$(brew --prefix node@18)/lib"
 export CPPFLAGS="-I$(brew --prefix node@18)/include"
 
-#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
-export SDKMAN_DIR="$HOME/.sdkman"
-[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
-
 if command -v rbenv &> /dev/null
 then
     eval "$(rbenv init - zsh)"
 fi
+
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="$HOME/.sdkman"
+[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
