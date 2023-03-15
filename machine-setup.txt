@@ -9,7 +9,7 @@ https://brew.sh/
 # install bat https://github.com/sharkdp/bat
 # docker runtime using colima
 brew install the following:
-neovim git tmux gcc cmake tree btop git-delta node@20 yarn bat ripgrep fd
+neovim git tmux gcc cmake tree btop git-delta node@20 yarn bat ripgrep fd fx yh
 youtube-dl
 watchman
 go

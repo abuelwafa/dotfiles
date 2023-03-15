@@ -4,7 +4,7 @@
     "diagnostic.checkCurrentLine": true,
     "codeLens.enable": false,
     "coc.preferences.formatOnType": false,
-    "eslint.run": "onSave"",
+    "eslint.run": "onSave",
     "eslint.autoFixOnSave": false,
     "eslint.alwaysShowStatus": true,
 
@@ -35,12 +35,10 @@
 
     "go.checkForUpdates": "ask",
     "clangd.checkUpdates": true,
-    "rust-analyzer.updates.channel": "stable"",
+    "rust-analyzer.updates.channel": "stable",
     "rust-analyzer.enable": true,
     "rust-analyzer.updates.prompt": true,
 
-    "rest-client.enable": true,
-    "rest-client.timeoutinmilliseconds": 40000,
     "suggest.snippetsSupport": false,
 
     "prettier.requireConfig": true,
@@ -58,18 +56,17 @@
     "prettier.statusItemText": "Prettier",
     "prettier.disableLanguages": [],
     "languageserver": {
-        "graphql": {
-            "command": "graphql-lsp",
-            "args": ["server", "-m", "stream"],
-            // customize filetypes to your needs
-            "filetypes": [
-                "typescript",
-                "typescriptreact",
-                "graphql",
-                "javascript",
-                "javascriptreact"
-            ]
-        }
-    },
-    "snippets.ultisnips.pythonPrompt": false,
+        // "graphql": {
+        //     "command": "graphql-lsp",
+        //     "args": ["server", "-m", "stream"],
+        //     // customize filetypes to your needs
+        //     "filetypes": [
+        //         "typescript",
+        //         "typescriptreact",
+        //         "graphql",
+        //         "javascript",
+        //         "javascriptreact"
+        //     ]
+        // }
+    }
 }

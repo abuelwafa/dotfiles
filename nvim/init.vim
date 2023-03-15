@@ -178,7 +178,6 @@ set splitright
 
 let g:coc_global_extensions = [
     \ 'coc-swagger',
-    \ 'coc-java',
     \ 'coc-html',
     \ 'coc-styled-components',
     \ 'coc-tsserver',

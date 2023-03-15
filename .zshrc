@@ -37,6 +37,7 @@ plugins=(
 export EDITOR='nvim'
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
+export FX_THEME=4
 
 # company specific config
 [[ -s "$HOME/projects/.work-company-config" ]] && source "$HOME/projects/.work-company-config"
@@ -153,6 +154,25 @@ function download(){
     else
       curl -O -# $1;
     fi
+}
+
+# parses jwt token and passes the output to fx
+function jwtparse(){
+    echo -n "Enter JWT token: "
+
+    read token
+
+    local payload="$(echo -n $token | cut -d "." -f 2)"
+    local result="$payload"
+
+    # pad the end of string by appending = to make
+    # the encoded string length equals to multiples of 4
+    local padlen=$(( ${#payload} % 4 ))
+    if [ $padlen -eq 2 ]; then result="$payload"'=='
+    elif [ $padlen -eq 3 ]; then result="$payload"'='
+    fi
+
+    echo -n $result | base64 -d | fx
 }
 
 # remember when copying directories, adding a slash to the directory name like directory/
