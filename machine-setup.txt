@@ -107,6 +107,7 @@ helpful chrome extensions
 https://chrome.google.com/webstore/detail/video-speed-controller/nffaoalbilbmmfgbnbgppjihopabppdk
 https://chrome.google.com/webstore/detail/papier/hhjeaokafplhjoogdemakihhdhffacia
 https://chrome.google.com/webstore/detail/gofullpage-full-page-scre/fdpohaocaechififmbbbbbknoalclacl
+https://chrome.google.com/webstore/detail/json-viewer/gbmdgpbipfallnflgajpaliibnhdgobh
 vimium
 react developer tools
 redux developer tools

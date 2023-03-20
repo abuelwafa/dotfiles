@@ -39,9 +39,6 @@ export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 export FX_THEME=4
 
-# company specific config
-[[ -s "$HOME/projects/.work-company-config" ]] && source "$HOME/projects/.work-company-config"
-
 source $ZSH/oh-my-zsh.sh
 
 PROMPT='$(rule)
@@ -180,6 +177,9 @@ function jwtparse(){
 alias cp='cp -iR'
 alias mv='mv -i'
 alias remove='rm -rf'
+
+# company specific config
+[[ -s "$HOME/projects/.work-company-config" ]] && source "$HOME/projects/.work-company-config"
 
 # Base16 Shell
 BASE16_SHELL_PATH="$HOME/projects/base16-shell"

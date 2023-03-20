@@ -34,7 +34,6 @@ Plug 'moll/vim-bbye'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install' }
 Plug 'christoomey/vim-system-copy'
-" Plug 'mileszs/ack.vim' // replaced in favor of telescope live_grep
 Plug 'numToStr/Comment.nvim'
 Plug 'airblade/vim-gitgutter'
 Plug 'tinted-theming/base16-vim'
@@ -399,6 +398,31 @@ require('telescope').setup({
     }
 })
 
+function vim.getVisualSelection()
+	vim.cmd('noau normal! "vy"')
+	local text = vim.fn.getreg('v')
+	vim.fn.setreg('v', {})
+
+	text = string.gsub(text, "\n", "")
+	if #text > 0 then
+		return text
+	else
+		return ''
+	end
+end
+vim.keymap.set('n', '<leader>fb', function()
+    vim.cmd('normal! viw')
+    local text = vim.getVisualSelection()
+    require('telescope.builtin').live_grep({ default_text = text })
+end, { noremap = true, silent = true })
+
+vim.keymap.set('v', '<leader>fb', function()
+	local text = vim.getVisualSelection()
+	require('telescope.builtin').live_grep({ default_text = text })
+end, { noremap = true, silent = true })
+---------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------
+
 -- nvim-tree setup
 require("nvim-tree").setup {
     hijack_cursor = true,
@@ -639,9 +663,6 @@ vnoremap <leader>v <esc>:set<space>invpaste<cr>
 :autocmd FileType js,javascript,typescript,javascriptreact,typescriptreact imap ifkj if () {
 inoremap xx $
 
-" folding
-nnoremap <C-i> za
-
 " mappings for speed buffer switching
 nnoremap <leader>b :bprevious<CR>
 nnoremap <leader>n :bnext<CR>
@@ -699,7 +720,7 @@ nnoremap <silent> <leader>u <c-w>K
 
 nnoremap <C-p> <cmd>Telescope find_files<cr>
 nnoremap <C-o> <cmd>Telescope buffers<cr>
-nnoremap <C-o> <cmd>Telescope buffers<cr>
+nnoremap <C-i> <cmd>Telescope live_grep<cr>
 
 nnoremap ff :NvimTreeToggle<cr>
 
