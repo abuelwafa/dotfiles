@@ -56,6 +56,7 @@ alias p='popd'
 alias tree='tree -a -h -f --du'
 alias vim='nvim'
 alias vi='nvim'
+alias vimdiff='nvim -d'
 
 function ..() { cd ../$1; }
 function ...() { cd ../../$1; }
