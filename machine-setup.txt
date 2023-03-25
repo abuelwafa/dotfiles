@@ -1,6 +1,9 @@
 # make the projects folder
 mkdir -p ~/projects
 =============================================================
+/* generate ssh keys */
+ssh-keygen -t rsa -b 2048 -C "your_email@domain.com"
+=============================================================
 # install Homebrew from it's website
 https://brew.sh/
 =============================================================
@@ -9,7 +12,7 @@ https://brew.sh/
 # install bat https://github.com/sharkdp/bat
 # docker runtime using colima
 brew install the following:
-neovim git tmux gcc cmake tree btop git-delta node@20 yarn bat ripgrep fd fx yh
+neovim git tmux gcc cmake tree btop git-delta node@20 yarn bat ripgrep fd fx yh lazygit
 youtube-dl
 watchman
 go
@@ -17,8 +20,13 @@ python
 docker colima kubernetes-cli helm
 rbenv ruby-build
 =============================================================
-install lazygit using homebrew
-https://github.com/jesseduffield/lazygit
+clone essential repos
+cd ~/projects
+git clone git@github.com:abuelwafa/dotfiles.git
+git clone git@github.com:ohmyzsh/ohmyzsh.git
+git clone git@github.com:bigH/git-fuzzy.git
+git clone git@github.com:tinted-theming/base16-shell.git
+git clone https://github.com/nvm-sh/nvm.git .nvm
 =============================================================
 install pgcli using either homebrew (instructions on website)
 or using pip
@@ -58,16 +66,6 @@ https://sdkman.io/
 sdk install java
 sdk install gradle
 sdk install kotlin
-=============================================================
-/* generate ssh keys */
-ssh-keygen -t rsa -b 2048 -C "your_email@domain.com"
-=============================================================
-clone essential repos
-cd ~/projects
-git clone git@github.com:abuelwafa/dotfiles.git
-git clone git@github.com:ohmyzsh/ohmyzsh.git
-git clone git@github.com:bigH/git-fuzzy.git
-git clone git@github.com:tinted-theming/base16-shell.git
 =============================================================
 # base16_theme: run the base16 theme command with the colorscheme you want
 base16_gruvbox-dark-hard
@@ -116,7 +114,5 @@ google translate
 json formatter
 grammarly
 pixelzoomer
-=============================================================
-
 =============================================================
 

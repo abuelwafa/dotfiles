@@ -42,7 +42,7 @@ export FX_THEME=4
 source $ZSH/oh-my-zsh.sh
 
 PROMPT='$(rule)
-%{$fg_bold[green]%}%~%{$reset_color%}$(git_prompt_info) %{$fg_bold[red]%}%*%{$reset_color%}
+%{$fg_bold[green]%}%~%{$reset_color%}$(git_prompt_info) %{$fg_bold[red]%}%*%{$reset_color%} %{$bg_bold[green]%}%{$fg_bold[black]%} node: $(node -v) %{$reset_color%}
 -> '
 
 # My aliases
@@ -66,10 +66,11 @@ function ......() { cd ../../../../../$1; }
 function .......() { cd ../../../../../../$1; }
 function ........() { cd ../../../../../../../$1; }
 
-alias yarn-upgrade='yarn upgrade-interactive --latest'
 alias y='yarn'
+alias yarn-clean='yarn cache clean'
+alias yarn-upgrade='yarn upgrade-interactive --latest'
 alias npm-upgrade='npx npm-upgrade check && npm update --save'
-function newreactnative() { npx react-native init $1 --template react-native-template-typescript }
+alias npm-clean='npm cache clean --force'
 
 rule() {
     printf "%$(tput cols)s\n"|tr " " "-"
@@ -77,6 +78,14 @@ rule() {
 
 # to make sudo work with aliases
 alias sudo='sudo '
+
+alias usenode-18="nvm use lts/hydrogen"
+# alias usenode-20="nvm use lts/codename"
+alias usenode-system="nvm use system" # system node version install by homebrew
+
+alias podinstall="npx pod-install"
+alias watchman-clean='watchman watch-del-all'
+alias pod-clean='pod cache clean --all'
 
 # git aliases
 alias gcm='git commit'
@@ -129,7 +138,7 @@ function gpopstash() {
         git stash pop stash@{$1};
     fi
 }
-alias gsavestash='git stash save'
+alias gsavestash='git stash push'
 
 # show file contents
 # function show(){ less -R -x4 "$1"; }
@@ -198,6 +207,10 @@ if command -v rbenv &> /dev/null
 then
     eval "$(rbenv init - zsh)"
 fi
+
+export NVM_DIR="$HOME/projects/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="$HOME/.sdkman"
