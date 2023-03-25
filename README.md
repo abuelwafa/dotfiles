@@ -1,7 +1,23 @@
 # dotfiles
-my personal dotfiles repo
+Personal dotfiles repo
 
-- Install sdkman
-- Install latest jdk `sdk install java`
-- Install gradle using sdkman `sdk install gradle`
-- Install kotlin using sdkman `sdk install kotlin`
+### Generate SSH key
+```
+ssh-keygen -t rsa -b 2048 -C "your_email@domain.com"
+```
+then add the public key to [Github](https://github.com/settings/keys)
+
+### Create projects folder
+```
+mkdir -p ~/projects
+```
+
+### Clone this repo
+```
+git clone git@github.com:abuelwafa/dotfiles.git
+```
+
+### run the install script
+```
+./install.sh
+```

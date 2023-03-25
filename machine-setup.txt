@@ -12,20 +12,20 @@ https://brew.sh/
 # install bat https://github.com/sharkdp/bat
 # docker runtime using colima
 brew install the following:
-neovim git tmux gcc cmake tree btop git-delta node@20 yarn bat ripgrep fd fx yh lazygit
-youtube-dl
+python
+neovim git tmux gcc cmake tree btop git-delta node@20 yarn bat ripgrep fd fx yh lazygit mc
+docker colima kubernetes-cli helm
 watchman
 go
-python
-docker colima kubernetes-cli helm
 rbenv ruby-build
+youtube-dl
 =============================================================
 clone essential repos
 cd ~/projects
 git clone git@github.com:abuelwafa/dotfiles.git
-git clone git@github.com:ohmyzsh/ohmyzsh.git
-git clone git@github.com:bigH/git-fuzzy.git
-git clone git@github.com:tinted-theming/base16-shell.git
+git clone https://github.com/ohmyzsh/ohmyzsh.git
+git clone https://github.com/bigH/git-fuzzy.git
+git clone https://github.com/tinted-theming/base16-shell.git
 git clone https://github.com/nvm-sh/nvm.git .nvm
 =============================================================
 install pgcli using either homebrew (instructions on website)
