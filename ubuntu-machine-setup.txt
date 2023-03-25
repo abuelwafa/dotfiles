@@ -61,4 +61,8 @@ and change the touchpad section by adding the 4 lines marked below to be as foll
 -----------------------------------------------------
 ```
 ================================================================
+# for cloud vms
+# create new non-root user
+adduser username sudo
+# disable root user login
 
