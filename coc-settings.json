@@ -27,10 +27,10 @@
         "coc.preferences.formatOnSave": true
     },
     "[rust]": {
-        "coc.preferences.formatOnSave": true,
+        "coc.preferences.formatOnSave": true
     },
     "[go]": {
-        "coc.preferences.formatOnSave": true,
+        "coc.preferences.formatOnSave": true
     },
 
     "go.checkForUpdates": "ask",

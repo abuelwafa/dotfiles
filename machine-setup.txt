@@ -60,7 +60,7 @@ sdk install gradle
 sdk install kotlin
 =============================================================
 /* generate ssh keys */
-ssh-keygen -t rsa -b 2048 -C "mohamed.abuelwafa@gmail.com"
+ssh-keygen -t rsa -b 2048 -C "your_email@domain.com"
 =============================================================
 clone essential repos
 cd ~/projects
@@ -93,7 +93,7 @@ chsh -s $(which zsh)
 # then logout and log back in
 
 # to change back to bash
-chsh -s $ /usr/bin/bash
+chsh -s /usr/bin/bash
 =============================================================
 # install aws cli from amazon website
 =============================================================
