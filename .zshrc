@@ -188,6 +188,8 @@ alias cp='cp -iR'
 alias mv='mv -i'
 alias remove='rm -rf'
 
+export BAT_THEME="base16-256"
+
 # company specific config
 [[ -s "$HOME/projects/.work-company-config" ]] && source "$HOME/projects/.work-company-config"
 
