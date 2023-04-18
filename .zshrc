@@ -79,10 +79,6 @@ rule() {
 # to make sudo work with aliases
 alias sudo='sudo '
 
-alias usenode-18="nvm use lts/hydrogen"
-# alias usenode-20="nvm use lts/codename"
-alias usenode-system="nvm use system" # system node version install by homebrew
-
 alias podinstall="npx pod-install"
 alias watchman-clean='watchman watch-del-all'
 alias pod-clean='pod cache clean --all'

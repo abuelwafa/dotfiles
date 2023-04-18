@@ -12,11 +12,9 @@ https://brew.sh/
 # install bat https://github.com/sharkdp/bat
 # docker runtime using colima
 brew install the following:
-python
 neovim git tmux gcc cmake tree btop git-delta node@20 yarn bat ripgrep fzf fd fx yh lazygit mc
-docker colima kubernetes-cli helm
-watchman
-go
+docker colima kubernetes-cli helm python watchman go
+
 rbenv ruby-build
 youtube-dl
 =============================================================
@@ -28,10 +26,14 @@ git clone https://github.com/bigH/git-fuzzy.git
 git clone https://github.com/tinted-theming/base16-shell.git
 git clone https://github.com/nvm-sh/nvm.git .nvm
 =============================================================
-install pgcli using either homebrew (instructions on website)
-or using pip
-pip install pgcli
-pip install mycli
+# install pgcli using homebrew (instructions on website)
+# https://www.pgcli.com/
+brew tap dbcli/tap
+brew install pgcli
+
+# optionally mycli for mysql
+# https://www.pgcli.com/
+brew install mycli
 =============================================================
 # language server when using graphql for use with nvim and coc
 npm i -g graphql-language-service-cli
