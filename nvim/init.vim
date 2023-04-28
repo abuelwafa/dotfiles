@@ -42,7 +42,6 @@ Plug 'MarcWeber/vim-addon-mw-utils'
 Plug 'mattn/emmet-vim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'nvim-lualine/lualine.nvim'
-Plug 'RRethy/nvim-base16'
 Plug 'nacro90/numb.nvim'
 Plug 'MunifTanjim/nui.nvim'
 Plug 'szw/vim-maximizer'
@@ -84,10 +83,10 @@ set colorcolumn=101
 " set relativenumber
 
 " disable code folding
+set foldenable
 set foldmethod=expr
 set foldexpr=nvim_treesitter#foldexpr()
 set foldnestmax=10
-set nofoldenable " disable folding at startup
 set foldlevel=20
 set foldminlines=3
 
@@ -172,9 +171,7 @@ set splitbelow
 set splitright
 
 "====================================================================
-"====================================================================
 " COC configuration
-
 let g:coc_global_extensions = [
     \ 'coc-swagger',
     \ 'coc-html',
@@ -368,7 +365,7 @@ require("rest-nvim").setup({
     result_split_in_place = true,
     skip_ssl_verification = true,
     encode_url = true,
-    highlight = { enabled = true, timeout = 150 },
+    highlight = { enabled = true, timeout = 1000 },
     result = {
         show_url = true,
         show_http_info = true,
@@ -393,8 +390,8 @@ require('telescope').setup({
                 ["<C-k>"] = require('telescope.actions').move_selection_previous
             }
         },
-        layout_strategy = 'vertical',
-        layout_config = { width = 0.9 }
+        layout_strategy = 'flex',
+        layout_config = { width = 0.95, prompt_position = 'top' }
     }
 })
 
@@ -446,34 +443,43 @@ require("nvim-tree").setup {
         show_on_dirs = true,
         show_on_open_dirs = true,
     },
+    on_attach = function(bufnr)
+        local api = require('nvim-tree.api')
+
+        local function opts(desc)
+            return { desc = 'nvim-tree: ' .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
+        end
+
+        vim.keymap.set('n', 'a', api.fs.create, opts('Create'))
+        vim.keymap.set('n', 'R', api.tree.reload, opts('Refresh'))
+        vim.keymap.set('n', 'd', api.fs.remove, opts('Delete'))
+        vim.keymap.set('n', 'c', api.fs.cut, opts('Cut'))
+        vim.keymap.set('n', 'r', api.fs.rename, opts('Rename'))
+        vim.keymap.set('n', 'y', api.fs.copy.node, opts('Copy'))
+        vim.keymap.set('n', 'p', api.fs.paste, opts('Paste'))
+        vim.keymap.set('n', '?', api.tree.toggle_help, opts('Help'))
+        vim.keymap.set('n', 'E', api.tree.expand_all, opts('Expand all'))
+        vim.keymap.set('n', 'X', api.tree.collapse_all, opts('Collapse all'))
+        vim.keymap.set('n', 'x', api.node.navigate.parent_close, opts('Close Directory'))
+        vim.keymap.set('n', '<', api.node.navigate.parent_close, opts('Close Directory'))
+        vim.keymap.set('n', ']', api.tree.change_root_to_node, opts('CD'))
+        vim.keymap.set('n', '[', api.tree.change_root_to_parent, opts('Up'))
+        vim.keymap.set('n', 'K', api.node.show_info_popup, opts('Info'))
+        vim.keymap.set('n', '<C-v>', api.node.open.vertical, opts('Open: Vertical Split'))
+        vim.keymap.set('n', 'v', api.node.open.vertical, opts('Open: Vertical Split'))
+        vim.keymap.set('n', 's', api.node.open.horizontal, opts('Open: Horizontal Split'))
+        vim.keymap.set('n', '<C-s>', api.node.open.horizontal, opts('Open: Horizontal Split'))
+        vim.keymap.set('n', 'O', api.node.open.edit, opts('Open'))
+        vim.keymap.set('n', 'o', api.node.open.no_window_picker, opts('Open: No Window Picker'))
+        vim.keymap.set('n', '<CR>', api.node.open.no_window_picker, opts('Open: No Window Picker'))
+        vim.keymap.set('n', '>', api.node.open.no_window_picker, opts('Open: No Window Picker'))
+        vim.keymap.set('n', '<2-LeftMouse>', api.node.open.no_window_picker, opts('Open: No Window Picker'))
+    end,
     view = {
         adaptive_size = false,
         hide_root_folder = false,
         width = 30,
         side = "left",
-        mappings = {
-            custom_only = true,
-            list = {
-                { key = { "<CR>", "o", "<2-LeftMouse>", ">" }, action = "edit_no_picker" },
-                { key = "O", action = "edit" },
-                { key = {"<C-v>", "v" }, action = "vsplit" },
-                { key = {"<C-s>", "s" }, action = "split" },
-                { key = "[", action = "parent_node" },
-                { key = "]", action = "cd" },
-                { key = {"x", "<"} , action = "close_node" },
-                { key = "R", action = "refresh" },
-                { key = "a", action = "create" },
-                { key = "d", action = "remove" },
-                { key = "r", action = "rename" },
-                { key = "c", action = "cut" },
-                { key = "y", action = "copy" },
-                { key = "p", action = "paste" },
-                { key = "X", action = "collapse_all" },
-                { key = "E", action = "expand_all" },
-                { key = "K", action = "toggle_file_info" },
-                { key = "?", action = "toggle_help" },
-            }
-        },
     },
     renderer = {
         highlight_git = false,
@@ -662,6 +668,9 @@ vnoremap <leader>v <esc>:set<space>invpaste<cr>
 :autocmd FileType js,javascript,typescript,javascriptreact,typescriptreact imap imkj import  from '
 :autocmd FileType js,javascript,typescript,javascriptreact,typescriptreact imap ifkj if () {
 inoremap xx $
+inoremap vv ``<esc>i
+" inoremap zz
+" inoremap ZZ
 
 " mappings for speed buffer switching
 nnoremap <leader>b :bprevious<CR>
