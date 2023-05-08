@@ -14,6 +14,9 @@ autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
   \| PlugInstall --sync | source $MYVIMRC | q | q!
 \| endif
 
+" TODO: configure pyright and python linting with coc
+" TODO: configure rest nvim
+
 " initiate vim-plug
 call plug#begin()
 Plug 'nvim-lua/plenary.nvim'
@@ -37,7 +40,6 @@ Plug 'christoomey/vim-system-copy'
 Plug 'numToStr/Comment.nvim'
 Plug 'airblade/vim-gitgutter'
 Plug 'tinted-theming/base16-vim'
-Plug 'danymat/neogen'
 Plug 'MarcWeber/vim-addon-mw-utils'
 Plug 'mattn/emmet-vim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
@@ -49,6 +51,8 @@ Plug 'nvim-tree/nvim-tree.lua'
 Plug 'akinsho/bufferline.nvim', { 'tag': 'v3.*' }
 Plug 'jparise/vim-graphql'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'norcalli/nvim-colorizer.lua'
+Plug 'f-person/git-blame.nvim'
 
 "-- to be explored
 " Plug 'numToStr/FTerm.nvim'
@@ -84,11 +88,10 @@ set colorcolumn=101
 
 " disable code folding
 set foldenable
-set foldmethod=expr
-set foldexpr=nvim_treesitter#foldexpr()
+set foldmethod=indent
 set foldnestmax=10
 set foldlevel=20
-set foldminlines=3
+set foldminlines=2
 
 set lbr
 set noshowmode
@@ -182,6 +185,8 @@ let g:coc_global_extensions = [
     \ 'coc-rust-analyzer',
     \ 'coc-prettier',
     \ 'coc-css',
+    \ 'coc-docker',
+    \ 'coc-pyright',
     \ 'coc-eslint',
     \ 'coc-sql',
     \ 'coc-db',
@@ -338,12 +343,23 @@ vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
 -- hop setup
-require'hop'.setup()
+require('hop').setup()
 
--- require('neogen').setup { enabled = true }
 require('Comment').setup()
 require('pairs'):setup({ enter = { enable_mapping = false } })
 require('numb').setup()
+require('colorizer').setup({
+    '*';
+}, {
+    RGB = true;
+    RRGGBB = true;
+    RRGGBBAA = true;
+    names = true;
+    rgb_fn = true;
+    hsl_fn = true;
+    css = true;
+    css_fn = true;
+})
 
 require('nvim-treesitter.configs').setup({
     ensure_installed = "all",
@@ -505,6 +521,7 @@ require("nvim-tree").setup {
 
 require("indent_blankline").setup {
     space_char_blankline = " ",
+    show_current_context = true,
     char_highlight_list = {
         "IndentBlanklineIndent3",
         "IndentBlanklineIndent4",
@@ -607,6 +624,10 @@ nnoremap <leader>[ <C-w>4<
 
 " leader+tab inserts a literal tab character in insert mode
 inoremap <leader><Tab> <C-V><Tab>
+
+nnoremap <Tab> za
+
+nnoremap <leader>sr <Plug>RestNvim
 
 " w moves to the end of word not the begining of it
 noremap w e
