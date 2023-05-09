@@ -178,6 +178,41 @@ function jwtparse(){
     echo -n $result | base64 -d | fx
 }
 
+function pg_connect(){
+    echo -n "Enter DB host: "
+    read db_host
+
+    echo -n "Enter DB name: "
+    read db_name
+
+    echo -n "Enter DB user: "
+    read db_user
+
+    echo -n "Enter DB password: "
+    read -s db_password
+    echo
+
+    echo -n "Enter DB port(5432): "
+    read db_port
+
+    echo -n "Enter SSH host: "
+    read ssh_host
+
+    echo -n "Enter SSH username: "
+    read ssh_username
+
+    echo -n "Enter SSH password: "
+    read -s ssh_pwd
+    echo
+
+    echo -n "Enter SSH port(22): "
+    read ssh_port
+
+    local cmd="pgcli postgresql://$db_user:$db_password@$db_host:$db_port/$db_name --ssh-tunnel $ssh_username:$ssh_pwd@$ssh_host:$ssh_port"
+
+    eval $cmd
+}
+
 # remember when copying directories, adding a slash to the directory name like directory/
 # makes the copying action to perform on the contents of the directory and not the directory itself
 alias cp='cp -iR'
@@ -185,9 +220,6 @@ alias mv='mv -i'
 alias remove='rm -rf'
 
 export BAT_THEME="base16-256"
-
-# company specific config
-[[ -s "$HOME/projects/.work-company-config" ]] && source "$HOME/projects/.work-company-config"
 
 # Base16 Shell
 BASE16_SHELL_PATH="$HOME/projects/base16-shell"
@@ -197,19 +229,18 @@ BASE16_SHELL_PATH="$HOME/projects/base16-shell"
 
 # setting up correct paths and variables from homebrew
 export PATH="$(brew --prefix python)/libexec/bin:$PATH"
-export PATH="$(brew --prefix node@18)/bin:$PATH"
-export LDFLAGS="-L$(brew --prefix node@18)/lib"
-export CPPFLAGS="-I$(brew --prefix node@18)/include"
+export PATH="$(brew --prefix node)/bin:$PATH"
+export LDFLAGS="-L$(brew --prefix node)/lib"
+export CPPFLAGS="-I$(brew --prefix node)/include"
 
 if command -v rbenv &> /dev/null
 then
     eval "$(rbenv init - zsh)"
 fi
 
-export NVM_DIR="$HOME/projects/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
-
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+
+# company specific config
+[[ -s "$HOME/projects/.work-company-config" ]] && source "$HOME/projects/.work-company-config"

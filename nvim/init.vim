@@ -15,7 +15,6 @@ autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
 \| endif
 
 " TODO: configure pyright and python linting with coc
-" TODO: configure rest nvim
 
 " initiate vim-plug
 call plug#begin()
@@ -376,8 +375,12 @@ require('nvim-treesitter.configs').setup({
     }
 })
 
+function fxJSONFormat(content)
+    return vim.fn.system({ "fx", "." }, content)
+end
+
 require("rest-nvim").setup({
-    result_split_horizontal = true,
+    result_split_horizontal = false,
     result_split_in_place = true,
     skip_ssl_verification = true,
     encode_url = true,
@@ -386,7 +389,13 @@ require("rest-nvim").setup({
         show_url = true,
         show_http_info = true,
         show_headers = true,
-        formatters = { json = false, html = false }
+        formatters = {
+            json = fxJSONFormat,
+            vnd = fxJSONFormat,
+            html = function(body)
+                return vim.fn.system({ "tidy", "-i", "-q", "-" }, body)
+            end,
+        }
     },
     jump_to_request = false,
     env_file = '.env',
@@ -423,6 +432,7 @@ function vim.getVisualSelection()
 		return ''
 	end
 end
+
 vim.keymap.set('n', '<leader>fb', function()
     vim.cmd('normal! viw')
     local text = vim.getVisualSelection()
