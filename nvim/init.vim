@@ -700,8 +700,6 @@ vnoremap <leader>v <esc>:set<space>invpaste<cr>
 :autocmd FileType js,javascript,typescript,javascriptreact,typescriptreact imap ifkj if () {
 inoremap xx $
 inoremap vv ``<esc>i
-" inoremap zz
-" inoremap ZZ
 
 " mappings for speed buffer switching
 nnoremap <leader>b :bprevious<CR>
@@ -758,9 +756,9 @@ tnoremap <ESC><ESC> <C-\><C-N>
 nnoremap <silent> <leader>h <c-w>H
 nnoremap <silent> <leader>u <c-w>K
 
-nnoremap <C-p> <cmd>Telescope find_files<cr>
-nnoremap <C-o> <cmd>Telescope buffers<cr>
-nnoremap <C-i> <cmd>Telescope live_grep<cr>
+nnoremap <C-p> <cmd>Telescope find_files<CR>
+nnoremap <C-o> <cmd>Telescope buffers<CR>
+nnoremap <C-_> <cmd>Telescope live_grep<CR>
 
 nnoremap ff :NvimTreeToggle<cr>
 
