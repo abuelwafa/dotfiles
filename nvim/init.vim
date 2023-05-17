@@ -612,6 +612,11 @@ nnoremap <CR> o<esc>
 nnoremap <leader><return> O<esc>
 inoremap <leader><return> <esc>O
 
+" make enter behave normally for quickfix
+augroup QuickFix
+     au FileType qf map <buffer> <CR> <CR>
+augroup END
+
 " faster movoment - multiple line jumping
 nmap <C-j> 10j
 vmap <C-j> 10j
