@@ -41,6 +41,8 @@
 
     "suggest.snippetsSupport": false,
 
+    "tsserver.useLocalTsdk": true,
+
     "prettier.requireConfig": true,
     "prettier.printWidth": 100,
     "prettier.tabWidth": 4,

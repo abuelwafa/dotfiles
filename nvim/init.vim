@@ -416,6 +416,7 @@ require('telescope').setup({
             }
         },
         layout_strategy = 'flex',
+        sorting_strategy = "ascending",
         layout_config = { width = 0.95, prompt_position = 'top' }
     }
 })

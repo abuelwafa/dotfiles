@@ -232,6 +232,7 @@ export PATH="$(brew --prefix python)/libexec/bin:$PATH"
 export PATH="$(brew --prefix node)/bin:$PATH"
 export LDFLAGS="-L$(brew --prefix node)/lib"
 export CPPFLAGS="-I$(brew --prefix node)/include"
+export NODE_BINARY="$(which node)"
 
 if command -v rbenv &> /dev/null
 then
