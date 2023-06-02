@@ -52,6 +52,8 @@ Plug 'jparise/vim-graphql'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'norcalli/nvim-colorizer.lua'
 Plug 'f-person/git-blame.nvim'
+Plug 'eandrju/cellular-automaton.nvim'
+Plug 'github/copilot.vim'
 
 "-- to be explored
 " Plug 'numToStr/FTerm.nvim'
@@ -320,6 +322,8 @@ autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 " <leader>,
 " <leader>i
 " <leader>c
+inoremap <silent><script><expr> <leader>c copilot#Accept()
+let g:copilot_no_tab_map = v:true
 
 set background=dark
 if filereadable(expand("~/.vimrc_background"))
