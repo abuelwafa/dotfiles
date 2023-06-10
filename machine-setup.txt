@@ -12,7 +12,7 @@ https://brew.sh/
 # install bat https://github.com/sharkdp/bat
 # docker runtime using colima
 brew install the following:
-neovim git tmux gcc cmake tree btop git-delta node@20 yarn bat ripgrep fzf fd fx jq yh lazygit mc
+zsh neovim git tmux gcc cmake tree btop git-delta node@20 yarn bat ripgrep fzf fd fx jq yh lazygit mc
 docker colima kubernetes-cli helm python watchman go
 
 rbenv ruby-build
@@ -88,7 +88,10 @@ mkdir -p ~/.nvim/_backup
 ln -s ~/projects/dotfiles/coc-settings.json ~/.config/nvim/coc-settings.json
 ln -s ~/projects/dotfiles/vim/.vimrc_background ~/.vimrc_background
 =============================================================
-# change the default shell to be zsh
+# change the default shell to be zsh (ubuntu only - mac already comes with zsh as the default shell)
+# you should have zsh install from homebrew from the previous step
+# add zsh first to the list of shells
+command -v zsh | sudo tee -a /etc/shells
 chsh -s $(which zsh)
 # then logout and log back in
 

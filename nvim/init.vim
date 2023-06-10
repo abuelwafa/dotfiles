@@ -34,6 +34,7 @@ Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-git'
 Plug 'moll/vim-bbye'
 Plug 'ntpeters/vim-better-whitespace'
+Plug 'prisma/vim-prisma'
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install' }
 Plug 'christoomey/vim-system-copy'
 Plug 'numToStr/Comment.nvim'
@@ -54,6 +55,7 @@ Plug 'norcalli/nvim-colorizer.lua'
 Plug 'f-person/git-blame.nvim'
 Plug 'eandrju/cellular-automaton.nvim'
 Plug 'github/copilot.vim'
+" Plug 'haishanh/night-owl.vim'
 
 "-- to be explored
 " Plug 'numToStr/FTerm.nvim'
@@ -196,6 +198,7 @@ let g:coc_global_extensions = [
     \ 'coc-sh',
     \ 'coc-svg',
     \ 'coc-yaml',
+    \ 'coc-prisma',
     \ 'coc-xml',
     \ 'coc-vimlsp',
     \ 'coc-styled-components',
