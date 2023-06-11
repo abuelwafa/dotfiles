@@ -1,0 +1,51 @@
+apk packages to install
+- [x] zsh-vcs
+- [x] sudo
+- [x] git
+- [x] curl
+- [x] wget
+- [x] mosh
+- [x] grep
+- [x] neovim
+- [x] bat
+- [] python3
+- [] zsh
+- [] tmux
+- [] jq
+- [] sqlite
+- [] mc
+-------------------------
+apk update
+apk upgrae
+-------------------------
+# apk add the above packages
+-------------------------
+adduser username
+-------------------------
+# allow the newly create user to run sudo commands
+visudo
+# and add the following line under the one for the root user
+username ALL=(ALL:ALL) ALL
+-------------------------
+switch to the user newly created
+su - username
+-------------------------
+# generate ssh key from the newly created user
+# add the generated key to github
+-------------------------
+# optional
+# change shell from ash to zsh
+apk add zsh
+sudo nvim /etc/passwd
+# change the shell path to `/bin/zsh`
+-------------------------
+mkdir ~/projects
+-------------------------
+# clone dotfiles and ohmyzsh repos
+-------------------------
+link zsh, git and tmux configs
+-------------------------
+
+-------------------------
+
+-------------------------

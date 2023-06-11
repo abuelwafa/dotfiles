@@ -20,6 +20,10 @@ install i stat menus, magnet, xcode from app store
 =============================================================
 download the ios simulator from Xcode preferences
 =============================================================
+# install docker cli and container runtime through colima from homebrew
+# https://github.com/abiosoft/colima
+brew install docker colima
+=============================================================
 # create ssh config file with config to use ssh keys without password
 ln -s ~/projects/dotfiles/ssh-config ~/.ssh/config
 =============================================================

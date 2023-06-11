@@ -325,7 +325,7 @@ autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 " <leader>,
 " <leader>i
 " <leader>c
-inoremap <silent><script><expr> <leader>c copilot#Accept()
+inoremap <silent><script><expr> <leader><space> copilot#Accept()
 let g:copilot_no_tab_map = v:true
 
 set background=dark

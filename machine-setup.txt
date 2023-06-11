@@ -13,7 +13,7 @@ https://brew.sh/
 # docker runtime using colima
 brew install the following:
 zsh neovim git tmux gcc cmake tree btop git-delta node@20 yarn bat ripgrep fzf fd fx jq yh lazygit mc
-docker colima kubernetes-cli helm python watchman go
+kubernetes-cli helm python watchman go
 
 rbenv ruby-build
 youtube-dl
