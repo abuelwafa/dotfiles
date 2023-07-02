@@ -54,7 +54,7 @@ Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'norcalli/nvim-colorizer.lua'
 Plug 'f-person/git-blame.nvim'
 Plug 'eandrju/cellular-automaton.nvim'
-Plug 'github/copilot.vim'
+" Plug 'github/copilot.vim'
 " Plug 'haishanh/night-owl.vim'
 
 "-- to be explored
@@ -156,7 +156,7 @@ set wildignore+=*.swp,*~,._*
 set signcolumn=yes
 
 " Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable delays and poor user experience. try experimenting with decreasing it to 200ms and check the performance
-set updatetime=200
+set updatetime=50
 
 " don't give |ins-completion-menu| messages.
 set shortmess+=c

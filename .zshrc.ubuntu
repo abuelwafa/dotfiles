@@ -6,9 +6,9 @@ export ANDROID_HOME="$HOME/Android/Sdk"
 source ~/projects/dotfiles/.zshrc
 
 # TODO: not needed in ubuntu, but consider adding working ones
-# alias shutdown
-# alias restart
-# alias reboot
+alias shutdown='sudo shutdown now'
+alias restart='sudo shutdown -r now'
+alias reboot='sudo reboot now'
 
 if [ "$TERM" = "xterm" ]; then
     export TERM=xterm-256color
@@ -16,5 +16,7 @@ fi
 
 alias open='xdg-open'
 alias copy='xclip -i -selection clipboard'
+
+alias ssh_setup='eval `ssh-agent -s` && ssh-add -k ~/.ssh/id_rsa'
 
 stty -ixon
