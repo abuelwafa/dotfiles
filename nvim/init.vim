@@ -71,7 +71,8 @@ set t_Co=256
 set termguicolors
 syntax on
 set ruler
-set ttyfast
+set lazyredraw
+set nofsync
 
 " Indentation
 set autoindent
@@ -369,13 +370,15 @@ require('colorizer').setup({
 
 require('nvim-treesitter.configs').setup({
     ensure_installed = {
+        -- "astro",
         "bash",
-        "c",
-        "c_sharp",
-        "cmake",
+        -- "c",
+        -- "c_sharp",
+        -- "cmake",
         "comment",
-        "cpp",
+        -- "cpp",
         "css",
+        "diff",
         "dockerfile",
         "git_config",
         "git_rebase",
@@ -383,12 +386,13 @@ require('nvim-treesitter.configs').setup({
         "gitcommit",
         "gitignore",
         "go",
-        "godot_resource",
         "gomod",
         "gosum",
         "gowork",
         "graphql",
+        -- "groovy",
         "html",
+        -- "htmldjango",
         "http",
         "java",
         "javascript",
@@ -400,26 +404,30 @@ require('nvim-treesitter.configs').setup({
         "kotlin",
         "lua",
         "luadoc",
+        -- "make",
         "markdown",
         "markdown_inline",
-        "objc",
-        "po",
+        -- "objc",
+        -- "pem",
+        -- "php",
+        -- "phpdoc",
+        -- "po",
         "prisma",
         "python",
         "query",
         "regex",
-        "rust",
+        -- "rust",
         "scss",
         "sql",
-        "svelte",
-        "swift",
+        -- "svelte",
+        -- "swift",
         "terraform",
         "toml",
         "tsx",
         "typescript",
         "vim",
         "vimdoc",
-        "vue",
+        -- "vue",
         "yaml"
     },
     auto_install = true,
