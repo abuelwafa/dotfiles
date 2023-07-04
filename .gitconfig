@@ -20,7 +20,7 @@
     showUntrackedFiles = all
 [merge]
     tool = nvim -d
-    conflictstyle = diff3
+    conflictstyle = merge
 [diff]
     tool = nvim -d
     guitool = meld
@@ -32,6 +32,7 @@
 [interactive]
     diffFilter = delta --color-only
 [delta]
+    side-by-side = true
     features = line-numbers decorations
     whitespace-error-style = 22 reverse
     plus-style = bold normal "#008400"
