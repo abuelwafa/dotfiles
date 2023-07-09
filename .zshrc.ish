@@ -64,6 +64,11 @@ else
   export EDITOR='mvim'
 fi
 
+alias ssh_setup='eval `ssh-agent -s` && ssh-add -k ~/.ssh/id_rsa'
+alias vim='nvim'
+alias cls='clear'
+alias gdif='git diff'
+
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
 
