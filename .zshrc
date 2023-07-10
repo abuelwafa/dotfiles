@@ -41,10 +41,6 @@ export FX_THEME=4
 
 source $ZSH/oh-my-zsh.sh
 
-PROMPT='$(rule)
-%{$fg_bold[green]%}%~%{$reset_color%}$(git_prompt_info) %{$fg_bold[red]%}%*%{$reset_color%} %{$bg_bold[green]%}%{$fg_bold[black]%} node: $(node -v) %{$reset_color%}
--> '
-
 # My aliases
 alias cls='clear'
 alias l='ls -lahp'
@@ -233,6 +229,10 @@ export PATH="$(brew --prefix node)/bin:$PATH"
 export LDFLAGS="-L$(brew --prefix node)/lib"
 export CPPFLAGS="-I$(brew --prefix node)/include"
 export NODE_BINARY="$(which node)"
+
+PROMPT='$(rule)
+%{$fg_bold[green]%}%~%{$reset_color%}$(git_prompt_info) %{$fg_bold[red]%}%*%{$reset_color%} %{$bg_bold[green]%}%{$fg_bold[black]%} node: $(node -v) %{$reset_color%}
+-> '
 
 if command -v rbenv &> /dev/null
 then
