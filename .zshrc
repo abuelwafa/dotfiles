@@ -225,9 +225,9 @@ BASE16_SHELL_PATH="$HOME/projects/base16-shell"
 
 # setting up correct paths and variables from homebrew
 export PATH="$(brew --prefix python)/libexec/bin:$PATH"
-export PATH="$(brew --prefix node)/bin:$PATH"
-export LDFLAGS="-L$(brew --prefix node)/lib"
-export CPPFLAGS="-I$(brew --prefix node)/include"
+export PATH="$(brew --prefix node@20)/bin:$PATH"
+export LDFLAGS="-L$(brew --prefix node@20)/lib"
+export CPPFLAGS="-I$(brew --prefix node@20)/include"
 export NODE_BINARY="$(which node)"
 
 PROMPT='$(rule)
