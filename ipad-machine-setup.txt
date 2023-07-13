@@ -21,6 +21,7 @@ apk upgrae
 # apk add the above packages
 -------------------------
 adduser username
+useradd -m username
 -------------------------
 # allow the newly create user to run sudo commands
 visudo

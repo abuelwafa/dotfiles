@@ -572,7 +572,7 @@ require("nvim-tree").setup {
     end,
     view = {
         adaptive_size = false,
-        centralize_selection = true,
+        centralize_selection = false,
         width = {
             min = 30,
             max = 42,
