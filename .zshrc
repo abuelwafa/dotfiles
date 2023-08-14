@@ -226,10 +226,11 @@ BASE16_SHELL_PATH="$HOME/projects/base16-shell"
         source "$BASE16_SHELL_PATH/profile_helper.sh"
 
 # setting up correct paths and variables from homebrew
+node_path="$(brew --prefix node)"
 export PATH="$(brew --prefix python)/libexec/bin:$PATH"
-export PATH="$(brew --prefix node@20)/bin:$PATH"
-export LDFLAGS="-L$(brew --prefix node@20)/lib"
-export CPPFLAGS="-I$(brew --prefix node@20)/include"
+export PATH="$node_path/bin:$PATH"
+export LDFLAGS="-L$node_path/lib"
+export CPPFLAGS="-I$node_path/include"
 export NODE_BINARY="$(which node)"
 
 PROMPT='$(rule)
