@@ -20,6 +20,10 @@ autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
 call plug#begin()
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.0' }
+Plug 'ANGkeith/telescope-terraform-doc.nvim'
+Plug 'lpoto/telescope-docker.nvim'
+Plug 'nvim-telescope/telescope-file-browser.nvim'
+Plug 'LinArcX/telescope-ports.nvim'
 Plug 'neoclide/coc.nvim', { 'branch': 'release' }
 Plug 'lukas-reineke/indent-blankline.nvim'
 Plug 'ZhiyuanLck/smart-pairs'
@@ -54,6 +58,7 @@ Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'norcalli/nvim-colorizer.lua'
 Plug 'f-person/git-blame.nvim'
 Plug 'eandrju/cellular-automaton.nvim'
+" Plug 'pwntester/octo.nvim'
 " Plug 'github/copilot.vim'
 " Plug 'haishanh/night-owl.vim'
 
@@ -512,6 +517,12 @@ vim.keymap.set('v', '<leader>fb', function()
 	local text = vim.getVisualSelection()
 	require('telescope.builtin').live_grep({ default_text = text })
 end, { noremap = true, silent = true })
+
+require('telescope').load_extension('terraform_doc')
+require("telescope").load_extension "docker"
+require("telescope").load_extension "file_browser"
+require('telescope').load_extension('ports')
+
 ---------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------
 
@@ -834,7 +845,7 @@ tnoremap <ESC><ESC> <C-\><C-N>
 nnoremap <silent> <leader>h <c-w>H
 nnoremap <silent> <leader>u <c-w>K
 
-nnoremap <C-p> <cmd>Telescope find_files<CR>
+nnoremap <C-p> <cmd>lua require"telescope.builtin".find_files({ hidden = true })<CR>
 nnoremap <C-o> <cmd>Telescope buffers<CR>
 nnoremap <C-_> <cmd>Telescope live_grep<CR>
 
