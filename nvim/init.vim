@@ -847,7 +847,7 @@ nnoremap <silent> <leader>u <c-w>K
 
 nnoremap <C-p> <cmd>lua require"telescope.builtin".find_files({ hidden = true })<CR>
 nnoremap <C-o> <cmd>Telescope buffers<CR>
-nnoremap <C-_> <cmd>Telescope live_grep<CR>
+nnoremap <C-f> <cmd>Telescope live_grep<CR>
 
 nnoremap ff :NvimTreeToggle<cr>
 
