@@ -853,10 +853,13 @@ nnoremap <C-p> <cmd>lua require"telescope.builtin".find_files({ hidden = true })
 nnoremap <C-o> <cmd>Telescope buffers<CR>
 nnoremap <C-f> <cmd>Telescope live_grep<CR>
 
+" toggle tag bar
+nnoremap <leader>i <cmd>TagbarToggle<CR>
+
 nnoremap ff :NvimTreeToggle<cr>
 
 " database UI
-nnoremap <leader>db <cmd>:DBUI<CR>
+" nnoremap <leader>db <cmd>:DBUI<CR>
 let g:db_ui_save_location = '~/projects/db-connections'
 
 " quickly switch currently open buffers

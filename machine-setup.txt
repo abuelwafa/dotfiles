@@ -25,6 +25,11 @@ git clone https://github.com/ohmyzsh/ohmyzsh.git
 git clone https://github.com/bigH/git-fuzzy.git
 git clone https://github.com/tinted-theming/base16-shell.git
 =============================================================
+# install universal-ctags
+# https://ctags.io/
+brew tap universal-ctags/universal-ctags
+brew install --HEAD universal-ctags
+=============================================================
 # install pgcli using homebrew (instructions on website)
 # https://www.pgcli.com/
 brew tap dbcli/tap
