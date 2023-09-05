@@ -58,6 +58,10 @@ Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'norcalli/nvim-colorizer.lua'
 Plug 'f-person/git-blame.nvim'
 Plug 'eandrju/cellular-automaton.nvim'
+Plug 'rcarriga/nvim-notify'
+Plug 'preservim/tagbar'
+Plug 'tpope/vim-dadbod'
+Plug 'kristijanhusak/vim-dadbod-ui'
 " Plug 'pwntester/octo.nvim'
 " Plug 'github/copilot.vim'
 " Plug 'haishanh/night-owl.vim'
@@ -850,6 +854,10 @@ nnoremap <C-o> <cmd>Telescope buffers<CR>
 nnoremap <C-f> <cmd>Telescope live_grep<CR>
 
 nnoremap ff :NvimTreeToggle<cr>
+
+" database UI
+nnoremap <leader>db <cmd>:DBUI<CR>
+let g:db_ui_save_location = '~/projects/db-connections'
 
 " quickly switch currently open buffers
 nnoremap <silent><leader>1 <Cmd>BufferLineGoToBuffer 1<CR>

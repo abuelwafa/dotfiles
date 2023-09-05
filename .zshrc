@@ -228,6 +228,7 @@ BASE16_SHELL_PATH="$HOME/projects/base16-shell"
 # setting up correct paths and variables from homebrew
 node_path="$(brew --prefix node)"
 export PATH="$(brew --prefix python)/libexec/bin:$PATH"
+export PATH="$(brew --prefix libpq)/bin:$PATH"
 export PATH="$node_path/bin:$PATH"
 export LDFLAGS="-L$node_path/lib"
 export CPPFLAGS="-I$node_path/include"
