@@ -1,0 +1,14 @@
+function bash_read_param() {
+    local some_var="some_arbitary_value"
+    echo -n "Enter anything: "
+    read -s anything_value
+    echo
+    echo $anything_value
+    eval $cmd
+}
+====================================================================================================
+// connect using pgcli
+pgcli postgresql://db_user:db_password@localhost:5432/db_name --ssh-tunnel ssh_user@remote.host
+====================================================================================================
+docker run --name container_name --rm -p 5432:5432 --env POSTGRES_PASSWORD="postgres" --env PGDATA=/var/lib/postgresql/data/pgdata postgres
+====================================================================================================

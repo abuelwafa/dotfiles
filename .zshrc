@@ -38,6 +38,7 @@ export EDITOR='nvim'
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 export FX_THEME=4
+export PAGER='less -XFR'
 
 source $ZSH/oh-my-zsh.sh
 
@@ -46,7 +47,7 @@ alias cls='clear'
 alias l='ls -lahp'
 alias la='ls -lahp'
 unalias ll
-alias ll='ls -lahp --color | less -R'
+alias ll='ls -lahp --color | less -XFR'
 alias md='mkdir -vp'
 alias p='popd'
 alias tree='tree -a -h -f --du'
@@ -67,6 +68,9 @@ alias yarn-clean='yarn cache clean'
 alias yarn-upgrade='yarn upgrade-interactive --latest'
 alias npm-upgrade='npx npm-upgrade check && npm update --save'
 alias npm-clean='npm cache clean --force'
+alias rnstart="watchman-clean && y start --reset-cache"
+alias gradle-clean="cd android && ./gradlew clean && .."
+alias blowup="rm -rf node_modules ios/Pods && yarn cache clean && watchman watch-del-all && pod cache clean --all && npm cache clean --force"
 
 rule() {
     printf "%$(tput cols)s\n"|tr " " "-"
@@ -215,8 +219,6 @@ alias cp='cp -iR'
 alias mv='mv -i'
 alias remove='rm -rf'
 
-alias pgcli='PAGER="less -S" pgcli'
-
 export BAT_THEME="base16-256"
 
 # Base16 Shell
@@ -234,9 +236,24 @@ export LDFLAGS="-L$node_path/lib"
 export CPPFLAGS="-I$node_path/include"
 export NODE_BINARY="$(which node)"
 
+# disable the default virtualenv prompt change
+export VIRTUAL_ENV_DISABLE_PROMPT=1
+
+function virtualenv_info(){
+    # Get Virtual Env
+    if [[ -n "$VIRTUAL_ENV" ]]; then
+        # Strip out the path and just leave the env name
+        venv="${VIRTUAL_ENV##*/}"
+    else
+        # In case you don't have one activated
+        venv=''
+    fi
+    [[ -n "$venv" ]] && echo "(venv:$venv) "
+}
+
 PROMPT='$(rule)
 %{$fg_bold[green]%}%~%{$reset_color%}$(git_prompt_info) %{$fg_bold[red]%}%*%{$reset_color%} %{$bg_bold[green]%}%{$fg_bold[black]%} node: $(node -v) %{$reset_color%}
--> '
+$(virtualenv_info)-> '
 
 if command -v rbenv &> /dev/null
 then

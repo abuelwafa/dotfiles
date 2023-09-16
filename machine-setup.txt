@@ -33,11 +33,11 @@ brew install --HEAD universal-ctags
 # install pgcli using homebrew (instructions on website)
 # https://www.pgcli.com/
 brew tap dbcli/tap
-brew install pgcli
+brew install pgcli litecli mycli
 
-# optionally mycli for mysql
-# https://www.pgcli.com/
-brew install mycli
+# install iredis using pip (check if installation through homebrew is available)
+# https://iredis.xbin.io
+pip install iredis
 =============================================================
 # language server when using graphql for use with nvim and coc
 npm i -g graphql-language-service-cli
@@ -80,6 +80,10 @@ base16_material-darker
 =============================================================
 # git configuration
 ln -s ~/projects/dotfiles/.gitconfig ~/.gitconfig
+=============================================================
+# pgcli config
+mkdir -p ~/.config/pgcli
+ln -s ~/projects/dotfiles/pgcli.config ~/.config/pgcli/config
 =============================================================
 # tmux
 ln -s ~/projects/dotfiles/tmux.conf ~/.tmux.conf

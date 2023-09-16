@@ -282,6 +282,8 @@ command! -nargs=? Fold :call CocAction('fold', <f-args>)
 " Add `:OrganizeImports` command for organize imports of the current buffer
 command! -nargs=0 OrganizeImports :call CocActionAsync('runCommand', 'editor.action.organizeImport')
 
+autocmd FileType sql autocmd BufWritePost * :CocCommand sqlfluff.fix
+
 augroup mygroup
   autocmd!
   " Setup formatexpr specified filetype(s)
@@ -856,10 +858,6 @@ nnoremap <leader>i <cmd>TagbarToggle<CR>
 
 nnoremap ff :NvimTreeToggle<cr>
 
-" database UI
-" nnoremap <leader>db <cmd>:DBUI<CR>
-let g:db_ui_save_location = '~/projects/db-connections'
-
 " quickly switch currently open buffers
 nnoremap <silent><leader>1 <Cmd>BufferLineGoToBuffer 1<CR>
 nnoremap <silent><leader>2 <Cmd>BufferLineGoToBuffer 2<CR>
@@ -879,4 +877,9 @@ highlight IndentBlanklineIndent4 guifg=#56B6C2 gui=nocombine
 highlight IndentBlanklineIndent5 guifg=#61AFEF gui=nocombine
 highlight IndentBlanklineIndent6 guifg=#C678DD gui=nocombine
 
-let g:better_whitespace_filetypes_blacklist=['NvimTree', 'diff', 'git', 'gitcommit', 'unite', 'qf', 'help', 'markdown', 'fugitive']
+" database UI
+nnoremap <leader>db <cmd>:DBUI<CR>
+let g:db_ui_save_location = '~/projects/db-connections'
+autocmd FileType dbout IndentBlanklineDisable
+
+let g:better_whitespace_filetypes_blacklist=['NvimTree', 'diff', 'git', 'gitcommit', 'unite', 'qf', 'help', 'markdown', 'fugitive', 'dbout']

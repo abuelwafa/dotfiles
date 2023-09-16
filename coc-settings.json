@@ -57,6 +57,7 @@
     "prettier.bracketSpacing": true,
     "prettier.statusItemText": "Prettier",
     "prettier.disableLanguages": [],
+    "sqlfluff.dialect": "postgres",
     "languageserver": {
         // "graphql": {
         //     "command": "graphql-lsp",
