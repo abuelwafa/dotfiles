@@ -68,6 +68,10 @@ and change the touchpad section by adding the 4 lines marked below to be as foll
 adduser username
 # add the newly created user to the sudo group
 adduser username sudo
+# copy ssh public keys to the new user
+mkdir -p /home/username/.ssh
+cp /root/.ssh/authorized_keys /home/username/.ssh/authorized_keys
+chown --recursive username:username /home/username/.ssh
 # disable root user login
 # disable password login
 # install mosh
