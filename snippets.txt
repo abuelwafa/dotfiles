@@ -12,3 +12,8 @@ pgcli postgresql://db_user:db_password@localhost:5432/db_name --ssh-tunnel ssh_u
 ====================================================================================================
 docker run --name container_name --rm -p 5432:5432 --env POSTGRES_PASSWORD="postgres" --env PGDATA=/var/lib/postgresql/data/pgdata postgres
 ====================================================================================================
+// ssh config - with postgres default port forward for usage with vim DBUI
+Host host-name
+    HostName some.host.abuelwafa.net
+    User ssh_username
+    LocalForward localhost:5432 localhost:5432

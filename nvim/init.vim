@@ -485,6 +485,11 @@ vim.diagnostic.config({ virtual_text = true })
 
 -- telescope setup
 require('telescope').setup({
+    extensions = {
+        file_browser = {
+            hijack_netrw = true,
+        },
+    },
     defaults = {
         mappings = {
             i = {
@@ -496,6 +501,11 @@ require('telescope').setup({
         layout_strategy = 'flex',
         sorting_strategy = "ascending",
         layout_config = { width = 0.95, prompt_position = 'top' }
+    },
+    pickers = {
+        buffers = {
+            sort_lastused = true,
+        }
     }
 })
 
@@ -523,6 +533,27 @@ vim.keymap.set('v', '<leader>fb', function()
 	require('telescope.builtin').live_grep({ default_text = text })
 end, { noremap = true, silent = true })
 
+-- live grep using Telescope inside the current directory under
+-- the cursor (or the parent directory of the current file)
+local function grep_in()
+    local api = require('nvim-tree.api')
+    local node = api.tree.get_node_under_cursor()
+
+    if not node then
+        return
+    end
+
+    local path = node.absolute_path or uv.cwd()
+    if node.type ~= 'directory' and node.parent then
+        path = node.parent.absolute_path
+    end
+
+    require('telescope.builtin').live_grep({
+        search_dirs = { path },
+        prompt_title = string.format('Grep in [%s]', vim.fs.basename(path)),
+    })
+end
+
 require('telescope').load_extension('terraform_doc')
 require("telescope").load_extension "docker"
 require("telescope").load_extension "file_browser"
@@ -533,6 +564,7 @@ require("telescope").load_extension "file_browser"
 -- nvim-tree setup
 require("nvim-tree").setup {
     hijack_cursor = true,
+    hijack_netrw = false,
     reload_on_bufenter = true,
     update_focused_file = {
         enable = true,
@@ -584,6 +616,7 @@ require("nvim-tree").setup {
         vim.keymap.set('n', '<CR>', api.node.open.no_window_picker, opts('Open: No Window Picker'))
         vim.keymap.set('n', '>', api.node.open.no_window_picker, opts('Open: No Window Picker'))
         vim.keymap.set('n', '<2-LeftMouse>', api.node.open.no_window_picker, opts('Open: No Window Picker'))
+        vim.keymap.set('n', '<C-f>', grep_in, opts('Search in directory'))
     end,
     view = {
         adaptive_size = false,
@@ -877,8 +910,16 @@ highlight IndentBlanklineIndent4 guifg=#56B6C2 gui=nocombine
 highlight IndentBlanklineIndent5 guifg=#61AFEF gui=nocombine
 highlight IndentBlanklineIndent6 guifg=#C678DD gui=nocombine
 
+
+" Save file with sudo
+command! -nargs=0 WriteWithSudo :w !sudo tee % >/dev/null
+" Use :ww instead of :WriteWithSudo
+cnoreabbrev ww WriteWithSudo
+
 " database UI
-nnoremap <leader>db <cmd>:DBUI<CR>
+" nnoremap <leader>db <cmd>:DBUI<CR>
+cnoreabbrev db DBUI
+cnoreabbrev dbui DBUI
 let g:db_ui_save_location = '~/projects/db-connections'
 autocmd FileType dbout IndentBlanklineDisable
 

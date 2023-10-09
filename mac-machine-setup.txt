@@ -1,3 +1,4 @@
+MACOS
 # system preferences configurations:
 - enable firewall in the settings
 - keyboard settings: increase the key repeating frequency (delay untill repeat: short, key repeat: fat)
@@ -15,32 +16,40 @@
 - Bluetooth: show bluetooth in menu bar
 - sound: check show sound in menu bar -> always
 =============================================================
+MACOS
 login with your apple id
 install i stat menus, magnet, xcode from app store
 =============================================================
+MACOS
 download the ios simulator from Xcode preferences
 =============================================================
+MACOS
 # install docker cli and container runtime through colima from homebrew
 # https://github.com/abiosoft/colima
 brew install docker colima
 =============================================================
+MACOS
 # create ssh config file with config to use ssh keys without password
 ln -s ~/projects/dotfiles/ssh-config ~/.ssh/config
 =============================================================
 # zsh shell
 ln -s ~/projects/dotfiles/.zshrc.mac ~/.zshrc
 =============================================================
+MACOS
 # optional: disable accented characters (key press and hold to view accents)
 defaults write -g ApplePressAndHoldEnabled -bool false
 =============================================================
+MACOS
 # optional: add spaces to the mac osx dock
 defaults write com.apple.dock persistent-apps -array-add '{tile-data={}; tile-type="spacer-tile";}'
 # repeat the command for the number of spaces wanted, then restart the dockwith the command
 killall Dock
 =============================================================
+MACOS
 # optional: install OSXfuse for dealing with NTFS and external hard disk drives
 https://github.com/osxfuse/osxfuse
 =============================================================
+MACOS
 install from their respective websites:
 Alfred
 iTerm
@@ -50,8 +59,10 @@ the unarchiver
 # showing hidden files on mac
 defaults write com.apple.finder AppleShowAllFiles YES && killall Finder
 =============================================================
+MACOS
 gimp through Homebrew
 =============================================================
+MACOS
 # clear nordvpn application defaults after every upgrade
 # might consider adding them to an alias
 defaults delete com.nordvpn.osx-apple
@@ -60,6 +71,7 @@ defaults delete com.nordvpn.osx
 # setting dns servers for nord vpn - for Egypt
 # https://support.nordvpn.com/Connectivity/macOS/1088046792/Change-your-DNS-servers-on-macOS.htm
 =============================================================
+MACOS
 optional: install meetingBar using HomeBrew
 brew install meetingbar
 https://github.com/leits/MeetingBar
