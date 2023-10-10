@@ -219,6 +219,8 @@ alias cp='cp -iR'
 alias mv='mv -i'
 alias remove='rm -rf'
 
+alias kctl='kubectl'
+
 export BAT_THEME="base16-256"
 
 # Base16 Shell

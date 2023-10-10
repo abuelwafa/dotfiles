@@ -6,6 +6,12 @@ ssh-keygen -t rsa -b 2048 -C "your_email@domain.com"
 =============================================================
 # install Homebrew from it's website
 https://brew.sh/
+# add homebrew to path
+touch ~/.zprofile
+# for ubuntu
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+# macos
+eval "$(/opt/homebrew/bin/brew shellenv)"
 =============================================================
 # install latest essentials using homebrew
 # install nodejs lts from homebrew
@@ -24,6 +30,7 @@ git clone git@github.com:abuelwafa/dotfiles.git
 git clone https://github.com/ohmyzsh/ohmyzsh.git
 git clone https://github.com/bigH/git-fuzzy.git
 git clone https://github.com/tinted-theming/base16-shell.git
+git clone https://github.com/tmux-plugins/tpm
 =============================================================
 # install universal-ctags
 # https://ctags.io/
@@ -42,7 +49,8 @@ pip install iredis
 # language server when using graphql for use with nvim and coc
 npm i -g graphql-language-service-cli
 =============================================================
-install k9s cli from homebrew
+# install k9s cli from homebrew
+brew install derailed/k9s/k9s
 =============================================================
 # download and install meslo font from nerd font releases
 https://github.com/ryanoasis/nerd-fonts
