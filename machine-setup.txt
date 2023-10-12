@@ -37,14 +37,12 @@ git clone https://github.com/tmux-plugins/tpm
 brew tap universal-ctags/universal-ctags
 brew install --HEAD universal-ctags
 =============================================================
-# install pgcli using homebrew (instructions on website)
+# install pgcli, litecli, mycli, iredis using homebrew (instructions on website)
+# https://www.dbcli.com/
 # https://www.pgcli.com/
-brew tap dbcli/tap
-brew install pgcli litecli mycli
-
-# install iredis using pip (check if installation through homebrew is available)
 # https://iredis.xbin.io
-pip install iredis
+brew tap dbcli/tap
+brew install pgcli litecli mycli iredis
 =============================================================
 # language server when using graphql for use with nvim and coc
 npm i -g graphql-language-service-cli

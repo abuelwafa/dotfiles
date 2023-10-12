@@ -7,13 +7,25 @@ function bash_read_param() {
     eval $cmd
 }
 ====================================================================================================
-// connect using pgcli
+# connect using pgcli
 pgcli postgresql://db_user:db_password@localhost:5432/db_name --ssh-tunnel ssh_user@remote.host
 ====================================================================================================
-docker run --name container_name --rm -p 5432:5432 --env POSTGRES_PASSWORD="postgres" --env PGDATA=/var/lib/postgresql/data/pgdata postgres
+# start postgres DB
+docker run --name container_name --rm -p 5432:5432 \
+           --env POSTGRES_USER="postgres" \
+           --env POSTGRES_PASSWORD="postgres" \
+           --env POSTGRES_DB="postgres" \
+           --env PGDATA=/var/lib/postgresql/data/pgdata \
+           -v /custom/mount:/var/lib/postgresql/data \
+           postgres
 ====================================================================================================
-// ssh config - with postgres default port forward for usage with vim DBUI
+# ssh config - with postgres default port forward for usage with vim DBUI
 Host host-name
     HostName some.host.abuelwafa.net
     User ssh_username
     LocalForward localhost:5432 localhost:5432
+====================================================================================================
+# start redis server
+docker run --name some-redis-instance --rm -p 6379:6379 redis
+====================================================================================================
+
