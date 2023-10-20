@@ -668,6 +668,7 @@ hooks.register(
 
 require("ibl").setup {
     indent = {
+        char = "│",
         highlight =  {
             "RainbowRed",
             "RainbowYellow",
@@ -682,6 +683,7 @@ require("ibl").setup {
         remove_blankline_trail = true,
     },
     scope = {
+        enabled = false
     }
 }
 
@@ -691,11 +693,8 @@ vim.o.winbar = "%{expand(\"%:~:.\")} %m%=%{coc#status()} "
 -- status line setup
 require('lualine').setup {
     options = {
-        -- theme = '16color',
-        -- theme = 'gruvbox_dark',
-        theme = 'material',
+        theme = 'gruvbox',
         -- theme = 'powerline',
-        -- theme = 'papercolor_dark',
         icons_enabled = false,
         section_separators = { left = '', right = '' },
         component_separators = { left = '', right = '' }
