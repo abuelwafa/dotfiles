@@ -684,7 +684,10 @@ require("ibl").setup {
     },
     scope = {
         enabled = false
-    }
+    },
+    exclude = {
+        filetypes = { "dbout" }
+    },
 }
 
 -- winbar setup
@@ -933,6 +936,5 @@ cnoreabbrev ww WriteWithSudo
 cnoreabbrev db DBUI
 cnoreabbrev dbui DBUI
 let g:db_ui_save_location = '~/projects/db-connections'
-autocmd FileType dbout IndentBlanklineDisable
 
 let g:better_whitespace_filetypes_blacklist=['NvimTree', 'diff', 'git', 'gitcommit', 'unite', 'qf', 'help', 'markdown', 'fugitive', 'dbout']
