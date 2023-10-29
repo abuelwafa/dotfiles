@@ -847,7 +847,7 @@ vnoremap <leader>v <esc>:set<space>invpaste<cr>
 :autocmd FileType js,javascript,typescript,javascriptreact,typescriptreact imap afkj () => {
 :autocmd FileType js,javascript,typescript,javascriptreact,typescriptreact imap logkj console.log(
 :autocmd FileType js,javascript,typescript,javascriptreact,typescriptreact imap imkj import  from '
-:autocmd FileType js,javascript,typescript,javascriptreact,typescriptreact imap ifkj if () {
+:autocmd FileType js,javascript,typescript,javascriptreact,typescriptreact imap ifkj if () {<cr><esc>k$2hi
 inoremap xx $
 inoremap vv ``<esc>i
 
