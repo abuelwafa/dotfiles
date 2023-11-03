@@ -525,12 +525,12 @@ end
 vim.keymap.set('n', '<leader>fb', function()
     vim.cmd('normal! viw')
     local text = vim.getVisualSelection()
-    require('telescope.builtin').live_grep({ default_text = text })
+    require('telescope.builtin').live_grep({ default_text = text, initial_mode = 'normal' })
 end, { noremap = true, silent = true })
 
 vim.keymap.set('v', '<leader>fb', function()
 	local text = vim.getVisualSelection()
-	require('telescope.builtin').live_grep({ default_text = text })
+	require('telescope.builtin').live_grep({ default_text = text, initial_mode = 'normal' })
 end, { noremap = true, silent = true })
 
 -- live grep using Telescope inside the current directory under
@@ -908,7 +908,8 @@ nnoremap <silent> <leader>u <c-w>K
 
 nnoremap <C-p> <cmd>lua require"telescope.builtin".find_files({ hidden = true })<CR>
 nnoremap <C-o> <cmd>Telescope buffers<CR>
-nnoremap <C-f> <cmd>Telescope live_grep<CR>
+nnoremap <C-f> <cmd>Telescope live_grep initial_mode=normal<CR>
+nnoremap <leader>o <cmd>Telescope file_browser path=%:p:h select_buffer=true initial_mode=normal<CR>
 
 " toggle tag bar
 nnoremap <leader>i <cmd>TagbarToggle<CR>
