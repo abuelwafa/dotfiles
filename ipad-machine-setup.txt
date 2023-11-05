@@ -1,24 +1,28 @@
-apk packages to install
-- [x] zsh-vcs
-- [x] sudo
-- [x] git
-- [x] curl
-- [x] wget
-- [x] mosh
-- [x] grep
-- [x] neovim
-- [x] bat
-- [] python3
-- [] zsh
-- [] tmux
-- [] jq
-- [] sqlite
-- [] mc
--------------------------
 apk update
 apk upgrae
 -------------------------
-# apk add the above packages
+# apk add the following packages
+- zsh-vcs
+- bash
+- sudo
+- git
+- curl
+- wget
+- mosh
+- grep
+- neovim
+- bat
+- python3
+- zsh
+- tmux
+- go
+- gcc
+- sqlite
+- htop
+- jq
+- mc
+- tput
+- grep
 -------------------------
 adduser username
 useradd -m username
