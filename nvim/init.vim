@@ -27,6 +27,7 @@ Plug 'neoclide/coc.nvim', { 'branch': 'release' }
 Plug 'lukas-reineke/indent-blankline.nvim'
 Plug 'ZhiyuanLck/smart-pairs'
 Plug 'phaazon/hop.nvim'
+Plug 'lbrayner/vim-rzip'
 Plug 'mg979/vim-visual-multi', {'branch': 'master'}
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'rest-nvim/rest.nvim'
@@ -696,8 +697,11 @@ vim.o.winbar = "%{expand(\"%:~:.\")} %m%=%{coc#status()} "
 -- status line setup
 require('lualine').setup {
     options = {
-        theme = 'gruvbox',
+        -- theme = 'gruvbox',
+        -- theme = 'gruvbox_dark',
+        -- theme = 'gruvbox_light',
         -- theme = 'powerline',
+        theme = 'everforest',
         icons_enabled = false,
         section_separators = { left = '', right = '' },
         component_separators = { left = '', right = '' }
@@ -908,7 +912,7 @@ nnoremap <silent> <leader>u <c-w>K
 
 nnoremap <C-p> <cmd>lua require"telescope.builtin".find_files({ hidden = true })<CR>
 nnoremap <C-o> <cmd>Telescope buffers<CR>
-nnoremap <C-f> <cmd>Telescope live_grep initial_mode=normal<CR>
+nnoremap <C-f> <cmd>Telescope live_grep<CR>
 nnoremap <leader>o <cmd>Telescope file_browser path=%:p:h select_buffer=true initial_mode=normal<CR>
 
 " toggle tag bar

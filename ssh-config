@@ -1,6 +1,7 @@
-Include ~/.colima/ssh_config
+Include ~/projects/ssh_config
 
 Host *
   AddKeysToAgent yes
   UseKeychain yes
   IdentityFile ~/.ssh/id_rsa
+  PreferredAuthentications publickey
