@@ -230,7 +230,7 @@ BASE16_SHELL_PATH="$HOME/projects/base16-shell"
         source "$BASE16_SHELL_PATH/profile_helper.sh"
 
 # setting up correct paths and variables from homebrew
-node_path="$(brew --prefix node)"
+node_path="$(brew --prefix node@20)"
 export PATH="$(brew --prefix python)/libexec/bin:$PATH"
 export PATH="$(brew --prefix libpq)/bin:$PATH"
 export PATH="$node_path/bin:$PATH"
