@@ -35,6 +35,7 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-git'
+Plug 'RRethy/nvim-base16'
 Plug 'moll/vim-bbye'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'prisma/vim-prisma'
@@ -696,8 +697,9 @@ vim.o.winbar = "%{expand(\"%:~:.\")} %m%=%{coc#status()} "
 -- status line setup
 require('lualine').setup {
     options = {
-        theme = 'gruvbox',
+        -- theme = 'gruvbox',
         -- theme = 'powerline',
+        theme = 'base16',
         icons_enabled = false,
         section_separators = { left = '', right = '' },
         component_separators = { left = '', right = '' }
