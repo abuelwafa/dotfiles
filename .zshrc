@@ -40,6 +40,8 @@ export LC_ALL=en_US.UTF-8
 export FX_THEME=6
 export PAGER='less -XFR'
 
+export BASE16_THEME_DEFAULT="catppuccin"
+
 source $ZSH/oh-my-zsh.sh
 
 # My aliases

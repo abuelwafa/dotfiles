@@ -36,6 +36,7 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-git'
+Plug 'RRethy/nvim-base16'
 Plug 'moll/vim-bbye'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'prisma/vim-prisma'
@@ -701,7 +702,8 @@ require('lualine').setup {
         -- theme = 'gruvbox_dark',
         -- theme = 'gruvbox_light',
         -- theme = 'powerline',
-        theme = 'everforest',
+        -- theme = 'everforest',
+        theme = 'base16',
         icons_enabled = false,
         section_separators = { left = '', right = '' },
         component_separators = { left = '', right = '' }

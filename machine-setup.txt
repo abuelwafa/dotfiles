@@ -93,6 +93,8 @@ ln -s ~/projects/dotfiles/pgcli.config ~/.config/pgcli/config
 =============================================================
 # tmux
 ln -s ~/projects/dotfiles/tmux.conf ~/.tmux.conf
+ln -s ~/projects/dotfiles/tmux/net_speed.sh ~/.tmux/plugins/tmux/custom/net_speed.sh
+ln -s ~/projects/dotfiles/tmux/mode_indicator.sh ~/.tmux/plugins/tmux/custom/mode_indicator.sh
 =============================================================
 # neovim config
 mkdir -p ~/.config/nvim
