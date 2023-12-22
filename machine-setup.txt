@@ -2,7 +2,10 @@
 mkdir -p ~/projects
 =============================================================
 /* generate ssh keys */
-ssh-keygen -t rsa -b 2048 -C "your_email@domain.com"
+ssh-keygen -t ed25519 -C "your_email@example.com"
+=============================================================
+# ubuntu/debian only: install the following packages
+curl git xclip build-essential
 =============================================================
 # install Homebrew from it's website
 https://brew.sh/
@@ -23,6 +26,9 @@ kubernetes-cli helm python watchman go
 
 rbenv ruby-build
 youtube-dl
+=============================================================
+brew tap hashicorp/tap
+brew install hashicorp/tap/terraform
 =============================================================
 clone essential repos
 cd ~/projects
