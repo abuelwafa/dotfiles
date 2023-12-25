@@ -215,7 +215,6 @@ let g:coc_global_extensions = [
     \ 'coc-styled-components',
     \ '@yaegassy/coc-nginx',
     \ 'coc-fzf-preview',
-    \ 'coc-sqlfluff',
     \ 'coc-toml',
 \ ]
 
@@ -283,8 +282,6 @@ command! -nargs=? Fold :call CocAction('fold', <f-args>)
 
 " Add `:OrganizeImports` command for organize imports of the current buffer
 command! -nargs=0 OrganizeImports :call CocActionAsync('runCommand', 'editor.action.organizeImport')
-
-autocmd FileType sql autocmd BufWritePost * :CocCommand sqlfluff.fix
 
 augroup mygroup
   autocmd!
