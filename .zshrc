@@ -268,5 +268,5 @@ fi
 export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
 
-# company specific config
-[[ -s "$HOME/projects/.work-company-config" ]] && source "$HOME/projects/.work-company-config"
+# machine specific config
+[[ -s "$HOME/projects/.machine-config" ]] && source "$HOME/projects/.machine-config"
