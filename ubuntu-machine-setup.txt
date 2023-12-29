@@ -1,8 +1,8 @@
+# ubuntu/debian
 # apt packages
-curl git xclip build-essential gnome-shell-extension-manager zsh meld
-================================================================
-# zshrc
-ln -s ~/projects/dotfiles/zsh/.zshrc.ubuntu ~/.zshrc
+curl git xclip build-essential zsh
+# ubuntu specific
+gnome-shell-extension-manager
 ================================================================
 # install docker engine according to the instructions from the docker website
 ================================================================

@@ -3,7 +3,7 @@
 # Android SDK path installed by Android Studio
 export ANDROID_HOME="$HOME/Android/Sdk"
 
-source ~/projects/dotfiles/.zshrc
+source ~/projects/dotfiles/zsh/.zshrc
 
 # TODO: not needed in ubuntu, but consider adding working ones
 alias shutdown='sudo shutdown now'
