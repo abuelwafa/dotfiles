@@ -1,5 +1,7 @@
 # make the projects folder
 mkdir -p ~/projects
+# create the machine config file. this file contains customizations specific to the current machine
+touch ~/projects/.machine-config
 =============================================================
 /* generate ssh keys */
 ssh-keygen -t ed25519 -C "your_email@example.com"
@@ -98,9 +100,14 @@ mkdir -p ~/.config/pgcli
 ln -s ~/projects/dotfiles/pgcli.config ~/.config/pgcli/config
 =============================================================
 # tmux
-ln -s ~/projects/dotfiles/tmux.conf ~/.tmux.conf
+ln -s ~/projects/dotfiles/tmux/tmux.conf ~/.tmux.conf
 ln -s ~/projects/dotfiles/tmux/net_speed.sh ~/.tmux/plugins/tmux/custom/net_speed.sh
 ln -s ~/projects/dotfiles/tmux/mode_indicator.sh ~/.tmux/plugins/tmux/custom/mode_indicator.sh
+ln -s ~/projects/dotfiles/tmux/pomodoro_status.sh ~/.tmux/plugins/tmux/custom/pomodoro_status.sh
+# run tmux and install plugins with <prefix>I
+# edit network speed arrow icons
+sed -i '' -e 's/↓//' ~/.tmux/plugins/tmux-network-speed/network_speed.sh
+sed -i '' -e 's/↑//' ~/.tmux/plugins/tmux-network-speed/network_speed.sh
 =============================================================
 # neovim config
 mkdir -p ~/.config/nvim
@@ -142,4 +149,3 @@ json formatter
 grammarly
 pixelzoomer
 =============================================================
-

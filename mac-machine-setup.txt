@@ -33,7 +33,7 @@ MACOS
 ln -s ~/projects/dotfiles/ssh-config ~/.ssh/config
 =============================================================
 # zsh shell
-ln -s ~/projects/dotfiles/.zshrc.mac ~/.zshrc
+ln -s ~/projects/dotfiles/zsh/.zshrc.mac ~/.zshrc
 =============================================================
 MACOS
 # optional: disable accented characters (key press and hold to view accents)

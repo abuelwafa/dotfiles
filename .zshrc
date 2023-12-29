@@ -12,9 +12,6 @@ export PATH="$PATH:$ANDROID_HOME/emulator"
 export PATH="$PATH:$ANDROID_HOME/platform-tools"
 
 ZSH_THEME="amuse"
-# ZSH_THEME="frontcube"
-# ZSH_THEME="macovsky"
-# ZSH_THEME="tjkirch"
 
 # display red dots while waiting for completion.
 COMPLETION_WAITING_DOTS="true"
@@ -32,6 +29,13 @@ plugins=(
     colored-man-pages
     docker
     docker-compose
+    helm
+    ssh-agent
+    podman
+    ripgrep
+    terraform
+    minikube
+    kubectx
 )
 
 export EDITOR='nvim'
@@ -223,6 +227,9 @@ alias remove='rm -rf'
 
 alias kctl='kubectl'
 
+# add kubectl completion
+[[ $commands[kubectl] ]] && source <(kubectl completion zsh)
+
 export BAT_THEME="base16-256"
 
 # Base16 Shell
@@ -255,9 +262,10 @@ function virtualenv_info(){
     [[ -n "$venv" ]] && echo "(venv:$venv) "
 }
 
-PROMPT='$(rule)
-%{$fg_bold[green]%}%~%{$reset_color%}$(git_prompt_info) %{$fg_bold[red]%}%*%{$reset_color%} %{$bg_bold[green]%}%{$fg_bold[black]%} node: $(node -v) %{$reset_color%}
-$(virtualenv_info)-> '
+PROMPT='
+$(rule)
+%{$fg_bold[green]%}%~%{$reset_color%}$(git_prompt_info) %{$fg_bold[red]%}%*%{$reset_color%}
+%{$bg_bold[red]%}%{$fg_bold[white]%}$(kubectx_prompt_info)%{$reset_color%}%{$bg_bold[magenta]%}%{$fg_bold[yellow]%}$(aws_prompt_info)%{$reset_color%}%{$fg[yellow]%}$(virtualenv_info)%{$reset_color%}%{$fg_bold[magenta]%}-> %{$reset_color%}'
 
 if command -v rbenv &> /dev/null
 then
