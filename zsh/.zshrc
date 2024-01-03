@@ -115,7 +115,7 @@ alias gdelbranch='git branch -d'
 alias gswitchbranch='git checkout'
 alias greset='git checkout --'
 alias gunstage='git reset HEAD --'
-alias gclean='git clean -ifd'
+alias gclean='git clean -ifdx'
 
 function gstash() {
     if [ -z $1 ]; then
