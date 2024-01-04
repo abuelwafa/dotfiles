@@ -36,7 +36,6 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-git'
-Plug 'RRethy/nvim-base16'
 Plug 'moll/vim-bbye'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'prisma/vim-prisma'
@@ -490,22 +489,31 @@ require('telescope').setup({
         },
     },
     defaults = {
+        file_ignore_patterns = { "^.git/" },
         mappings = {
             i = {
                 ["jj"] = { "<esc>", type = "command" },
                 ["<C-j>"] = require('telescope.actions').move_selection_next,
-                ["<C-k>"] = require('telescope.actions').move_selection_previous
+                ["<C-k>"] = require('telescope.actions').move_selection_previous,
+                ["J"] = require('telescope.actions').preview_scrolling_down,
+                ["K"] = require('telescope.actions').preview_scrolling_up,
+                ["H"] = require('telescope.actions').preview_scrolling_left,
+                ["L"] = require('telescope.actions').preview_scrolling_right,
             }
         },
         layout_strategy = 'flex',
         sorting_strategy = "ascending",
-        layout_config = { width = 0.95, prompt_position = 'top' }
+        layout_config = { width = 0.95, prompt_position = 'top', scroll_speed = 1 },
     },
     pickers = {
         buffers = {
             sort_lastused = true,
-        }
-    }
+        },
+        find_files = {
+            hidden = true,
+            no_ignore = false,
+        },
+    },
 })
 
 function vim.getVisualSelection()
@@ -584,7 +592,7 @@ require("nvim-tree").setup {
     },
 
     diagnostics = {
-        enable = true,
+        enable = false,
         show_on_dirs = true,
         show_on_open_dirs = true,
     },
@@ -703,8 +711,8 @@ require('lualine').setup {
         -- theme = 'gruvbox_dark',
         -- theme = 'gruvbox_light',
         -- theme = 'powerline',
+        theme = 'powerline_dark',
         -- theme = 'everforest',
-        theme = 'base16',
         icons_enabled = false,
         section_separators = { left = '', right = '' },
         component_separators = { left = '', right = '' }
