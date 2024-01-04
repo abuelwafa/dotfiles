@@ -569,10 +569,14 @@ require("nvim-tree").setup {
         enable = true,
     },
     git = {
-        ignore = false,
-        timeout = 999
+        enable = true,
     },
-    modified = { enable = true },
+    filters = {
+        git_ignored = false,
+        git_clean = false,
+        dotfiles = false,
+    },
+    modified = { enable = false },
     actions = {
         expand_all = {
             exclude = { ".git", "node_modules", "dist", "build" }
