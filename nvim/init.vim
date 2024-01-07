@@ -68,6 +68,9 @@ Plug 'williamboman/mason.nvim'
 Plug 'L3MON4D3/LuaSnip', {'tag': 'v2.*', 'do': 'make install_jsregexp'}
 Plug 'saadparwaiz1/cmp_luasnip'
 Plug 'hrsh7th/cmp-nvim-lsp'
+Plug 'mfussenegger/nvim-lint'
+Plug 'mfussenegger/nvim-dap'
+Plug 'rcarriga/nvim-dap-ui'
 
 "-- to be explored
 " Plug 'numToStr/FTerm.nvim'
