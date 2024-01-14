@@ -316,17 +316,11 @@ au FileType gitcommit let b:EditorConfig_disable = 1
 " let g:gitblame_message_when_not_committed = ''
 
 
-" setting font for gvim and macvim
-if has('gui_running')
-    set guifont=Meslo\ LG\ S\ for\ Powerline:h18
-endif
-
 " disable automatic comment insertion on newlines after a comment
 autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 
 " available mappings
 " R
-" z
 " Z
 " g
 " ,
@@ -715,12 +709,7 @@ vim.o.winbar = "%{expand(\"%:~:.\")} %m%=%{coc#status()} "
 -- status line setup
 require('lualine').setup {
     options = {
-        -- theme = 'gruvbox',
-        -- theme = 'gruvbox_dark',
-        -- theme = 'gruvbox_light',
-        -- theme = 'powerline',
-        theme = 'powerline_dark',
-        -- theme = 'everforest',
+        theme = 'everforest', -- other values: powerline, powerline_dark, gruvbox_dark
         icons_enabled = false,
         section_separators = { left = '', right = '' },
         component_separators = { left = '', right = '' }

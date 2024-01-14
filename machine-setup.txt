@@ -143,8 +143,12 @@ ln -s ~/projects/dotfiles/tmux/mode_indicator.sh ~/.tmux/plugins/tmux/custom/mod
 ln -s ~/projects/dotfiles/tmux/pomodoro_status.sh ~/.tmux/plugins/tmux/custom/pomodoro_status.sh
 # run tmux and install plugins with <prefix>I
 # edit network speed arrow icons
-sed -i '' -e 's/↓//' ~/.tmux/plugins/tmux-network-speed/network_speed.sh
-sed -i '' -e 's/↑//' ~/.tmux/plugins/tmux-network-speed/network_speed.sh
+sed -i -e 's/↓//' ~/.tmux/plugins/tmux-network-speed/network_speed.sh
+sed -i -e 's/↑//' ~/.tmux/plugins/tmux-network-speed/network_speed.sh
+
+# export the correct network interface to get online speeds correctly if not on macos
+# you can look at available interfaces in /proc/net/dev
+echo 'export TMUX_STATUS_NETWORK_SPEED_INTERFACE="wlan0"' | tee -a ~/projects/.machine-config
 =============================================================
 # neovim config
 mkdir -p ~/.config/nvim
