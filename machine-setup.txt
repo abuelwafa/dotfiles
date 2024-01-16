@@ -2,6 +2,7 @@
 mkdir -p ~/projects
 # create the machine config file. this file contains customizations specific to the current machine
 touch ~/projects/.machine-config
+echo 'export WORK_EMAIL_ADDRESS="mohamed.abuelwafa@gmail.com"' | tee -a ~/projects/.machine-config
 =============================================================
 /* generate ssh keys */
 ssh-keygen -t ed25519 -C "your_email@example.com"
@@ -146,8 +147,9 @@ ln -s ~/projects/dotfiles/tmux/pomodoro_status.sh ~/.tmux/plugins/tmux/custom/po
 sed -i -e 's/↓//' ~/.tmux/plugins/tmux-network-speed/network_speed.sh
 sed -i -e 's/↑//' ~/.tmux/plugins/tmux-network-speed/network_speed.sh
 
-# export the correct network interface to get online speeds correctly if not on macos
-# you can look at available interfaces in /proc/net/dev
+# linux only: export the correct network interface to get online speeds correctly if not on macos
+# for macos, it should be already configured. no need to export this variable
+# you can look at available interfaces in /proc/net/dev for linux.
 echo 'export TMUX_STATUS_NETWORK_SPEED_INTERFACE="wlan0"' | tee -a ~/projects/.machine-config
 =============================================================
 # neovim config
