@@ -3,6 +3,7 @@ mkdir -p ~/projects
 # create the machine config file. this file contains customizations specific to the current machine
 touch ~/projects/.machine-config
 echo 'export WORK_EMAIL_ADDRESS="mohamed.abuelwafa@gmail.com"' | tee -a ~/projects/.machine-config
+echo 'export OPENAI_API_KEY="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"' | tee -a ~/projects/.machine-config
 =============================================================
 /* generate ssh keys */
 ssh-keygen -t ed25519 -C "your_email@example.com"
