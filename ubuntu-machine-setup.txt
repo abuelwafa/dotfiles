@@ -1,10 +1,5 @@
-# ubuntu/debian
 # apt packages
-curl git xclip build-essential zsh
-# ubuntu specific
 gnome-shell-extension-manager
-================================================================
-# install docker engine according to the instructions from the docker website
 ================================================================
 install gnome extensions from extensions manager
 - time++
@@ -62,17 +57,3 @@ and change the touchpad section by adding the 4 lines marked below to be as foll
  |EndSection
 -----------------------------------------------------
 ```
-================================================================
-# for ubuntu cloud vms
-# create new non-root user
-adduser username
-# add the newly created user to the sudo group
-adduser username sudo
-# copy ssh public keys to the new user
-mkdir -p /home/username/.ssh
-cp /root/.ssh/authorized_keys /home/username/.ssh/authorized_keys
-chown --recursive username:username /home/username/.ssh
-# disable root user login
-# disable password login
-# install mosh
-sudo apt install mosh

@@ -101,6 +101,9 @@ MACOS
 # https://github.com/abiosoft/colima
 brew install docker colima
 =============================================================
+UBUNTU
+# install docker engine according to the instructions from the docker website
+================================================================
 install from their respective websites
 Google Chrome
 Zoom
@@ -238,3 +241,21 @@ MACOS
 # optional: install OSXfuse for dealing with NTFS and external hard disk drives
 https://github.com/osxfuse/osxfuse
 =============================================================
+increase ubuntu inotify watchers for dropbox sync and for projects file watching
+echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
+==================================================================
+# for ubuntu cloud vms
+# create new non-root user
+adduser username
+# add the newly created user to the sudo group
+adduser username sudo
+# copy ssh public keys to the new user
+mkdir -p /home/username/.ssh
+cp /root/.ssh/authorized_keys /home/username/.ssh/authorized_keys
+chown --recursive username:username /home/username/.ssh
+# disable root user login
+# disable password login
+# install mosh
+sudo apt install mosh
+================================================================
+
