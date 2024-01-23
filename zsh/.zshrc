@@ -219,6 +219,15 @@ function pg_connect(){
     eval $cmd
 }
 
+function check-git-email() {
+    local currentEmail=$(git config --global user.email)
+    if [[ $currentEmail != $WORK_EMAIL_ADDRESS ]]; then
+        echo "================================================"
+        echo "   GIT EMAIL IS NOT SET TO WORK EMAIL ADDRESS   "
+        echo "================================================"
+    fi
+}
+
 # remember when copying directories, adding a slash to the directory name like directory/
 # makes the copying action to perform on the contents of the directory and not the directory itself
 alias cp='cp -iR'
@@ -263,7 +272,7 @@ function virtualenv_info(){
 }
 
 PROMPT='
-$(rule)
+$(rule)$(check-git-email)
 %{$fg_bold[green]%}%~%{$reset_color%}$(git_prompt_info) %{$fg_bold[red]%}%*%{$reset_color%}
 %{$bg_bold[red]%}%{$fg_bold[white]%}$(kubectx_prompt_info)%{$reset_color%}%{$bg_bold[magenta]%}%{$fg_bold[yellow]%}$(aws_prompt_info)%{$reset_color%}%{$fg[yellow]%}$(virtualenv_info)%{$reset_color%}%{$fg_bold[magenta]%}-> %{$reset_color%}'
 
@@ -276,5 +285,5 @@ fi
 export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
 
-# machine specific config
+# machine specific config/overrides
 [[ -s "$HOME/projects/.machine-config" ]] && source "$HOME/projects/.machine-config"

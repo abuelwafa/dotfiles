@@ -14,7 +14,6 @@ autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
   \| PlugInstall --sync | source $MYVIMRC | q | q!
 \| endif
 
-" initiate vim-plug
 call plug#begin()
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
@@ -59,6 +58,9 @@ Plug 'rcarriga/nvim-notify'
 Plug 'preservim/tagbar'
 Plug 'tpope/vim-dadbod'
 Plug 'kristijanhusak/vim-dadbod-ui'
+Plug 'kristijanhusak/vim-dadbod-completion'
+Plug 'jackMort/ChatGPT.nvim'
+
 " Plug 'pwntester/octo.nvim'
 " Plug 'github/copilot.vim'
 " Plug 'haishanh/night-owl.vim'
@@ -75,6 +77,14 @@ Plug 'rcarriga/nvim-dap-ui'
 "-- to be explored
 " Plug 'numToStr/FTerm.nvim'
 " Plug 'neovim/nvim-lspconfig'
+
+function! UpdateRemotePlugins(...)
+    " Needed to refresh runtime files
+    let &rtp=&rtp
+    UpdateRemotePlugins
+endfunction
+
+Plug 'gelguy/wilder.nvim', { 'do': function('UpdateRemotePlugins') }
 
 call plug#end()
 
@@ -212,17 +222,11 @@ au FileType gitcommit let b:EditorConfig_disable = 1
 " let g:gitblame_message_when_not_committed = ''
 
 
-" setting font for gvim and macvim
-if has('gui_running')
-    set guifont=Meslo\ LG\ S\ for\ Powerline:h18
-endif
-
 " disable automatic comment insertion on newlines after a comment
 autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 
 " available mappings
 " R
-" z
 " Z
 " g
 " ,
@@ -245,6 +249,8 @@ if !executable('pbcopy') && executable('xclip')
     let g:system_copy#paste_command='xclip -sel clipboard -o'
 endif
 
+call wilder#setup({'modes': [':', '/', '?']})
+
 " ===================================================================================
 " ===================================================================================
 " lua configuration
@@ -259,6 +265,7 @@ require('hop').setup()
 require('Comment').setup()
 require('pairs'):setup({ enter = { enable_mapping = false } })
 require('numb').setup()
+require("chatgpt").setup()
 require('colorizer').setup({
     '*';
 }, {
@@ -484,18 +491,14 @@ require("nvim-tree").setup {
     hijack_cursor = true,
     hijack_netrw = false,
     reload_on_bufenter = true,
-    update_focused_file = {
-        enable = true,
-    },
-    git = {
-        enable = true,
-    },
+    update_focused_file = { enable = true },
+    git = { enable = true },
     filters = {
         git_ignored = false,
         git_clean = false,
         dotfiles = false,
     },
-    modified = { enable = false },
+    modified = { enable = true },
     actions = {
         expand_all = {
             exclude = { ".git", "node_modules", "dist", "build" }
@@ -541,21 +544,21 @@ require("nvim-tree").setup {
         vim.keymap.set('n', '<C-f>', grep_in, opts('Search in directory'))
     end,
     view = {
-        adaptive_size = false,
         centralize_selection = false,
         width = {
-            min = 30,
-            max = 42,
+            min = 32,
+            max = -1,
             padding = 1,
         },
-        side = "left",
+        side = "right",
     },
     renderer = {
-        highlight_git = false,
+        highlight_git = true,
         add_trailing = true,
         full_name = true,
         group_empty = false,
-        highlight_opened_files = "name",
+        highlight_opened_files = "all",
+        highlight_modified = "all",
         root_folder_label = ":t:r",
         special_files = {},
         indent_markers = {
@@ -566,7 +569,7 @@ require("nvim-tree").setup {
             modified_placement = "before",
             show = {
                 file = false,
-                folder = false,
+                folder = true,
             },
         },
     },
@@ -618,12 +621,7 @@ require("ibl").setup {
 -- status line setup
 require('lualine').setup {
     options = {
-        -- theme = 'gruvbox',
-        -- theme = 'gruvbox_dark',
-        -- theme = 'gruvbox_light',
-        -- theme = 'powerline',
-        theme = 'powerline_dark',
-        -- theme = 'everforest',
+        theme = 'everforest', -- other values: powerline, powerline_dark, gruvbox_dark
         icons_enabled = false,
         section_separators = { left = '', right = '' },
         component_separators = { left = '', right = '' }
@@ -859,9 +857,6 @@ command! -nargs=0 WriteWithSudo :w !sudo tee % >/dev/null
 cnoreabbrev ww WriteWithSudo
 
 " database UI
-" nnoremap <leader>db <cmd>:DBUI<CR>
-cnoreabbrev db DBUI
-cnoreabbrev dbui DBUI
 let g:db_ui_save_location = '~/projects/db-connections'
 
 let g:better_whitespace_filetypes_blacklist=['NvimTree', 'diff', 'git', 'gitcommit', 'unite', 'qf', 'help', 'markdown', 'fugitive', 'dbout']

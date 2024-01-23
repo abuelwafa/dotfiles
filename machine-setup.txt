@@ -2,6 +2,8 @@
 mkdir -p ~/projects
 # create the machine config file. this file contains customizations specific to the current machine
 touch ~/projects/.machine-config
+echo 'export WORK_EMAIL_ADDRESS="mohamed.abuelwafa@gmail.com"' | tee -a ~/projects/.machine-config
+echo 'export OPENAI_API_KEY="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"' | tee -a ~/projects/.machine-config
 =============================================================
 /* generate ssh keys */
 ssh-keygen -t ed25519 -C "your_email@example.com"
@@ -99,6 +101,9 @@ MACOS
 # https://github.com/abiosoft/colima
 brew install docker colima
 =============================================================
+UBUNTU
+# install docker engine according to the instructions from the docker website
+================================================================
 install from their respective websites
 Google Chrome
 Zoom
@@ -143,8 +148,13 @@ ln -s ~/projects/dotfiles/tmux/mode_indicator.sh ~/.tmux/plugins/tmux/custom/mod
 ln -s ~/projects/dotfiles/tmux/pomodoro_status.sh ~/.tmux/plugins/tmux/custom/pomodoro_status.sh
 # run tmux and install plugins with <prefix>I
 # edit network speed arrow icons
-sed -i '' -e 's/↓//' ~/.tmux/plugins/tmux-network-speed/network_speed.sh
-sed -i '' -e 's/↑//' ~/.tmux/plugins/tmux-network-speed/network_speed.sh
+sed -i -e 's/↓//' ~/.tmux/plugins/tmux-network-speed/network_speed.sh
+sed -i -e 's/↑//' ~/.tmux/plugins/tmux-network-speed/network_speed.sh
+
+# linux only: export the correct network interface to get online speeds correctly if not on macos
+# for macos, it should be already configured. no need to export this variable
+# you can look at available interfaces in /proc/net/dev for linux.
+echo 'export TMUX_STATUS_NETWORK_SPEED_INTERFACE="wlan0"' | tee -a ~/projects/.machine-config
 =============================================================
 # neovim config
 mkdir -p ~/.config/nvim
@@ -231,3 +241,21 @@ MACOS
 # optional: install OSXfuse for dealing with NTFS and external hard disk drives
 https://github.com/osxfuse/osxfuse
 =============================================================
+increase ubuntu inotify watchers for dropbox sync and for projects file watching
+echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
+==================================================================
+# for ubuntu cloud vms
+# create new non-root user
+adduser username
+# add the newly created user to the sudo group
+adduser username sudo
+# copy ssh public keys to the new user
+mkdir -p /home/username/.ssh
+cp /root/.ssh/authorized_keys /home/username/.ssh/authorized_keys
+chown --recursive username:username /home/username/.ssh
+# disable root user login
+# disable password login
+# install mosh
+sudo apt install mosh
+================================================================
+

@@ -62,9 +62,6 @@ docker pull vault
 docker pull sonarqube
 docker pull gitlab/gitlab-ce
 ==================================================================
-increase ubuntu inotify watchers for dropbox sync and for projects file watching
-echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
-==================================================================
 # ubuntu - nautilus hide the sidebar by default when opening a new window
 gsettings set org.gnome.nautilus.window-state start-with-sidebar false
 ===========================================================
