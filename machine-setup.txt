@@ -143,10 +143,10 @@ ln -s ~/projects/dotfiles/pgcli.config ~/.config/pgcli/config
 =============================================================
 # tmux
 ln -s ~/projects/dotfiles/tmux/tmux.conf ~/.tmux.conf
+# run tmux and install plugins with <prefix>I before linking the following files
 ln -s ~/projects/dotfiles/tmux/net_speed.sh ~/.tmux/plugins/tmux/custom/net_speed.sh
 ln -s ~/projects/dotfiles/tmux/mode_indicator.sh ~/.tmux/plugins/tmux/custom/mode_indicator.sh
 ln -s ~/projects/dotfiles/tmux/pomodoro_status.sh ~/.tmux/plugins/tmux/custom/pomodoro_status.sh
-# run tmux and install plugins with <prefix>I
 # edit network speed arrow icons
 sed -i -e 's/↓//' ~/.tmux/plugins/tmux-network-speed/network_speed.sh
 sed -i -e 's/↑//' ~/.tmux/plugins/tmux-network-speed/network_speed.sh
