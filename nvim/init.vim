@@ -61,6 +61,18 @@ Plug 'tpope/vim-dadbod'
 Plug 'kristijanhusak/vim-dadbod-ui'
 Plug 'kristijanhusak/vim-dadbod-completion'
 Plug 'jackMort/ChatGPT.nvim'
+Plug 'mfussenegger/nvim-dap'
+Plug 'nvim-telescope/telescope-dap.nvim'
+Plug 'rcarriga/nvim-dap-ui'
+Plug 'nvim-neo-tree/neo-tree.nvim'
+Plug 'williamboman/mason.nvim'
+Plug 'mfussenegger/nvim-lint'
+Plug 'hrsh7th/nvim-cmp'
+Plug 'neovim/nvim-lspconfig'
+Plug 'williamboman/mason.nvim'
+Plug 'L3MON4D3/LuaSnip', {'tag': 'v2.*', 'do': 'make install_jsregexp'}
+Plug 'saadparwaiz1/cmp_luasnip'
+Plug 'hrsh7th/cmp-nvim-lsp'
 
 " Plug 'pwntester/octo.nvim'
 " Plug 'github/copilot.vim'
@@ -68,7 +80,6 @@ Plug 'jackMort/ChatGPT.nvim'
 
 "-- to be explored
 " Plug 'numToStr/FTerm.nvim'
-" Plug 'neovim/nvim-lspconfig'
 
 function! UpdateRemotePlugins(...)
     " Needed to refresh runtime files
@@ -105,7 +116,6 @@ set ignorecase
 set showmatch
 
 set colorcolumn=101
-" set relativenumber
 
 " disable code folding
 set foldenable
@@ -194,117 +204,6 @@ match errorMsg /\s\+$/
 set splitbelow
 set splitright
 
-"====================================================================
-" COC configuration
-let g:coc_global_extensions = [
-    \ 'coc-swagger',
-    \ 'coc-html',
-    \ 'coc-styled-components',
-    \ 'coc-tsserver',
-    \ 'coc-json',
-    \ 'coc-go',
-    \ 'coc-rust-analyzer',
-    \ 'coc-prettier',
-    \ 'coc-css',
-    \ 'coc-docker',
-    \ 'coc-pyright',
-    \ 'coc-eslint',
-    \ 'coc-sql',
-    \ 'coc-db',
-    \ 'coc-highlight',
-    \ 'coc-clangd',
-    \ 'coc-sh',
-    \ 'coc-svg',
-    \ 'coc-yaml',
-    \ 'coc-prisma',
-    \ 'coc-xml',
-    \ 'coc-vimlsp',
-    \ 'coc-styled-components',
-    \ '@yaegassy/coc-nginx',
-    \ 'coc-fzf-preview',
-    \ 'coc-toml',
-\ ]
-
-" Use tab for trigger completion with characters ahead and navigate
-inoremap <silent><expr> <TAB>
-      \ coc#pum#visible() ? coc#pum#next(1) :
-      \ CheckBackspace() ? "\<Tab>" :
-      \ coc#refresh()
-inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
-
-lua vim.keymap.set("i", "<cr>", [[coc#pum#visible() ? coc#pum#confirm() : "<cmd>lua require('pairs.enter').type()<cr>"]], { silent = true, noremap = true, expr = true, replace_keycodes = false })
-
-function! CheckBackspace() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
-
-" Use <c-space> to trigger completion
-inoremap <silent><expr> <c-space> coc#refresh()
-
-" Use K to show documentation in preview window
-nnoremap <silent> K :call ShowDocumentation()<CR>
-
-function! ShowDocumentation()
-  if CocAction('hasProvider', 'hover')
-    call CocActionAsync('doHover')
-  else
-    call feedkeys('K', 'in')
-  endif
-endfunction
-
-" Highlight the symbol and its references when holding the cursor
-autocmd CursorHold * silent call CocActionAsync('highlight')
-
-" Symbol renaming
-nmap <leader>rn <Plug>(coc-rename)
-
-" GoTo code navigation
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
-
-" Remap keys for applying code actions at the cursor position
-nmap <leader>a  <Plug>(coc-codeaction-cursor)
-
-" Use `[g` and `]g` to navigate diagnostics
-" Use `:CocDiagnostics` to get all diagnostics of current buffer in location list
-nmap <silent> [g <Plug>(coc-diagnostic-prev)
-nmap <silent> ]g <Plug>(coc-diagnostic-next)
-
-" Remap keys for applying refactor code actions
-nmap <silent> <leader>re <Plug>(coc-codeaction-refactor)
-xmap <silent> <leader>r  <Plug>(coc-codeaction-refactor-selected)
-nmap <silent> <leader>r  <Plug>(coc-codeaction-refactor-selected)
-
-" Run the Code Lens action on the current line
-nmap <leader>cl  <Plug>(coc-codelens-action)
-
-" Add `:Format` command to format current buffer
-command! -nargs=0 Format :call CocActionAsync('format')
-
-" Add `:Fold` command to fold current buffer
-command! -nargs=? Fold :call CocAction('fold', <f-args>)
-
-" Add `:OrganizeImports` command for organize imports of the current buffer
-command! -nargs=0 OrganizeImports :call CocActionAsync('runCommand', 'editor.action.organizeImport')
-
-augroup mygroup
-  autocmd!
-  " Setup formatexpr specified filetype(s)
-  autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
-  " Update signature help on jump placeholder
-  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
-augroup end
-
-" Remap <C-f> and <C-b> to scroll float windows/popups
-if has('nvim-0.4.0') || has('patch-8.2.0750')
-  nnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : <Nop>
-  nnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : <Nop>
-endif
-
-"====================================================================
 "====================================================================
 
 " set mouse shape to block in insert mode
@@ -486,6 +385,12 @@ require("rest-nvim").setup({
 
 vim.diagnostic.config({ virtual_text = true })
 
+------------------------------------------------
+-- lsp config
+
+
+
+------------------------------------------------
 -- telescope setup
 require('telescope').setup({
     extensions = {
@@ -494,7 +399,7 @@ require('telescope').setup({
         },
     },
     defaults = {
-        file_ignore_patterns = { "^.git/" },
+        file_ignore_patterns = { "^.git/", "yarn.lock" },
         mappings = {
             i = {
                 ["jj"] = { "<esc>", type = "command" },
@@ -736,7 +641,7 @@ require('bufferline').setup({
         show_buffer_default_icon = false,
         left_trunc_marker = '..',
         right_trunc_marker = '..',
-        diagnostics = "coc",
+        diagnostics = "nvim_lsp",
         separator_style = {"", ""},
         name_formatter = function(buf)
             return '' .. buf.name .. ' '
@@ -933,7 +838,7 @@ nnoremap <leader>o <cmd>Telescope file_browser path=%:p:h select_buffer=true ini
 " toggle tag bar
 nnoremap <leader>i <cmd>TagbarToggle<CR>
 
-nnoremap ff :NvimTreeToggle<cr>
+nnoremap ff :Neotree source=filesystem position=right toggle reveal<cr>
 
 " quickly switch currently open buffers
 nnoremap <silent><leader>1 <Cmd>BufferLineGoToBuffer 1<CR>
@@ -955,3 +860,17 @@ cnoreabbrev ww WriteWithSudo
 let g:db_ui_save_location = '~/projects/db-connections'
 
 let g:better_whitespace_filetypes_blacklist=['NvimTree', 'diff', 'git', 'gitcommit', 'unite', 'qf', 'help', 'markdown', 'fugitive', 'dbout']
+
+command! Qfall call s:quickFixOpenAll()
+function! s:quickFixOpenAll()
+  let files = {}
+  for entry in getqflist()
+    let filename = bufname(entry.bufnr)
+    let files[filename] = 1
+  endfor
+
+  for file in keys(files)
+    silent exe "edit ".file
+  endfor
+endfunction
+

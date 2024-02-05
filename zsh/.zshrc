@@ -273,7 +273,7 @@ function virtualenv_info(){
 
 PROMPT='
 $(rule)$(check-git-email)
-%{$fg_bold[green]%}%~%{$reset_color%}$(git_prompt_info) %{$fg_bold[red]%}%*%{$reset_color%}
+%{$fg_bold[green]%}%~%{$reset_color%}$(git_prompt_info) %{$fg_bold[red]%}%*%{$reset_color%} %{$bg_bold[green]%}%{$fg_bold[black]%} node: $(node -v) %{$reset_color%}
 %{$bg_bold[red]%}%{$fg_bold[white]%}$(kubectx_prompt_info)%{$reset_color%}%{$bg_bold[magenta]%}%{$fg_bold[yellow]%}$(aws_prompt_info)%{$reset_color%}%{$fg[yellow]%}$(virtualenv_info)%{$reset_color%}%{$fg_bold[magenta]%}-> %{$reset_color%}'
 
 if command -v rbenv &> /dev/null
