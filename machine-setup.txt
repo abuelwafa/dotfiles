@@ -23,10 +23,9 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 # install latest essentials using homebrew
 # install nodejs lts from homebrew
 # install bat https://github.com/sharkdp/bat
-# docker runtime using colima
 brew install the following:
 zsh neovim git tmux gcc cmake tree btop git-delta node@20 yarn bat ripgrep fzf fd fx jq yh lazygit mc libpq
-kubernetes-cli helm python watchman go
+kubernetes-cli minikube helm python watchman go
 
 rbenv ruby-build
 youtube-dl
