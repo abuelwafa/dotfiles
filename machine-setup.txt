@@ -11,6 +11,14 @@ ssh-keygen -t ed25519 -C "your_email@example.com"
 # ubuntu/debian only: install the following packages
 curl git xclip build-essential
 =============================================================
+# ubuntu/debian: setup firewall
+sudo apt install ufw
+sudo ufw default deny incoming
+sudo ufw allow in http
+sudo ufw allow ssh
+sudo ufw allow in 3000/tcp
+sudo ufw enable
+=============================================================
 # install Homebrew from it's website
 https://brew.sh/
 # add homebrew to path
