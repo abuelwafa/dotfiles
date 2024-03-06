@@ -235,6 +235,7 @@ alias mv='mv -i'
 alias remove='rm -rf'
 
 alias kctl='kubectl'
+alias lima='limactl'
 
 # add kubectl completion
 [[ $commands[kubectl] ]] && source <(kubectl completion zsh)
