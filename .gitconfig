@@ -37,6 +37,7 @@
     whitespace-error-style = 22 reverse
     plus-style = bold normal "#008400"
     minus-style = bold normal "#3f0001"
+    light = false
 
 [delta "decorations"]
     commit-decoration-style = bold yellow

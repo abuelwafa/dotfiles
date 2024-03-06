@@ -239,7 +239,7 @@ alias kctl='kubectl'
 # add kubectl completion
 [[ $commands[kubectl] ]] && source <(kubectl completion zsh)
 
-export BAT_THEME="base16-256"
+export BAT_THEME="base16"
 
 # Base16 Shell
 BASE16_SHELL_PATH="$HOME/projects/base16-shell"

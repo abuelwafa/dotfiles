@@ -20,7 +20,6 @@ Plug 'nvim-telescope/telescope.nvim'
 Plug 'ANGkeith/telescope-terraform-doc.nvim'
 Plug 'lpoto/telescope-docker.nvim'
 Plug 'nvim-telescope/telescope-file-browser.nvim'
-Plug 'neoclide/coc.nvim', { 'branch': 'release' }
 Plug 'lukas-reineke/indent-blankline.nvim'
 Plug 'ZhiyuanLck/smart-pairs'
 Plug 'phaazon/hop.nvim'
@@ -73,10 +72,13 @@ Plug 'williamboman/mason.nvim'
 Plug 'L3MON4D3/LuaSnip', {'tag': 'v2.*', 'do': 'make install_jsregexp'}
 Plug 'saadparwaiz1/cmp_luasnip'
 Plug 'hrsh7th/cmp-nvim-lsp'
+" Plug 'folke/noice.nvim'
+" Plug 'rmagatti/goto-preview'
+" Plug 'windwp/nvim-autopairs'
 
 " Plug 'pwntester/octo.nvim'
-" Plug 'github/copilot.vim'
 " Plug 'haishanh/night-owl.vim'
+" Plug 'zbirenbaum/copilot.lua'
 
 "-- to be explored
 " Plug 'numToStr/FTerm.nvim'
@@ -388,6 +390,16 @@ vim.diagnostic.config({ virtual_text = true })
 ------------------------------------------------
 -- lsp config
 
+local lspconfig = require('lspconfig')
+lspconfig.pyright.setup {}
+lspconfig.tsserver.setup {}
+lspconfig.rust_analyzer.setup {}
+
+require("mason").setup()
+
+local cmp = require'cmp'
+cmp.setup({
+})
 
 
 ------------------------------------------------
@@ -616,7 +628,7 @@ require("ibl").setup {
 }
 
 -- winbar setup
-vim.o.winbar = "%{expand(\"%:~:.\")} %m%=%{coc#status()} "
+-- vim.o.winbar = "%{expand(\"%:~:.\")} %m%=%{coc#status()} "
 
 -- status line setup
 require('lualine').setup {
