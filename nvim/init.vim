@@ -284,13 +284,13 @@ require('colorizer').setup({
 
 require('nvim-treesitter.configs').setup({
     ensure_installed = {
-        -- "astro",
+        "astro",
         "bash",
-        -- "c",
-        -- "c_sharp",
-        -- "cmake",
+        "c",
+        "c_sharp",
+        "cmake",
         "comment",
-        -- "cpp",
+        "cpp",
         "css",
         "diff",
         "dockerfile",
@@ -304,9 +304,9 @@ require('nvim-treesitter.configs').setup({
         "gosum",
         "gowork",
         "graphql",
-        -- "groovy",
+        "groovy",
         "html",
-        -- "htmldjango",
+        "htmldjango",
         "http",
         "java",
         "javascript",
@@ -318,19 +318,19 @@ require('nvim-treesitter.configs').setup({
         "kotlin",
         "lua",
         "luadoc",
-        -- "make",
+        "make",
         "markdown",
         "markdown_inline",
         -- "objc",
         -- "pem",
-        -- "php",
-        -- "phpdoc",
-        -- "po",
+        "php",
+        "phpdoc",
+        "po",
         "prisma",
         "python",
         "query",
         "regex",
-        -- "rust",
+        "rust",
         "scss",
         "sql",
         -- "svelte",
@@ -341,7 +341,7 @@ require('nvim-treesitter.configs').setup({
         "typescript",
         "vim",
         "vimdoc",
-        -- "vue",
+        "vue",
         "yaml"
     },
     auto_install = true,
@@ -352,9 +352,7 @@ require('nvim-treesitter.configs').setup({
         disable = {},
         additional_vim_regex_highlighting = false
     },
-    indent = {
-        enable = true
-    }
+    indent = { enable = true }
 })
 
 function fxJSONFormat(content)
