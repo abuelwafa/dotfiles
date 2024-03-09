@@ -20,6 +20,8 @@ Plug 'nvim-telescope/telescope.nvim'
 Plug 'ANGkeith/telescope-terraform-doc.nvim'
 Plug 'lpoto/telescope-docker.nvim'
 Plug 'nvim-telescope/telescope-file-browser.nvim'
+Plug 'nvim-telescope/telescope-ui-select.nvim'
+Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build' }
 Plug 'lukas-reineke/indent-blankline.nvim'
 Plug 'ZhiyuanLck/smart-pairs'
 Plug 'phaazon/hop.nvim'
@@ -48,9 +50,9 @@ Plug 'nacro90/numb.nvim'
 Plug 'MunifTanjim/nui.nvim'
 Plug 'szw/vim-maximizer'
 Plug 'nvim-tree/nvim-tree.lua'
+Plug 'nvim-neo-tree/neo-tree.nvim'
 Plug 'akinsho/bufferline.nvim', { 'tag': 'v3.*' }
 Plug 'jparise/vim-graphql'
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'norcalli/nvim-colorizer.lua'
 Plug 'f-person/git-blame.nvim'
 Plug 'eandrju/cellular-automaton.nvim'
@@ -60,18 +62,20 @@ Plug 'tpope/vim-dadbod'
 Plug 'kristijanhusak/vim-dadbod-ui'
 Plug 'kristijanhusak/vim-dadbod-completion'
 Plug 'jackMort/ChatGPT.nvim'
-Plug 'mfussenegger/nvim-dap'
-Plug 'nvim-telescope/telescope-dap.nvim'
-Plug 'rcarriga/nvim-dap-ui'
-Plug 'nvim-neo-tree/neo-tree.nvim'
-Plug 'williamboman/mason.nvim'
-Plug 'mfussenegger/nvim-lint'
-Plug 'hrsh7th/nvim-cmp'
+
 Plug 'neovim/nvim-lspconfig'
 Plug 'williamboman/mason.nvim'
-Plug 'L3MON4D3/LuaSnip', {'tag': 'v2.*', 'do': 'make install_jsregexp'}
-Plug 'saadparwaiz1/cmp_luasnip'
-Plug 'hrsh7th/cmp-nvim-lsp'
+Plug 'williamboman/mason-lspconfig.nvim'
+Plug 'WhoIsSethDaniel/mason-tool-installer.nvim'
+
+" Plug 'mfussenegger/nvim-dap'
+" Plug 'rcarriga/nvim-dap-ui'
+" Plug 'nvim-telescope/telescope-dap.nvim'
+" Plug 'mfussenegger/nvim-lint'
+" Plug 'hrsh7th/nvim-cmp'
+" Plug 'L3MON4D3/LuaSnip', {'tag': 'v2.*', 'do': 'make install_jsregexp'}
+" Plug 'saadparwaiz1/cmp_luasnip'
+" Plug 'hrsh7th/cmp-nvim-lsp'
 " Plug 'folke/noice.nvim'
 " Plug 'rmagatti/goto-preview'
 " Plug 'windwp/nvim-autopairs'
@@ -110,10 +114,7 @@ set smartindent
 set cindent
 
 " Search
-set hlsearch
 set incsearch
-set smartcase
-set ignorecase
 " set gdefault
 set showmatch
 
@@ -127,7 +128,6 @@ set foldlevel=20
 set foldminlines=2
 
 set lbr
-set noshowmode
 
 set tabstop=4
 set softtabstop=4
@@ -136,8 +136,6 @@ set expandtab
 
 set nopaste
 
-set number " show line numbers
-set cursorline " highlight current line
 
 set completeopt="menuone,noinsert,noselect"
 
@@ -148,14 +146,10 @@ set backspace=indent,eol,start
 " movement keys will take you to the next or previous line
 set whichwrap+=<,>,h,l
 
-" scrolls the buffer before you reach the last line of the window
-set scrolloff=4
-
 " remember more commands and search history
 set history=1000
 " use many much of levels of undo  "
 set undolevels=1000
-set undofile
 
 " hide buffers instead of closing them, allows for changing files without saving
 set hidden
@@ -183,28 +177,17 @@ set wildignore+=*/tmp/cache/assets/*/sprockets/*,*/tmp/cache/assets/*/sass/*
 " Disable temp and backup files
 set wildignore+=*.swp,*~,._*
 
-set signcolumn=yes
-
-" Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable delays and poor user experience. try experimenting with decreasing it to 200ms and check the performance
-set updatetime=50
-
 " don't give |ins-completion-menu| messages.
 set shortmess+=c
 
 " Better display for messages
 " set cmdheight=2
 
-" set nolist
-set list
 " makes cursor on the begining of tab characters. makes it behaves like other editors
 " view tabs with pipe character and three spaces to proper view indent guides
 set listchars+=extends:>
 set listchars+=trail:\ ,tab:\|\ ,nbsp:␣
 match errorMsg /\s\+$/
-
-" Open new windows on the bottom and right instead of the top and left.
-set splitbelow
-set splitright
 
 "====================================================================
 
@@ -252,8 +235,6 @@ if !executable('pbcopy') && executable('xclip')
     let g:system_copy#paste_command='xclip -sel clipboard -o'
 endif
 
-call wilder#setup({'modes': [':', '/', '?']})
-
 " ===================================================================================
 " ===================================================================================
 " lua configuration
@@ -262,8 +243,29 @@ lua << EOF
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
+vim.opt.number = true
+vim.opt.showmode = false
+vim.o.updatetime = 50
+vim.opt.timeoutlen = 1000
+vim.opt.cursorline = true
+vim.opt.scrolloff = 6
+vim.opt.list = true
+vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }   
+vim.opt.splitright = true
+vim.opt.splitbelow = true
+vim.opt.signcolumn = 'yes'
+vim.opt.ignorecase = true
+vim.opt.smartcase = true
+vim.opt.undofile = true
+vim.opt.inccommand = 'split'
+vim.opt.hlsearch = true
+vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
+vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
+
 -- hop setup
 require('hop').setup()
+
+require('wilder').setup({ modes = { ':', '/' } })
 
 require('Comment').setup()
 require('pairs'):setup({ enter = { enable_mapping = false } })
@@ -383,27 +385,98 @@ require("rest-nvim").setup({
     yank_dry_run = true,
 })
 
-vim.diagnostic.config({ virtual_text = true })
+vim.diagnostic.config({ virtual_text = false })
+vim.cmd [[autocmd CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {focus=false})]]
 
 ------------------------------------------------
 -- lsp config
 
-local lspconfig = require('lspconfig')
-lspconfig.pyright.setup {}
-lspconfig.tsserver.setup {}
-lspconfig.rust_analyzer.setup {}
-
 require("mason").setup()
+require('mason-tool-installer').setup({
+    auto_update = true,
+    run_on_start = true,
+    ensure_installed = {
+        'bashls',
+        'lua_ls',
+        'stylua',
+        'ansiblels',
+        'nginx-language-server',
+        'eslint',
+        'shellcheck',
+        'editorconfig-checker',
+        'luacheck',
+        'prettierd',
+        'pyright',
+        'rust-analyzer',
+        'yamlls',
+        'tsserver',
+        'tflint',
+        'terraformls',
+        'tailwindcss',
+        'stylelint_lsp',
+        'prismals',
+        'marksman',
+        'kotlin_language_server',
+        'gopls',
+        'golangci_lint_ls',
+        'jsonls',
+        'html',
+        'helm_ls',
+        'gradle_ls',
+        'emmet_ls',
+        'dockerls',
+        'docker_compose_language_service',
+        'cssls',
+        'cmake',
+        'clangd',
+        -- 'jdtls',
+        -- 'groovyls',
+        -- 'graphql',
+        -- 'textlsp',
+        -- 'postgres_lsp',
 
-local cmp = require'cmp'
-cmp.setup({
+        -- 'vint',
+        -- 'shellcheck',
+        -- 'shfmt',
+        -- 'vim-language-server',
+        -- 'impl',
+        -- 'gomodifytags',
+        -- 'gotests',
+        -- 'gofumpt',
+        -- 'golines',
+        -- 'json-to-struct',
+        -- 'misspell',
+        -- 'revive',
+        -- 'staticcheck',
+    },
 })
 
+require("mason-lspconfig").setup({
+    handlers = {
+        function(server_name)
+            require('lspconfig')[server_name].setup({})
+        end,
+        -- overrides
+        -- ["lsp_name"] = function ()
+        --     require("lspconfig").setup()
+        -- end
+    }
+})
 
 ------------------------------------------------
 -- telescope setup
 require('telescope').setup({
     extensions = {
+        fzf = {
+            fuzzy = true,                    -- false will only do exact matching
+            override_generic_sorter = true,  -- override the generic sorter
+            override_file_sorter = true,     -- override the file sorter
+            case_mode = "smart_case",        -- or "ignore_case" or "respect_case"
+                           -- the default case_mode is "smart_case"
+        },
+        ["ui-select"] = {
+            require('telescope.themes').get_dropdown(),
+        },
         file_browser = {
             hijack_netrw = true,
         },
@@ -444,17 +517,25 @@ require('telescope').setup({
     },
 })
 
-function vim.getVisualSelection()
-	vim.cmd('noau normal! "vy"')
-	local text = vim.fn.getreg('v')
-	vim.fn.setreg('v', {})
+vim.keymap.set('n', '?', function()
+    local builtin = require 'telescope.builtin'
+    builtin.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
+        winblend = 10,
+        previewer = false,
+    })
+end, { desc = '[/] Fuzzily search in current buffer' })
 
-	text = string.gsub(text, "\n", "")
-	if #text > 0 then
-		return text
-	else
-		return ''
-	end
+function vim.getVisualSelection()
+    vim.cmd('noau normal! "vy"')
+    local text = vim.fn.getreg('v')
+    vim.fn.setreg('v', {})
+
+    text = string.gsub(text, "\n", "")
+    if #text > 0 then
+        return text
+    else
+        return ''
+    end
 end
 
 vim.keymap.set('n', '<leader>fb', function()
@@ -490,8 +571,10 @@ local function grep_in()
 end
 
 require('telescope').load_extension('terraform_doc')
-require("telescope").load_extension "docker"
-require("telescope").load_extension "file_browser"
+require("telescope").load_extension("docker")
+require("telescope").load_extension("file_browser")
+require("telescope").load_extension("ui-select")
+require('telescope').load_extension('fzf')
 
 ---------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------
@@ -560,7 +643,7 @@ require("nvim-tree").setup {
             max = -1,
             padding = 1,
         },
-        side = "right",
+        side = "left",
     },
     renderer = {
         highlight_git = true,
@@ -626,7 +709,7 @@ require("ibl").setup {
 }
 
 -- winbar setup
--- vim.o.winbar = "%{expand(\"%:~:.\")} %m%=%{coc#status()} "
+vim.o.winbar = "%{expand(\"%:~:.\")} %m%=%{'dddd'} "
 
 -- status line setup
 require('lualine').setup {
@@ -833,8 +916,6 @@ nnoremap <expr> p 'p`[' . strpart(getregtype(), 0, 1) . '`]y'
 vnoremap <expr> p 'p`[' . strpart(getregtype(), 0, 1) . '`]y'
 nnoremap <leader>m :MaximizerToggle<cr>
 
-nnoremap <leader>t :term<cr>
-tnoremap <ESC><ESC> <C-\><C-N>
 
 " move splits
 nnoremap <silent> <leader>h <c-w>H
@@ -848,7 +929,8 @@ nnoremap <leader>o <cmd>Telescope file_browser path=%:p:h select_buffer=true ini
 " toggle tag bar
 nnoremap <leader>i <cmd>TagbarToggle<CR>
 
-nnoremap ff :Neotree source=filesystem position=right toggle reveal<cr>
+nnoremap ff :NvimTreeToggle<cr>
+" nnoremap ff :Neotree source=filesystem position=left toggle reveal<cr>
 
 " quickly switch currently open buffers
 nnoremap <silent><leader>1 <Cmd>BufferLineGoToBuffer 1<CR>
