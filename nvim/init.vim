@@ -23,7 +23,6 @@ Plug 'nvim-telescope/telescope-file-browser.nvim'
 Plug 'nvim-telescope/telescope-ui-select.nvim'
 Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build' }
 Plug 'lukas-reineke/indent-blankline.nvim'
-Plug 'ZhiyuanLck/smart-pairs'
 Plug 'phaazon/hop.nvim'
 Plug 'lbrayner/vim-rzip'
 Plug 'mg979/vim-visual-multi', {'branch': 'master'}
@@ -40,7 +39,7 @@ Plug 'prisma/vim-prisma'
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install' }
 Plug 'christoomey/vim-system-copy'
 Plug 'numToStr/Comment.nvim'
-Plug 'airblade/vim-gitgutter'
+Plug 'lewis6991/gitsigns.nvim'
 Plug 'tinted-theming/base16-vim'
 Plug 'MarcWeber/vim-addon-mw-utils'
 Plug 'mattn/emmet-vim'
@@ -62,23 +61,35 @@ Plug 'tpope/vim-dadbod'
 Plug 'kristijanhusak/vim-dadbod-ui'
 Plug 'kristijanhusak/vim-dadbod-completion'
 Plug 'jackMort/ChatGPT.nvim'
+Plug 'stevearc/dressing.nvim'
+Plug 'folke/trouble.nvim'
+Plug 'j-hui/fidget.nvim'
+Plug 'windwp/nvim-autopairs'
+Plug 'nvim-tree/nvim-web-devicons'
 
 Plug 'neovim/nvim-lspconfig'
 Plug 'williamboman/mason.nvim'
 Plug 'williamboman/mason-lspconfig.nvim'
 Plug 'WhoIsSethDaniel/mason-tool-installer.nvim'
+Plug 'RRethy/vim-illuminate'
+Plug 'folke/todo-comments.nvim'
+Plug 'stevearc/conform.nvim'
 
 " Plug 'mfussenegger/nvim-dap'
 " Plug 'rcarriga/nvim-dap-ui'
 " Plug 'nvim-telescope/telescope-dap.nvim'
+
 " Plug 'mfussenegger/nvim-lint'
-" Plug 'hrsh7th/nvim-cmp'
+
+Plug 'hrsh7th/nvim-cmp'
+Plug 'hrsh7th/cmp-nvim-lsp'
+Plug 'hrsh7th/cmp-path'
+" Plug 'onsails/lspkind.nvim'
+
 " Plug 'L3MON4D3/LuaSnip', {'tag': 'v2.*', 'do': 'make install_jsregexp'}
 " Plug 'saadparwaiz1/cmp_luasnip'
-" Plug 'hrsh7th/cmp-nvim-lsp'
-" Plug 'folke/noice.nvim'
+" Plug 'rafamadriz/friendly-snippets'
 " Plug 'rmagatti/goto-preview'
-" Plug 'windwp/nvim-autopairs'
 
 " Plug 'pwntester/octo.nvim'
 " Plug 'haishanh/night-owl.vim'
@@ -147,9 +158,9 @@ set backspace=indent,eol,start
 set whichwrap+=<,>,h,l
 
 " remember more commands and search history
-set history=1000
+set history=9999
 " use many much of levels of undo  "
-set undolevels=1000
+set undolevels=9999
 
 " hide buffers instead of closing them, allows for changing files without saving
 set hidden
@@ -250,7 +261,7 @@ vim.opt.timeoutlen = 1000
 vim.opt.cursorline = true
 vim.opt.scrolloff = 6
 vim.opt.list = true
-vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }   
+vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
 vim.opt.splitright = true
 vim.opt.splitbelow = true
 vim.opt.signcolumn = 'yes'
@@ -268,7 +279,7 @@ require('hop').setup()
 require('wilder').setup({ modes = { ':', '/' } })
 
 require('Comment').setup()
-require('pairs'):setup({ enter = { enable_mapping = false } })
+require('gitsigns').setup()
 require('numb').setup()
 require("chatgpt").setup()
 require('colorizer').setup({
@@ -282,6 +293,30 @@ require('colorizer').setup({
     hsl_fn = true;
     css = true;
     css_fn = true;
+})
+
+require('dressing').setup()
+require('trouble').setup()
+require('fidget').setup()
+require("nvim-autopairs").setup()
+require("todo-comments").setup()
+require("conform").setup({
+    notify_on_error = true,
+    format_on_save = {
+        timeout_ms = 500,
+        lsp_fallback = true,
+    },
+    formatters_by_ft = {
+        lua = { "stylua" },
+        go = { "goimports", "gofmt" },
+        -- python = { {  "isort", "black" } },
+        javascript = { { "prettierd" } },
+        javascriptreact = { { "prettierd" } },
+        typescript = { { "prettierd" } },
+        typescriptreact = { { "prettierd" } },
+        ["*"] = { "codespell" },
+        ["_"] = { "trim_whitespace" },
+    },
 })
 
 require('nvim-treesitter.configs').setup({
@@ -386,7 +421,7 @@ require("rest-nvim").setup({
 })
 
 vim.diagnostic.config({ virtual_text = false })
-vim.cmd [[autocmd CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {focus=false})]]
+vim.cmd [[autocmd CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, { focus = false, border = 'single' })]]
 
 ------------------------------------------------
 -- lsp config
@@ -450,6 +485,53 @@ require('mason-tool-installer').setup({
         -- 'staticcheck',
     },
 })
+
+vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
+  vim.lsp.handlers.hover, { border = "single" }
+)
+
+vim.api.nvim_create_autocmd('LspAttach', {
+    group = vim.api.nvim_create_augroup('lsp-attach-group', { clear = true }),
+    callback = function(event)
+        local map = function(keys, func, desc)
+            vim.keymap.set('n', keys, func, { buffer = event.buf, desc = 'LSP: ' .. desc })
+        end
+        --  To jump back, press <C-T>.
+        map('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
+        -- Jump to the type definition
+        map('gD', require('telescope.builtin').lsp_type_definitions, 'Type [D]efinition')
+        -- Goto Declaration. For example, in C this would take you to the header
+        map('<leader>D', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
+        -- Find references for the word under your cursor.
+        map('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
+        -- Rename the variable under your cursor
+        map('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
+        -- Execute a code action
+        map('<leader>a', vim.lsp.buf.code_action, '[C]ode [A]ction')
+        -- Opens a documentation popup
+        map('K', vim.lsp.buf.hover, 'Hover Documentation')
+
+        -- The following two autocommands are used to highlight references of the
+        -- word under your cursor when your cursor rests there for a little while.
+        --    See `:help CursorHold` for information about when this is executed
+        -- When you move your cursor, the highlights will be cleared (the second autocommand).
+        local client = vim.lsp.get_client_by_id(event.data.client_id)
+        if client and client.server_capabilities.documentHighlightProvider then
+            vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
+            buffer = event.buf,
+            callback = vim.lsp.buf.document_highlight,
+            })
+
+            vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
+                buffer = event.buf,
+                callback = vim.lsp.buf.clear_references,
+            })
+        end
+    end,
+})
+
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
 
 require("mason-lspconfig").setup({
     handlers = {
@@ -709,7 +791,7 @@ require("ibl").setup {
 }
 
 -- winbar setup
-vim.o.winbar = "%{expand(\"%:~:.\")} %m%=%{'dddd'} "
+vim.o.winbar = "%{expand(\"%:~:.\")} %m%=%{'ddddddddddddddddddd'} "
 
 -- status line setup
 require('lualine').setup {
@@ -966,3 +1048,4 @@ function! s:quickFixOpenAll()
   endfor
 endfunction
 
+hi FloatBorder ctermfg=Cyan
