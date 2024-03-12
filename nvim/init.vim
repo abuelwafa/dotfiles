@@ -66,6 +66,7 @@ Plug 'folke/trouble.nvim'
 Plug 'j-hui/fidget.nvim'
 Plug 'windwp/nvim-autopairs'
 Plug 'nvim-tree/nvim-web-devicons'
+Plug 'windwp/nvim-ts-autotag'
 
 Plug 'neovim/nvim-lspconfig'
 Plug 'williamboman/mason.nvim'
@@ -75,21 +76,24 @@ Plug 'RRethy/vim-illuminate'
 Plug 'folke/todo-comments.nvim'
 Plug 'stevearc/conform.nvim'
 
+Plug 'hrsh7th/nvim-cmp'
+Plug 'hrsh7th/cmp-nvim-lsp'
+Plug 'hrsh7th/cmp-path'
+Plug 'hrsh7th/cmp-buffer'
+Plug 'hrsh7th/cmp-cmdline'
+Plug 'petertriho/cmp-git'
+Plug 'onsails/lspkind.nvim'
+
+Plug 'L3MON4D3/LuaSnip', {'tag': 'v2.*', 'do': 'make install_jsregexp'}
+Plug 'saadparwaiz1/cmp_luasnip'
+" Plug 'rafamadriz/friendly-snippets'
+" Plug 'rmagatti/goto-preview'
+
 " Plug 'mfussenegger/nvim-dap'
 " Plug 'rcarriga/nvim-dap-ui'
 " Plug 'nvim-telescope/telescope-dap.nvim'
 
 " Plug 'mfussenegger/nvim-lint'
-
-Plug 'hrsh7th/nvim-cmp'
-Plug 'hrsh7th/cmp-nvim-lsp'
-Plug 'hrsh7th/cmp-path'
-" Plug 'onsails/lspkind.nvim'
-
-" Plug 'L3MON4D3/LuaSnip', {'tag': 'v2.*', 'do': 'make install_jsregexp'}
-" Plug 'saadparwaiz1/cmp_luasnip'
-" Plug 'rafamadriz/friendly-snippets'
-" Plug 'rmagatti/goto-preview'
 
 " Plug 'pwntester/octo.nvim'
 " Plug 'haishanh/night-owl.vim'
@@ -104,7 +108,7 @@ function! UpdateRemotePlugins(...)
     UpdateRemotePlugins
 endfunction
 
-Plug 'gelguy/wilder.nvim', { 'do': function('UpdateRemotePlugins') }
+" Plug 'gelguy/wilder.nvim', { 'do': function('UpdateRemotePlugins') }
 
 call plug#end()
 
@@ -247,7 +251,6 @@ if !executable('pbcopy') && executable('xclip')
 endif
 
 " ===================================================================================
-" ===================================================================================
 " lua configuration
 " ===================================================================================
 lua << EOF
@@ -273,18 +276,13 @@ vim.opt.hlsearch = true
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 
--- hop setup
+-- plugins
 require('hop').setup()
-
-require('wilder').setup({ modes = { ':', '/' } })
-
 require('Comment').setup()
 require('gitsigns').setup()
 require('numb').setup()
 require("chatgpt").setup()
-require('colorizer').setup({
-    '*';
-}, {
+require('colorizer').setup({ '*' }, {
     RGB = true;
     RRGGBB = true;
     RRGGBBAA = true;
@@ -294,7 +292,7 @@ require('colorizer').setup({
     css = true;
     css_fn = true;
 })
-
+require'nvim-treesitter.configs'.setup({ autotag = { enable = true } })
 require('dressing').setup()
 require('trouble').setup()
 require('fidget').setup()
@@ -302,10 +300,7 @@ require("nvim-autopairs").setup()
 require("todo-comments").setup()
 require("conform").setup({
     notify_on_error = true,
-    format_on_save = {
-        timeout_ms = 500,
-        lsp_fallback = true,
-    },
+    format_on_save = { timeout_ms = 500, lsp_fallback = true },
     formatters_by_ft = {
         lua = { "stylua" },
         go = { "goimports", "gofmt" },
@@ -425,47 +420,47 @@ vim.cmd [[autocmd CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, { 
 
 ------------------------------------------------
 -- lsp config
-
 require("mason").setup()
 require('mason-tool-installer').setup({
     auto_update = true,
     run_on_start = true,
     ensure_installed = {
-        'bashls',
-        'lua_ls',
-        'stylua',
+        'actionlint',
         'ansiblels',
-        'nginx-language-server',
-        'eslint',
-        'shellcheck',
+        'bashls',
+        'clangd',
+        'cmake',
+        'cssls',
+        'docker_compose_language_service',
+        'dockerls',
         'editorconfig-checker',
+        'emmet_ls',
+        'eslint',
+        'golangci_lint_ls',
+        'gopls',
+        'gradle_ls',
+        'groovyls',
+        'helm_ls',
+        'html',
+        'jdtls',
+        'jsonls',
+        'kotlin_language_server',
+        'lua_ls',
         'luacheck',
+        'marksman',
+        'nginx-language-server',
         'prettierd',
+        'prismals',
         'pyright',
         'rust-analyzer',
-        'yamlls',
-        'tsserver',
-        'tflint',
-        'terraformls',
-        'tailwindcss',
+        'shellcheck',
         'stylelint_lsp',
-        'prismals',
-        'marksman',
-        'kotlin_language_server',
-        'gopls',
-        'golangci_lint_ls',
-        'jsonls',
-        'html',
-        'helm_ls',
-        'gradle_ls',
-        'emmet_ls',
-        'dockerls',
-        'docker_compose_language_service',
-        'cssls',
-        'cmake',
-        'clangd',
-        -- 'jdtls',
-        -- 'groovyls',
+        'stylua',
+        'tailwindcss',
+        'terraformls',
+        'tflint',
+        'tsserver',
+        'yamlls',
         -- 'graphql',
         -- 'textlsp',
         -- 'postgres_lsp',
@@ -473,12 +468,12 @@ require('mason-tool-installer').setup({
         -- 'vint',
         -- 'shellcheck',
         -- 'shfmt',
-        -- 'vim-language-server',
-        -- 'impl',
-        -- 'gomodifytags',
-        -- 'gotests',
-        -- 'gofumpt',
-        -- 'golines',
+        'vimls',
+        'impl',
+        'gomodifytags',
+        'gotests',
+        'gofumpt',
+        'golines',
         -- 'json-to-struct',
         -- 'misspell',
         -- 'revive',
@@ -530,9 +525,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
     end,
 })
 
-local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
-
 require("mason-lspconfig").setup({
     handlers = {
         function(server_name)
@@ -545,16 +537,103 @@ require("mason-lspconfig").setup({
     }
 })
 
-------------------------------------------------
+local cmp = require 'cmp'
+cmp.setup({
+    formatting = {
+        format = require('lspkind').cmp_format({ show_labelDetails = true })
+    },
+    snippet = {
+        expand = function(args)
+            require('luasnip').lsp_expand(args.body)
+        end,
+    },
+    window = {
+        completion = cmp.config.window.bordered(),
+        documentation = cmp.config.window.bordered(),
+    },
+    mapping = cmp.mapping.preset.insert({
+        ['<tab>'] = function(fallback)
+            if cmp.visible() then
+                cmp.select_next_item()
+            else
+                fallback()
+            end
+        end,
+        ['<s-tab>'] = function(fallback)
+            if cmp.visible() then
+                cmp.select_prev_item()
+            else
+                fallback()
+            end
+        end,
+        ['<s-k>'] = function(fallback)
+            if cmp.visible() then
+                cmp.scroll_docs(-2)
+            else
+                fallback()
+            end
+        end,
+        ['<s-j>'] = function(fallback)
+            if cmp.visible() then
+                cmp.scroll_docs(2)
+            else
+                fallback()
+            end
+        end,
+        ['<esc>'] = function(fallback)
+            if cmp.visible() then
+                cmp.abort()
+            else
+                fallback()
+            end
+        end,
+        ['<cr>'] = cmp.mapping.confirm({ select = false }),
+    }),
+    sources = cmp.config.sources({
+        { name = 'nvim_lsp' },
+        { name = 'luasnip' },
+    }, {
+        { name = 'buffer' },
+    })
+})
+
+cmp.setup.filetype('gitcommit', {
+    sources = cmp.config.sources({
+        { name = 'git' },
+    }, {
+        { name = 'buffer' },
+    })
+})
+
+cmp.setup.cmdline({ '/', '?' }, {
+    mapping = cmp.mapping.preset.cmdline(),
+    sources = {
+        { name = 'buffer' }
+    }
+})
+
+cmp.setup.cmdline(':', {
+    mapping = cmp.mapping.preset.cmdline(),
+    sources = cmp.config.sources({
+        { name = 'path' }
+    }, {
+        { name = 'cmdline' }
+    })
+})
+
+vim.cmd [[autocmd FileType sql,mysql,plsql lua require('cmp').setup.buffer({ sources = {{ name = 'vim-dadbod-completion' }} })]]
+
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
+
 -- telescope setup
 require('telescope').setup({
     extensions = {
         fzf = {
-            fuzzy = true,                    -- false will only do exact matching
-            override_generic_sorter = true,  -- override the generic sorter
-            override_file_sorter = true,     -- override the file sorter
-            case_mode = "smart_case",        -- or "ignore_case" or "respect_case"
-                           -- the default case_mode is "smart_case"
+            fuzzy = true,
+            override_generic_sorter = true,
+            override_file_sorter = true,
+            case_mode = "smart_case",
         },
         ["ui-select"] = {
             require('telescope.themes').get_dropdown(),
@@ -589,13 +668,8 @@ require('telescope').setup({
         layout_config = { width = 0.95, prompt_position = 'top', scroll_speed = 1 },
     },
     pickers = {
-        buffers = {
-            sort_lastused = true,
-        },
-        find_files = {
-            hidden = true,
-            no_ignore = false,
-        },
+        buffers = { sort_lastused = true },
+        find_files = { hidden = true, no_ignore = false },
     },
 })
 
@@ -627,8 +701,8 @@ vim.keymap.set('n', '<leader>fb', function()
 end, { noremap = true, silent = true })
 
 vim.keymap.set('v', '<leader>fb', function()
-	local text = vim.getVisualSelection()
-	require('telescope.builtin').live_grep({ default_text = text, initial_mode = 'normal' })
+    local text = vim.getVisualSelection()
+    require('telescope.builtin').live_grep({ default_text = text, initial_mode = 'normal' })
 end, { noremap = true, silent = true })
 
 -- live grep using Telescope inside the current directory under
@@ -657,9 +731,6 @@ require("telescope").load_extension("docker")
 require("telescope").load_extension("file_browser")
 require("telescope").load_extension("ui-select")
 require('telescope').load_extension('fzf')
-
----------------------------------------------------------------------------------------------
----------------------------------------------------------------------------------------------
 
 -- nvim-tree setup
 require("nvim-tree").setup {
@@ -720,11 +791,7 @@ require("nvim-tree").setup {
     end,
     view = {
         centralize_selection = false,
-        width = {
-            min = 32,
-            max = -1,
-            padding = 1,
-        },
+        width = { min = 32, max = -1, padding = 1 },
         side = "left",
     },
     renderer = {
@@ -742,18 +809,13 @@ require("nvim-tree").setup {
         icons = {
             git_placement = "after",
             modified_placement = "before",
-            show = {
-                file = false,
-                folder = true,
-            },
+            show = { file = false, folder = true },
         },
     },
 }
 
 -- Indent blankline
 local hooks = require "ibl.hooks"
--- create the highlight groups in the highlight setup hook, so they are reset
--- every time the colorscheme changes
 hooks.register(
     hooks.type.HIGHLIGHT_SETUP, function()
         vim.api.nvim_set_hl(0, "RainbowRed", { fg = "#E06C75" })
@@ -779,15 +841,9 @@ require("ibl").setup {
             "RainbowCyan",
         },
     },
-    whitespace = {
-        remove_blankline_trail = true,
-    },
-    scope = {
-        enabled = false
-    },
-    exclude = {
-        filetypes = { "dbout" }
-    },
+    whitespace = { remove_blankline_trail = true },
+    scope = { enabled = false },
+    exclude = { filetypes = { "dbout" } },
 }
 
 -- winbar setup
@@ -806,9 +862,7 @@ require('lualine').setup {
 require('bufferline').setup({
     options = {
         mode = "buffers",
-        indicator = {
-            style = 'none'
-        },
+        indicator = { style = 'none' },
         enforce_regular_tabs = false,
         buffer_close_icon = 'x',
         close_icon = 'x',
@@ -837,9 +891,6 @@ require('bufferline').setup({
 })
 
 EOF
-
-" ===========================================================
-" Custom Mappings
 
 let g:tmux_navigator_no_mappings = 1
 let g:tmux_navigator_disable_when_zoomed = 1
