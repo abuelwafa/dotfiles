@@ -72,7 +72,6 @@ Plug 'neovim/nvim-lspconfig'
 Plug 'williamboman/mason.nvim'
 Plug 'williamboman/mason-lspconfig.nvim'
 Plug 'WhoIsSethDaniel/mason-tool-installer.nvim'
-Plug 'RRethy/vim-illuminate'
 Plug 'folke/todo-comments.nvim'
 Plug 'stevearc/conform.nvim'
 
@@ -114,7 +113,6 @@ call plug#end()
 
 "===================================================
 " basic vim configuration
-"===================================================
 
 set t_Co=256
 set termguicolors
@@ -204,8 +202,6 @@ set listchars+=extends:>
 set listchars+=trail:\ ,tab:\|\ ,nbsp:␣
 match errorMsg /\s\+$/
 
-"====================================================================
-
 " set mouse shape to block in insert mode
 set guicursor=i:block
 
@@ -252,7 +248,6 @@ endif
 
 " ===================================================================================
 " lua configuration
-" ===================================================================================
 lua << EOF
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
@@ -353,8 +348,6 @@ require('nvim-treesitter.configs').setup({
         "make",
         "markdown",
         "markdown_inline",
-        -- "objc",
-        -- "pem",
         "php",
         "phpdoc",
         "po",
@@ -365,8 +358,6 @@ require('nvim-treesitter.configs').setup({
         "rust",
         "scss",
         "sql",
-        -- "svelte",
-        -- "swift",
         "terraform",
         "toml",
         "tsx",
@@ -638,9 +629,7 @@ require('telescope').setup({
         ["ui-select"] = {
             require('telescope.themes').get_dropdown(),
         },
-        file_browser = {
-            hijack_netrw = true,
-        },
+        file_browser = { hijack_netrw = true },
     },
     defaults = {
         file_ignore_patterns = { "^.git/", "yarn.lock" },
