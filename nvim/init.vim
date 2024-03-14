@@ -81,6 +81,7 @@ Plug 'hrsh7th/cmp-path'
 Plug 'hrsh7th/cmp-buffer'
 Plug 'hrsh7th/cmp-cmdline'
 Plug 'petertriho/cmp-git'
+Plug 'SergioRibera/cmp-dotenv'
 Plug 'onsails/lspkind.nvim'
 
 Plug 'L3MON4D3/LuaSnip', {'tag': 'v2.*', 'do': 'make install_jsregexp'}
@@ -95,8 +96,9 @@ Plug 'saadparwaiz1/cmp_luasnip'
 " Plug 'mfussenegger/nvim-lint'
 
 " Plug 'pwntester/octo.nvim'
-" Plug 'haishanh/night-owl.vim'
+
 " Plug 'zbirenbaum/copilot.lua'
+" Plug 'zbirenbaum/copilot-cmp'
 
 "-- to be explored
 " Plug 'numToStr/FTerm.nvim'
@@ -196,7 +198,7 @@ set shortmess+=c
 " Better display for messages
 " set cmdheight=2
 
-" makes cursor on the begining of tab characters. makes it behaves like other editors
+" makes cursor on the beginning of tab characters. makes it behaves like other editors
 " view tabs with pipe character and three spaces to proper view indent guides
 set listchars+=extends:>
 set listchars+=trail:\ ,tab:\|\ ,nbsp:␣
@@ -299,12 +301,12 @@ require("conform").setup({
     formatters_by_ft = {
         lua = { "stylua" },
         go = { "goimports", "gofmt" },
-        -- python = { {  "isort", "black" } },
-        javascript = { { "prettierd" } },
-        javascriptreact = { { "prettierd" } },
-        typescript = { { "prettierd" } },
-        typescriptreact = { { "prettierd" } },
-        ["*"] = { "codespell" },
+        python = { "isort", "black" },
+        javascript = { "prettierd" },
+        javascriptreact = { "prettierd" },
+        typescript = { "prettierd" },
+        typescriptreact = { "prettierd" },
+        yaml = { "yamlfix" },
         ["_"] = { "trim_whitespace" },
     },
 })
@@ -407,69 +409,105 @@ require("rest-nvim").setup({
 })
 
 vim.diagnostic.config({ virtual_text = false })
-vim.cmd [[autocmd CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, { focus = false, border = 'single' })]]
+vim.cmd [[autocmd CursorHold * lua vim.diagnostic.open_float(nil, { focus = false, border = 'single' })]]
 
 ------------------------------------------------
 -- lsp config
+
+local lsp_servers = {
+    'ansiblels',
+    'astro',
+    'bashls',
+    'clangd',
+    'cmake',
+    'cssls',
+    'cssmodules_ls',
+    'docker_compose_language_service',
+    'dockerls',
+    'eslint',
+    'gleam',
+    'golangci_lint_ls',
+    'gopls',
+    'gradle_ls',
+    'graphql',
+    'groovyls',
+    'harper-ls',
+    'helm_ls',
+    'html',
+    'intelephense',
+    'jdtls',
+    'jsonls',
+    'kotlin_language_server',
+    'lua_ls',
+    'marksman',
+    'mdx_analyzer',
+    -- 'nginx-language-server',
+    'omnisharp',
+    'prismals',
+    'pylyzer',
+    'pyright',
+    'rust-analyzer',
+    'tailwindcss',
+    'taplo',
+    'templ',
+    'terraformls',
+    'tflint',
+    'tsserver',
+    'typos_lsp',
+    'vimls',
+    'volar',
+    'yamlls',
+    'zls',
+}
+
+local linters = {
+    -- 'actionlint',
+    -- 'eslint_d',
+    -- 'flake8',
+    -- 'golangci-lint',
+    -- 'jsonlint',
+    -- 'pylint',
+    -- 'vale',
+    -- 'vint',
+    -- 'yamllint',
+}
+
+local debug_adapters = {
+     'bash-debug-adapter',
+     'chrome-debug-adapter',
+     'debugpy',
+     'delve',
+     'java-debug-adapter',
+     'java-test',
+     'js-debug-adapter',
+     'kotlin-debug-adapter',
+}
+
+local formatters = {
+    'black',
+    'isort',
+    'djlint',
+    'gofumpt',
+    'goimports',
+    'golines',
+    'gomodifytags',
+    'gotests',
+    'prettierd',
+    'stylua',
+    'yamlfix',
+}
+
+local ensure_installed = {}
+vim.list_extend(ensure_installed, lsp_servers)
+vim.list_extend(ensure_installed, linters)
+vim.list_extend(ensure_installed, debug_adapters)
+vim.list_extend(ensure_installed, formatters)
+
 require("mason").setup()
 require('mason-tool-installer').setup({
     auto_update = true,
     run_on_start = true,
-    ensure_installed = {
-        'actionlint',
-        'ansiblels',
-        'bashls',
-        'clangd',
-        'cmake',
-        'cssls',
-        'docker_compose_language_service',
-        'dockerls',
-        'editorconfig-checker',
-        'emmet_ls',
-        'eslint',
-        'golangci_lint_ls',
-        'gopls',
-        'gradle_ls',
-        'groovyls',
-        'helm_ls',
-        'html',
-        'jdtls',
-        'jsonls',
-        'kotlin_language_server',
-        'lua_ls',
-        'luacheck',
-        'marksman',
-        'nginx-language-server',
-        'prettierd',
-        'prismals',
-        'pyright',
-        'rust-analyzer',
-        'shellcheck',
-        'stylelint_lsp',
-        'stylua',
-        'tailwindcss',
-        'terraformls',
-        'tflint',
-        'tsserver',
-        'yamlls',
-        -- 'graphql',
-        -- 'textlsp',
-        -- 'postgres_lsp',
-
-        -- 'vint',
-        -- 'shellcheck',
-        -- 'shfmt',
-        'vimls',
-        'impl',
-        'gomodifytags',
-        'gotests',
-        'gofumpt',
-        'golines',
-        -- 'json-to-struct',
-        -- 'misspell',
-        -- 'revive',
-        -- 'staticcheck',
-    },
+    ensure_installed = ensure_installed
 })
 
 vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
@@ -489,7 +527,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
         -- Goto Declaration. For example, in C this would take you to the header
         map('<leader>D', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
         -- Find references for the word under your cursor.
-        map('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
+        map('gr', require('telescope.builtin').lsp_references, '[G]oto [R]references')
         -- Rename the variable under your cursor
         map('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
         -- Execute a code action
@@ -583,8 +621,8 @@ cmp.setup({
     sources = cmp.config.sources({
         { name = 'nvim_lsp' },
         { name = 'luasnip' },
-    }, {
         { name = 'buffer' },
+        { name = 'dotenv', option = { load_shell = false, show_content_on_docs = false } },
     })
 })
 
@@ -836,7 +874,7 @@ require("ibl").setup {
 }
 
 -- winbar setup
-vim.o.winbar = "%{expand(\"%:~:.\")} %m%=%{'ddddddddddddddddddd'} "
+vim.o.winbar = "%{expand(\"%:~:.\")} %m%=%{'ddddddddd'} "
 
 -- status line setup
 require('lualine').setup {
@@ -928,7 +966,7 @@ nnoremap <Tab> za
 
 nnoremap <leader>sr <Plug>RestNvim
 
-" w moves to the end of word not the begining of it
+" w moves to the end of word not the beginning of it
 noremap w e
 
 " e and r act as home and end keys
