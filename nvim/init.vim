@@ -272,6 +272,7 @@ vim.opt.inccommand = 'split'
 vim.opt.hlsearch = true
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
+vim.keymap.set('n', '<Esc><Esc>', '<C-w>w', { desc = 'Exit Documentation' })
 
 -- plugins
 require('hop').setup()
@@ -514,6 +515,10 @@ vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
   vim.lsp.handlers.hover, { border = "single" }
 )
 
+function show_documentation()
+    vim.lsp.buf.hover()
+    vim.lsp.buf.hover()
+end
 vim.api.nvim_create_autocmd('LspAttach', {
     group = vim.api.nvim_create_augroup('lsp-attach-group', { clear = true }),
     callback = function(event)
@@ -533,7 +538,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
         -- Execute a code action
         map('<leader>a', vim.lsp.buf.code_action, '[C]ode [A]ction')
         -- Opens a documentation popup
-        map('K', vim.lsp.buf.hover, 'Hover Documentation')
+        map('K', show_documentation, 'Hover Documentation')
 
         -- The following two autocommands are used to highlight references of the
         -- word under your cursor when your cursor rests there for a little while.
