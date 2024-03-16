@@ -301,13 +301,20 @@ require("conform").setup({
     format_on_save = { timeout_ms = 500, lsp_fallback = true },
     formatters_by_ft = {
         lua = { "stylua" },
-        go = { "goimports", "gofmt" },
-        python = { "isort", "black" },
+        go = { "goimports", "golines", { "gofumpt", "gofmt" } },
+        rust = { "rustfmt" },
+        python = { "isort", "ruff_format" },
         javascript = { "prettierd" },
         javascriptreact = { "prettierd" },
         typescript = { "prettierd" },
         typescriptreact = { "prettierd" },
-        yaml = { "yamlfix" },
+        sh = { "shfmt" },
+        css = { "stylelint" },
+        sql = { "sqlfluff" },
+        tf = { "terraform_fmt" },
+        yaml = { "yamlfmt" },
+        html = { "djlint" },
+        java = { "google-java-format" },
         ["_"] = { "trim_whitespace" },
     },
 })
@@ -415,94 +422,19 @@ vim.cmd [[autocmd CursorHold * lua vim.diagnostic.open_float(nil, { focus = fals
 ------------------------------------------------
 -- lsp config
 
-local lsp_servers = {
-    'ansiblels',
-    'astro',
-    'bashls',
-    'clangd',
-    'cmake',
-    'cssls',
-    'cssmodules_ls',
-    'docker_compose_language_service',
-    'dockerls',
-    'eslint',
-    'gleam',
-    'golangci_lint_ls',
-    'gopls',
-    'gradle_ls',
-    'graphql',
-    'groovyls',
-    'harper-ls',
-    'helm_ls',
-    'html',
-    'intelephense',
-    'jdtls',
-    'jsonls',
-    'kotlin_language_server',
-    'lua_ls',
-    'marksman',
-    'mdx_analyzer',
-    -- 'nginx-language-server',
-    'omnisharp',
-    'prismals',
-    'pylyzer',
-    'pyright',
-    'rust-analyzer',
-    'tailwindcss',
-    'taplo',
-    'templ',
-    'terraformls',
-    'tflint',
-    'tsserver',
-    'typos_lsp',
-    'vimls',
-    'volar',
-    'yamlls',
-    'zls',
+local ensure_installed = {
+    'actionlint', 'ansiblels', 'astro', 'bash-debug-adapter', 'bashls', 'chrome-debug-adapter',
+    'clangd', 'cmake', 'cssls', 'cssmodules_ls', 'debugpy', 'delve', 'djlint',
+    'docker_compose_language_service', 'dockerls', 'eslint', 'eslint_d', 'flake8', 'gofumpt',
+    'goimports', 'golangci-lint', 'golangci_lint_ls', 'golines', 'gomodifytags',
+    'google-java-format', 'gopls', 'gotests', 'gradle_ls', 'graphql', 'groovyls', 'harper-ls',
+    'helm_ls', 'html', 'intelephense', 'isort', 'java-debug-adapter', 'java-test', 'jdtls',
+    'js-debug-adapter', 'jsonlint', 'jsonls', 'kotlin-debug-adapter', 'kotlin_language_server',
+    'lua_ls', 'marksman', 'mdx_analyzer', 'omnisharp', 'prettierd', 'prismals', 'pylint', 'pyright',
+    'ruff', 'ruff-lsp', 'rust-analyzer', 'shfmt', 'sqlfluff', 'stylelint', 'stylua',
+    'tailwindcss', 'taplo', 'templ', 'terraformls', 'tflint', 'tsserver', 'vale', 'vale-ls',
+    'vimls', 'vint', 'volar', 'yamlfmt' , 'yamllint', 'yamlls', 'zls',
 }
-
-local linters = {
-    -- 'actionlint',
-    -- 'eslint_d',
-    -- 'flake8',
-    -- 'golangci-lint',
-    -- 'jsonlint',
-    -- 'pylint',
-    -- 'vale',
-    -- 'vint',
-    -- 'yamllint',
-}
-
-local debug_adapters = {
-     'bash-debug-adapter',
-     'chrome-debug-adapter',
-     'debugpy',
-     'delve',
-     'java-debug-adapter',
-     'java-test',
-     'js-debug-adapter',
-     'kotlin-debug-adapter',
-}
-
-local formatters = {
-    'black',
-    'isort',
-    'djlint',
-    'gofumpt',
-    'goimports',
-    'golines',
-    'gomodifytags',
-    'gotests',
-    'prettierd',
-    'stylua',
-    'yamlfix',
-}
-
-local ensure_installed = {}
-vim.list_extend(ensure_installed, lsp_servers)
-vim.list_extend(ensure_installed, linters)
-vim.list_extend(ensure_installed, debug_adapters)
-vim.list_extend(ensure_installed, formatters)
 
 require("mason").setup()
 require('mason-tool-installer').setup({
