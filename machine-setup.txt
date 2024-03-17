@@ -32,7 +32,7 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 # install nodejs lts from homebrew
 # install bat https://github.com/sharkdp/bat
 brew install the following:
-zsh neovim git tmux gcc cmake tree btop git-delta node@20 yarn bat ripgrep fzf fd fx jq yh lazygit mc libpq gh
+zsh neovim git tmux gcc cmake tree btop git-delta node@20 yarn bat ripgrep fzf fd fx jq yh lazygit mc libpq gh act
 kubernetes-cli minikube helm python watchman go lima
 
 rbenv ruby-build
@@ -135,6 +135,8 @@ https://sdkman.io/
 sdk install java
 sdk install gradle
 sdk install kotlin
+sdk install groovy
+sdk install maven
 =============================================================
 # base16_theme: run the base16 theme command with the colorscheme you want
 base16_gruvbox-dark-hard
