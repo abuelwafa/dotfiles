@@ -186,16 +186,6 @@ exec slack
 assign [class="obs"] $ws7
 exec obs
 
-# assign [class="Alarm-clock-applet"] $ws7
-exec alarm-clock-applet --no-startup-window
-assign [class="Org.gnome.clocks"] $ws6
-exec gnome-clocks
-
-assign [class="Org.gnome.clocks"] $ws6
-exec gnome-pomodoro --no-default-window
-
-assign [class="xpad"] $ws6
-
 for_window [class="Spotify"] move to workspace $ws10
 exec spotify
 

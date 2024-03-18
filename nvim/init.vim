@@ -89,9 +89,9 @@ Plug 'saadparwaiz1/cmp_luasnip'
 " Plug 'rafamadriz/friendly-snippets'
 " Plug 'rmagatti/goto-preview'
 
-" Plug 'mfussenegger/nvim-dap'
-" Plug 'rcarriga/nvim-dap-ui'
-" Plug 'nvim-telescope/telescope-dap.nvim'
+Plug 'mfussenegger/nvim-dap'
+Plug 'rcarriga/nvim-dap-ui'
+Plug 'nvim-telescope/telescope-dap.nvim'
 
 " Plug 'mfussenegger/nvim-lint'
 
@@ -99,6 +99,9 @@ Plug 'saadparwaiz1/cmp_luasnip'
 
 " Plug 'zbirenbaum/copilot.lua'
 " Plug 'zbirenbaum/copilot-cmp'
+
+Plug 'sindrets/diffview.nvim'
+" Plug 'NeogitOrg/neogit'
 
 "-- to be explored
 " Plug 'numToStr/FTerm.nvim'
@@ -270,9 +273,8 @@ vim.opt.smartcase = true
 vim.opt.undofile = true
 vim.opt.inccommand = 'split'
 vim.opt.hlsearch = true
-vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
-vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
-vim.keymap.set('n', '<Esc><Esc>', '<C-w>w', { desc = 'Exit Documentation' })
+vim.keymap.set('n', '<esc>', '<cmd>nohlsearch<CR>')
+vim.keymap.set('t', '<esc><esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 
 -- plugins
 require('hop').setup()
@@ -416,11 +418,22 @@ require("rest-nvim").setup({
     yank_dry_run = true,
 })
 
-vim.diagnostic.config({ virtual_text = false })
-vim.cmd [[autocmd CursorHold * lua vim.diagnostic.open_float(nil, { focus = false, border = 'single' })]]
-
 ------------------------------------------------
 -- lsp config
+
+local signs = { Error = "󰅚 ", Warn = "󰀪 ", Hint = "󰌶 ", Info = " " }
+for type, icon in pairs(signs) do
+  local hl = "DiagnosticSign" .. type
+  vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
+end
+
+vim.diagnostic.config({ virtual_text = false, float = { source = true } })
+vim.api.nvim_create_autocmd({ "CursorHold" }, {
+  group = vim.api.nvim_create_augroup("float_diagnostic", { clear = true }),
+  callback = function ()
+    vim.diagnostic.open_float(nil, { focus = false, border = 'single' })
+  end
+})
 
 local ensure_installed = {
     'actionlint', 'ansiblels', 'astro', 'bash-debug-adapter', 'bashls', 'chrome-debug-adapter',
@@ -450,6 +463,10 @@ vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
 function show_documentation()
     vim.lsp.buf.hover()
     vim.lsp.buf.hover()
+    -- vim.keymap.set('n', '<esc><esc>', function()
+    --     vim.keymap.del('n', '<esc><esc>')
+    --     vim.cmd(vim.api.nvim_replace_termcodes('normal! <c-w>q', true, true, true))
+    -- end, { desc = 'Exit Documentation' })
 end
 vim.api.nvim_create_autocmd('LspAttach', {
     group = vim.api.nvim_create_augroup('lsp-attach-group', { clear = true }),
@@ -864,7 +881,7 @@ nnoremap <silent> <c-u> :<C-U>TmuxNavigateUp<cr>
 nnoremap <silent> <c-l> :<C-U>TmuxNavigateRight<cr>
 
 " Quickly go to normal mode
-inoremap jj <Esc>
+inoremap jj <esc>
 
 " adding new lines from normal mode - for speed factoring and cleaning
 nnoremap <CR> o<esc>
