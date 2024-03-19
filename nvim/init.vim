@@ -305,7 +305,7 @@ require("conform").setup({
         lua = { "stylua" },
         go = { "goimports", "golines", { "gofumpt", "gofmt" } },
         rust = { "rustfmt" },
-        python = { "isort", "ruff_format" },
+        python = { "isort", { "ruff_format", "autopep8" } },
         javascript = { "prettierd" },
         javascriptreact = { "prettierd" },
         typescript = { "prettierd" },
@@ -436,7 +436,7 @@ vim.api.nvim_create_autocmd({ "CursorHold" }, {
 })
 
 local ensure_installed = {
-    'actionlint', 'ansiblels', 'astro', 'bash-debug-adapter', 'bashls', 'chrome-debug-adapter',
+    'actionlint', 'ansiblels', 'astro', 'autopep8', 'bash-debug-adapter', 'bashls', 'chrome-debug-adapter',
     'clangd', 'cmake', 'cssls', 'cssmodules_ls', 'debugpy', 'delve', 'djlint',
     'docker_compose_language_service', 'dockerls', 'eslint', 'eslint_d', 'flake8', 'gofumpt',
     'goimports', 'golangci-lint', 'golangci_lint_ls', 'golines', 'gomodifytags',
