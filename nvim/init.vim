@@ -300,24 +300,23 @@ require("nvim-autopairs").setup()
 require("todo-comments").setup()
 require("conform").setup({
     notify_on_error = true,
-    format_on_save = { timeout_ms = 500, lsp_fallback = true },
+    format_on_save = { timeout_ms = 1000, lsp_fallback = true },
     formatters_by_ft = {
         lua = { "stylua" },
         go = { "goimports", "golines", { "gofumpt", "gofmt" } },
         rust = { "rustfmt" },
-        python = { "isort", { "ruff_format", "autopep8" } },
+        python = { "isort", "ruff_format" },
         javascript = { "prettierd" },
         javascriptreact = { "prettierd" },
         typescript = { "prettierd" },
         typescriptreact = { "prettierd" },
         sh = { "shfmt" },
         css = { "stylelint" },
-        sql = { "sqlfluff" },
+        sql = { "sqlfmt", "sqlfluff" },
         tf = { "terraform_fmt" },
         yaml = { "yamlfmt" },
         html = { "djlint" },
         java = { "google-java-format" },
-        ["_"] = { "trim_whitespace" },
     },
 })
 
@@ -436,7 +435,7 @@ vim.api.nvim_create_autocmd({ "CursorHold" }, {
 })
 
 local ensure_installed = {
-    'actionlint', 'ansiblels', 'astro', 'autopep8', 'bash-debug-adapter', 'bashls', 'chrome-debug-adapter',
+    'actionlint', 'ansiblels', 'astro', 'bash-debug-adapter', 'bashls', 'chrome-debug-adapter',
     'clangd', 'cmake', 'cssls', 'cssmodules_ls', 'debugpy', 'delve', 'djlint',
     'docker_compose_language_service', 'dockerls', 'eslint', 'eslint_d', 'flake8', 'gofumpt',
     'goimports', 'golangci-lint', 'golangci_lint_ls', 'golines', 'gomodifytags',
@@ -444,9 +443,9 @@ local ensure_installed = {
     'helm_ls', 'html', 'intelephense', 'isort', 'java-debug-adapter', 'java-test', 'jdtls',
     'js-debug-adapter', 'jsonlint', 'jsonls', 'kotlin-debug-adapter', 'kotlin_language_server',
     'lua_ls', 'marksman', 'mdx_analyzer', 'omnisharp', 'prettierd', 'prismals', 'pylint', 'pyright',
-    'ruff', 'ruff-lsp', 'rust-analyzer', 'shfmt', 'sqlfluff', 'stylelint', 'stylua',
+    'ruff', 'ruff-lsp', 'rust-analyzer', 'shfmt', 'sqlfluff', 'sqlfmt', 'stylelint', 'stylua',
     'tailwindcss', 'taplo', 'templ', 'terraformls', 'tflint', 'tsserver', 'vale', 'vale-ls',
-    'vimls', 'vint', 'volar', 'yamlfmt' , 'yamllint', 'yamlls', 'zls',
+    'vimls', 'vint', 'volar', 'yamlfmt' , 'yamllint', 'yamlls',
 }
 
 require("mason").setup()
@@ -1066,6 +1065,7 @@ cnoreabbrev ww WriteWithSudo
 let g:db_ui_save_location = '~/projects/db-connections'
 
 let g:better_whitespace_filetypes_blacklist=['NvimTree', 'diff', 'git', 'gitcommit', 'unite', 'qf', 'help', 'markdown', 'fugitive', 'dbout']
+let g:strip_whitespace_on_save = 1
 
 command! Qfall call s:quickFixOpenAll()
 function! s:quickFixOpenAll()
