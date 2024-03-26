@@ -50,10 +50,11 @@ source $ZSH/oh-my-zsh.sh
 
 # My aliases
 alias cls='clear'
-alias l='ls -lahp'
-alias la='ls -lahp'
+alias l='eza -la --icons'
+alias la='eza -la --icons'
+alias ls='eza'
 unalias ll
-alias ll='ls -lahp --color | less -XFR'
+alias ll='eza -la --color=always | less -XFR'
 alias md='mkdir -vp'
 alias p='popd'
 alias tree='tree -a -h -f --du'
@@ -272,8 +273,7 @@ function virtualenv_info(){
     [[ -n "$venv" ]] && echo "(venv:$venv) "
 }
 
-PROMPT='
-$(rule)$(check-git-email)
+PROMPT='$(rule)$(check-git-email)
 %{$fg_bold[green]%}%~%{$reset_color%}$(git_prompt_info) %{$fg_bold[red]%}%*%{$reset_color%} %{$bg_bold[green]%}%{$fg_bold[black]%} node: $(node -v) %{$reset_color%}
 %{$bg_bold[red]%}%{$fg_bold[white]%}$(kubectx_prompt_info)%{$reset_color%}%{$bg_bold[magenta]%}%{$fg_bold[yellow]%}$(aws_prompt_info)%{$reset_color%}%{$fg[yellow]%}$(virtualenv_info)%{$reset_color%}%{$fg_bold[magenta]%}-> %{$reset_color%}'
 
