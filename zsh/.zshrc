@@ -50,9 +50,9 @@ source $ZSH/oh-my-zsh.sh
 
 # My aliases
 alias cls='clear'
-alias l='eza -la --icons'
-alias la='eza -la --icons'
-alias ls='eza'
+alias l='eza -la --color=always --icons'
+alias la='eza -la --color=always --icons'
+alias ls='eza --color=always'
 unalias ll
 alias ll='eza -la --color=always | less -XFR'
 alias md='mkdir -vp'
