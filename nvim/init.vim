@@ -1,4 +1,9 @@
-" Abuelwafa's Neovim init.vim config
+"   ▄▄   █                    ▀▀█                    ▄▀▀
+"   ██   █▄▄▄   ▄   ▄   ▄▄▄     █   ▄     ▄  ▄▄▄   ▄▄█▄▄   ▄▄▄
+"  █  █  █▀ ▀█  █   █  █▀  █    █   ▀▄ ▄ ▄▀ ▀   █    █    ▀   █
+"  █▄▄█  █   █  █   █  █▀▀▀▀    █    █▄█▄█  ▄▀▀▀█    █    ▄▀▀▀█
+" █    █ ██▄█▀  ▀▄▄▀█  ▀█▄▄▀    ▀▄▄   █ █   ▀▄▄▀█    █    ▀▄▄▀█
+" Abuelwafa's Neovim config
 
 set nocompatible
 
@@ -154,7 +159,6 @@ set expandtab
 
 set nopaste
 
-
 set completeopt="menuone,noinsert,noselect"
 
 " sets backspace key functions, allows it to backspace over end of line
@@ -267,6 +271,7 @@ vim.opt.list = true
 vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
 vim.opt.splitright = true
 vim.opt.splitbelow = true
+vim.opt.wrap = true
 vim.opt.signcolumn = 'yes'
 vim.opt.ignorecase = true
 vim.opt.smartcase = true

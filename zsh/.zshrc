@@ -237,6 +237,7 @@ alias remove='rm -rf'
 
 alias kctl='kubectl'
 alias lima='limactl'
+alias dog='dog A AAAA MX TXT'
 
 # add kubectl completion
 [[ $commands[kubectl] ]] && source <(kubectl completion zsh)
