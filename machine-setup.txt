@@ -34,13 +34,10 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 brew install the following:
 zsh neovim git tmux gcc cmake tree btop git-delta node@20 yarn dog
 bat ripgrep fzf fd fx jq yh lazygit mc libpq gh act cmatrix dust eza
-kubernetes-cli minikube helm python watchman go
+kubernetes-cli minikube helm python watchman go qemu lima ansible
 
 rbenv ruby-build
 youtube-dl
-=============================================================
-MACOS
-brew install lima
 =============================================================
 brew tap hashicorp/tap
 brew install hashicorp/tap/terraform
@@ -125,9 +122,7 @@ Thunderbird from thunderbird.net
 OBS from https://obsproject.com/
 DBeaver from debeaver.io (mac -> homebrew, Ubuntu -> snap store )
 vlc videolan.org/vlc (snap store for Ubuntu)
-flipper
 NordVPN
-Virtual box
 Discord
 android studio and android sdk
 Spotify (snap store for Ubuntu)
