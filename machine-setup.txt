@@ -214,8 +214,11 @@ the unarchiver
 # showing hidden files on mac
 defaults write com.apple.finder AppleShowAllFiles YES && killall Finder
 =============================================================
-MACOS
-gimp through Homebrew
+gimp
+MACOS through Homebrew
+brew install gimp
+linux through apt
+sudo apt install gimp
 =============================================================
 MACOS
 # clear nordvpn application defaults after every upgrade

@@ -81,7 +81,7 @@ alias gradle-clean="cd android && ./gradlew clean && .."
 alias blowup="rm -rf node_modules ios/Pods && yarn cache clean && watchman watch-del-all && pod cache clean --all && npm cache clean --force"
 
 rule() {
-    printf "%$(tput cols)s\n"|tr " " "-"
+    printf "%$(tput cols)s\n" | tr " " "-"
 }
 
 # to make sudo work with aliases
@@ -121,9 +121,9 @@ alias gclean='git clean -ifdx'
 
 function gstash() {
     if [ -z $1 ]; then
-        git stash list;
+        git stash list
     else
-        git stash show stash@{$1} -p;
+        git stash show stash@{$1} -p
     fi
 }
 
@@ -131,7 +131,7 @@ function gdropstash() {
     if [ -z $1 ]; then
         echo "Specify the id of the stash you want to drop."
     else
-        git stash drop stash@{$1};
+        git stash drop stash@{$1}
     fi
 }
 
@@ -139,7 +139,7 @@ function gpopstash() {
     if [ -z $1 ]; then
         echo "Specify the id of the stash you want to apply."
     else
-        git stash pop stash@{$1};
+        git stash pop stash@{$1}
     fi
 }
 alias gsavestash='git stash push'
@@ -150,7 +150,7 @@ alias gsavestash='git stash push'
 alias show=bat
 
 function serve() {
-    docker run --rm -p $1:80/tcp -v $(pwd):/usr/share/nginx/html:ro nginx:stable-alpine;
+    docker run --rm -p $1:80/tcp -v $(pwd):/usr/share/nginx/html:ro nginx:stable-alpine
 }
 
 # make an alias for compressing and extracting zip files
@@ -161,9 +161,9 @@ function serve() {
 # function for downloading files from urls
 function download(){
     if [ -n "$2" ]; then
-      curl -# $1 -o $2;
+        curl -# $1 -o $2
     else
-      curl -O -# $1;
+        curl -O -# $1
     fi
 }
 
@@ -178,9 +178,11 @@ function jwtparse(){
 
     # pad the end of string by appending = to make
     # the encoded string length equals to multiples of 4
-    local padlen=$(( ${#payload} % 4 ))
-    if [ $padlen -eq 2 ]; then result="$payload"'=='
-    elif [ $padlen -eq 3 ]; then result="$payload"'='
+    local padlen=$((${#payload} % 4))
+    if [ $padlen -eq 2 ]; then
+        result="$payload"'=='
+    elif [ $padlen -eq 3 ]; then
+        result="$payload"'='
     fi
 
     echo -n $result | base64 -d | fx
@@ -248,9 +250,9 @@ export BAT_THEME="base16"
 
 # Base16 Shell
 BASE16_SHELL_PATH="$HOME/projects/base16-shell"
-[ -n "$PS1" ] && \
-    [ -s "$BASE16_SHELL_PATH/profile_helper.sh" ] && \
-        source "$BASE16_SHELL_PATH/profile_helper.sh"
+[ -n "$PS1" ] &&
+    [ -s "$BASE16_SHELL_PATH/profile_helper.sh" ] &&
+    source "$BASE16_SHELL_PATH/profile_helper.sh"
 
 # setting up correct paths and variables from homebrew
 node_path="$(brew --prefix node@20)"
@@ -280,8 +282,7 @@ PROMPT='$(rule)$(check-git-email)
 %{$fg_bold[green]%}%~%{$reset_color%}$(git_prompt_info) %{$fg_bold[red]%}%*%{$reset_color%} %{$bg_bold[green]%}%{$fg_bold[black]%} node: $(node -v) %{$reset_color%}
 %{$bg_bold[red]%}%{$fg_bold[white]%}$(kubectx_prompt_info)%{$reset_color%}%{$bg_bold[magenta]%}%{$fg_bold[yellow]%}$(aws_prompt_info)%{$reset_color%}%{$fg[yellow]%}$(virtualenv_info)%{$reset_color%}%{$fg_bold[magenta]%}-> %{$reset_color%}'
 
-if command -v rbenv &> /dev/null
-then
+if command -v rbenv &>/dev/null; then
     eval "$(rbenv init - zsh)"
 fi
 

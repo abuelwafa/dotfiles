@@ -25,8 +25,7 @@ main() {
 
     read -p "Change default shell to ZSH? " -n 1 -r change_shell
     echo
-    if [[ $change_shell =~ ^[Yy]$ ]]
-    then
+    if [[ $change_shell =~ ^[Yy]$ ]]; then
         echo "=> Changing default shell to ZSH"
         chsh -s $(which zsh)
     fi
@@ -45,9 +44,6 @@ main() {
     echo
 
     echo "=> Installing Homebrew"
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-    (echo; echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"') >> /home/abuelwafa/.profile
-    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
     echo
     echo "===================================="
@@ -147,8 +143,7 @@ main() {
 
     read -p "Install Watchman? " -n 1 -r install_watchman
     echo
-    if [[ $install_watchman =~ ^[Yy]$ ]]
-    then
+    if [[ $install_watchman =~ ^[Yy]$ ]]; then
         echo "=> Installing watchman"
         brew install watchman
         echo
@@ -156,16 +151,14 @@ main() {
 
     read -p "Install Go? " -n 1 -r install_go
     echo
-    if [[ $install_go =~ ^[Yy]$ ]]
-    then
+    if [[ $install_go =~ ^[Yy]$ ]]; then
         echo "=> Installing Go"
         brew install go
     fi
 
     read -p "Install Docker and Colima through Homebrew? " -n 1 -r install_docker
     echo
-    if [[ $install_docker =~ ^[Yy]$ ]]
-    then
+    if [[ $install_docker =~ ^[Yy]$ ]]; then
         echo "=> Installing docker"
         brew install docker
 
@@ -173,11 +166,9 @@ main() {
         brew install colima
     fi
 
-
     read -p "Install Kubernetes CLI? " -n 1 -r install_k8s_cli
     echo
-    if [[ $install_k8s_cli =~ ^[Yy]$ ]]
-    then
+    if [[ $install_k8s_cli =~ ^[Yy]$ ]]; then
         echo "=> Installing k8s cli"
         brew install kubernetes-cli
     fi

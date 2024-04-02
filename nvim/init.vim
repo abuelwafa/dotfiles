@@ -281,6 +281,8 @@ vim.opt.hlsearch = true
 vim.keymap.set('n', '<esc>', '<cmd>nohlsearch<CR>')
 vim.keymap.set('t', '<esc><esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 
+vim.notify = require("notify")
+
 -- plugins
 require('hop').setup()
 require('Comment').setup()
@@ -316,12 +318,15 @@ require("conform").setup({
         typescript = { "prettierd" },
         typescriptreact = { "prettierd" },
         sh = { "shfmt" },
+        bash = { "shfmt" },
+        zsh = { "shfmt" },
         css = { "stylelint" },
-        sql = { "sqlfmt", "sqlfluff" },
+        sql = { "sqlfluff" },
         tf = { "terraform_fmt" },
         yaml = { "yamlfmt" },
         html = { "djlint" },
         java = { "google-java-format" },
+        xml = { "xmlformat" },
     },
 })
 
@@ -448,9 +453,9 @@ local ensure_installed = {
     'helm_ls', 'html', 'intelephense', 'isort', 'java-debug-adapter', 'java-test', 'jdtls',
     'js-debug-adapter', 'jsonlint', 'jsonls', 'kotlin-debug-adapter', 'kotlin_language_server',
     'lua_ls', 'marksman', 'mdx_analyzer', 'omnisharp', 'prettierd', 'prismals', 'pylint', 'pyright',
-    'ruff', 'ruff-lsp', 'rust-analyzer', 'shfmt', 'sqlfluff', 'sqlfmt', 'stylelint', 'stylua',
+    'ruff', 'ruff-lsp', 'rust-analyzer', 'shfmt', 'sqlfluff', 'stylelint', 'stylua',
     'tailwindcss', 'taplo', 'templ', 'terraformls', 'tflint', 'tsserver', 'vale', 'vale-ls',
-    'vimls', 'vint', 'volar', 'yamlfmt' , 'yamllint', 'yamlls',
+    'vimls', 'vint', 'volar', 'xmlformatter', 'yamlfmt' , 'yamllint', 'yamlls',
 }
 
 require("mason").setup()
@@ -875,14 +880,30 @@ require('bufferline').setup({
     },
 })
 
-EOF
+vim.g.tmux_navigator_no_mappings = 1
+vim.g.tmux_navigator_disable_when_zoomed = 1
+vim.api.nvim_set_keymap('n', '<c-h>', ':TmuxNavigateLeft<CR>', {silent = true})
+vim.api.nvim_set_keymap('n', '<c-d>', ':TmuxNavigateDown<CR>', {silent = true})
+vim.api.nvim_set_keymap('n', '<c-u>', ':TmuxNavigateUp<CR>', {silent = true})
+vim.api.nvim_set_keymap('n', '<c-l>', ':TmuxNavigateRight<CR>', {silent = true})
 
-let g:tmux_navigator_no_mappings = 1
-let g:tmux_navigator_disable_when_zoomed = 1
-nnoremap <silent> <c-h> :<C-U>TmuxNavigateLeft<cr>
-nnoremap <silent> <c-d> :<C-U>TmuxNavigateDown<cr>
-nnoremap <silent> <c-u> :<C-U>TmuxNavigateUp<cr>
-nnoremap <silent> <c-l> :<C-U>TmuxNavigateRight<cr>
+-- e and r act as home and end keys
+vim.api.nvim_set_keymap('n', 'e', '^', {noremap = true})
+vim.api.nvim_set_keymap('v', 'e', '^', {noremap = true})
+vim.api.nvim_set_keymap('o', 'e', '^', {noremap = true})
+vim.api.nvim_set_keymap('n', 'r', '$', {noremap = true})
+vim.api.nvim_set_keymap('v', 'r', '$', {noremap = true})
+vim.api.nvim_set_keymap('o', 'r', '$', {noremap = true})
+
+-- open new buffer
+vim.api.nvim_set_keymap('n', '<leader>gg', ':enew<CR>', { noremap = true })
+
+-- Git hunks management
+vim.api.nvim_set_keymap('n', '<leader>ga', ':lua require"gitsigns".stage_hunk()<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>gs', ':lua require"gitsigns".preview_hunk()<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>gd', ':lua require"gitsigns".reset_hunk()<CR>', { noremap = true, silent = true })
+
+EOF
 
 " Quickly go to normal mode
 inoremap jj <esc>
@@ -927,14 +948,6 @@ nnoremap <leader>sr <Plug>RestNvim
 " w moves to the end of word not the beginning of it
 noremap w e
 
-" e and r act as home and end keys
-nnoremap e ^
-vnoremap e ^
-onoremap e ^
-nnoremap r $
-vnoremap r $
-onoremap r $
-
 " Remap j and k to act as expected when used on long, wrapped, lines
 nnoremap <silent> j gj
 vnoremap <silent> j gj
@@ -947,8 +960,6 @@ vnoremap <silent> <up> gk
 
 " redo with capital U
 noremap U <C-r>
-
-nnoremap <leader>g :enew<cr> " open new buffer
 
 " search for selection
 " use * for words under cursor
@@ -1068,6 +1079,12 @@ cnoreabbrev ww WriteWithSudo
 
 " database UI
 let g:db_ui_save_location = '~/projects/db-connections'
+let g:db_ui_tmp_query_location = '~/.db-queries'
+let g:db_ui_use_nvim_notify = 1
+let g:db_ui_use_nerd_fonts = 1
+let g:db_ui_show_database_icon = 1
+let g:db_ui_win_position = 'left'
+let g:db_ui_execute_on_save = 0
 
 let g:better_whitespace_filetypes_blacklist=['NvimTree', 'diff', 'git', 'gitcommit', 'unite', 'qf', 'help', 'markdown', 'fugitive', 'dbout']
 let g:strip_whitespace_on_save = 1
