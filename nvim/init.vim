@@ -338,61 +338,13 @@ require("conform").setup({
 
 require('nvim-treesitter.configs').setup({
     ensure_installed = {
-        "astro",
-        "bash",
-        "c",
-        "c_sharp",
-        "cmake",
-        "comment",
-        "cpp",
-        "css",
-        "diff",
-        "dockerfile",
-        "git_config",
-        "git_rebase",
-        "gitattributes",
-        "gitcommit",
-        "gitignore",
-        "go",
-        "gomod",
-        "gosum",
-        "gowork",
-        "graphql",
-        "groovy",
-        "html",
-        "htmldjango",
-        "http",
-        "java",
-        "javascript",
-        "jq",
-        "jsdoc",
-        "json",
-        "json5",
-        "jsonc",
-        "kotlin",
-        "lua",
-        "luadoc",
-        "make",
-        "markdown",
-        "markdown_inline",
-        "php",
-        "phpdoc",
-        "po",
-        "prisma",
-        "python",
-        "query",
-        "regex",
-        "rust",
-        "scss",
-        "sql",
-        "terraform",
-        "toml",
-        "tsx",
-        "typescript",
-        "vim",
-        "vimdoc",
-        "vue",
-        "yaml"
+        "astro", "bash", "c", "c_sharp", "cmake", "comment", "cpp", "css", "diff", "dockerfile",
+        "git_config", "git_rebase", "gitattributes", "gitcommit", "gitignore", "go", "gomod",
+        "gosum", "gowork", "graphql", "groovy", "html", "htmldjango", "http", "java",
+        "javascript", "jq", "jsdoc", "json", "json5", "jsonc", "kotlin", "lua", "luadoc", "make",
+        "markdown", "markdown_inline", "php", "phpdoc", "po", "prisma", "python", "query",
+        "regex", "rust", "scss", "sql", "terraform", "toml", "tsx", "typescript", "vim", "vimdoc",
+        "vue", "yaml"
     },
     auto_install = true,
     sync_install = false,
@@ -924,15 +876,17 @@ augroup QuickFix
      au FileType qf map <buffer> <CR> <CR>
 augroup END
 
-" faster movoment - multiple line jumping
-nmap <C-j> 10j
-vmap <C-j> 10j
-nmap <C-k> 10k
-vmap <C-k> 10k
+lua << EOF
+-- faster movoment - multiple line jumping
+vim.api.nvim_set_keymap('n', '<C-j>', '10j', {noremap = true})
+vim.api.nvim_set_keymap('v', '<C-j>', '10j', {noremap = true})
+vim.api.nvim_set_keymap('n', '<C-k>', '10k', {noremap = true})
+vim.api.nvim_set_keymap('v', '<C-k>', '10k', {noremap = true})
 
-" single and double quotes in normal mode navigate forward and backwards 24 lines
-nnoremap ' 20j
-nnoremap " 20k
+-- single and double quotes in normal mode navigate forward and backwards 24 lines
+vim.api.nvim_set_keymap('n', "'", '20j', {noremap = true})
+vim.api.nvim_set_keymap('n', '"', '20k', {noremap = true})
+EOF
 
 "split resizing
 " increase vertically
@@ -964,71 +918,70 @@ vnoremap <silent> <down> gj
 nnoremap <silent> <up> gk
 vnoremap <silent> <up> gk
 
-" redo with capital U
-noremap U <C-r>
+lua << EOF
+-- redo with capital U
+vim.api.nvim_set_keymap('n', 'U', '<C-r>', {noremap = true})
 
-" search for selection
-" use * for words under cursor
-vnoremap <leader>f y/<C-R>"<cr>
+-- search for selection
+-- use * for words under cursor
+vim.api.nvim_set_keymap('v', '<leader>f', 'y/<C-R>"<cr>', {noremap = true})
 
-" map leader+space to execute q macro quickly
-nnoremap <leader><space> @q
-vnoremap <leader><space> @q
+-- map leader+space to execute q macro quickly
+vim.api.nvim_set_keymap('n', '<leader><space>', '@q', {noremap = true})
+vim.api.nvim_set_keymap('v', '<leader><space>', '@q', {noremap = true})
 
-" duplicate lines after
-" without separator line
-nnoremap <leader>d YP`[v`]<esc>l
-vnoremap <leader>d YP`[v`]<esc>l
+-- duplicate lines after
+-- without separator line
+vim.api.nvim_set_keymap('n', '<leader>d', 'YP`[v`]<esc>l', {noremap = true})
+vim.api.nvim_set_keymap('v', '<leader>d', 'YP`[v`]<esc>l', {noremap = true})
 
-" swapping lines down and up respecting the top and bottom of the buffer
-nnoremap <silent> H :m .+1<cr>==
-vnoremap <expr><silent> H max([line('.'),line('v')]) < line('$') ? ':m ''>+1<cr>gv=gv' : ''
-nnoremap <silent> L :m .-2<cr>==
-vnoremap <expr><silent> L min([line('.'),line('v')]) > 1 ? ':m ''<-2<cr>gv=gv' : ''
+-- swapping lines down and up respecting the top and bottom of the buffer
+vim.api.nvim_set_keymap('n', 'H', ':m .+1<cr>==', {noremap = true})
+vim.api.nvim_set_keymap('v', 'H', [[:m '']+1<cr>gv=gv]], {expr = true, noremap = true})
+vim.api.nvim_set_keymap('n', 'L', ':m .-2<cr>==', {noremap = true})
+vim.api.nvim_set_keymap('v', 'L', [[:m ''<-2<cr>gv=gv]], {expr = true, noremap = true})
 
-"easier colons in normal mode
-noremap <space> :
+-- easier colons in normal mode
+vim.api.nvim_set_keymap('n', '<space>', ':', {noremap = true})
 
-" enabling paste - note that this mapping doesn't work when paste is on
-nnoremap <leader>v :set<space>invpaste<cr>
-inoremap <leader>v <esc>:set<space>invpaste<cr>
-vnoremap <leader>v <esc>:set<space>invpaste<cr>
+-- arrow mappings
+vim.api.nvim_command([[
+  autocmd FileType js,javascript,blade,typescript,javascriptreact,typescriptreact,rust,php,go inoremap >> =>
+  autocmd FileType js,javascript,typescript,javascriptreact,typescriptreact imap afkj () => {
+  autocmd FileType js,javascript,typescript,javascriptreact,typescriptreact imap logkj console.log(
+  autocmd FileType js,javascript,typescript,javascriptreact,typescriptreact imap imkj import  from '
+  autocmd FileType js,javascript,typescript,javascriptreact,typescriptreact imap ifkj if () {<cr><esc>k$2hi
+]])
+vim.api.nvim_set_keymap('i', 'xx', '$', {noremap = true})
+vim.api.nvim_set_keymap('i', 'vv', '``<esc>i', {noremap = true})
 
-" arrow mappings
-:autocmd FileType js,javascript,blade,typescript,javascriptreact,typescriptreact,rust,php,go inoremap >> =>
-:autocmd FileType js,javascript,typescript,javascriptreact,typescriptreact imap afkj () => {
-:autocmd FileType js,javascript,typescript,javascriptreact,typescriptreact imap logkj console.log(
-:autocmd FileType js,javascript,typescript,javascriptreact,typescriptreact imap imkj import  from '
-:autocmd FileType js,javascript,typescript,javascriptreact,typescriptreact imap ifkj if () {<cr><esc>k$2hi
-inoremap xx $
-inoremap vv ``<esc>i
+-- mappings for speed buffer switching
+vim.api.nvim_set_keymap('n', '<leader>b', ':bprevious<CR>', {noremap = true})
+vim.api.nvim_set_keymap('n', '<leader>n', ':bnext<CR>', {noremap = true})
 
-" mappings for speed buffer switching
-nnoremap <leader>b :bprevious<CR>
-nnoremap <leader>n :bnext<CR>
+-- mappings for saving files
+vim.api.nvim_set_keymap('n', '<leader>w', ':w<cr>', {noremap = true})
+vim.api.nvim_set_keymap('v', '<leader>w', '<esc>:w<cr>', {noremap = true})
+vim.api.nvim_set_keymap('i', '<leader>w', '<esc>:w<cr>', {noremap = true})
 
-"mappings for saving files
-nnoremap <leader>w :w<cr>
-vnoremap <leader>w <esc>:w<cr>
-inoremap <leader>w <esc>:w<cr>
-
-" close current buffer without messing up with splits
-function! DeleteBuffer()
-    if &buftype ==# 'terminal'
-        Bdelete!
+-- close current buffer without messing up with splits
+function DeleteBuffer()
+    if vim.bo.buftype == 'terminal' then
+        vim.cmd('Bdelete!')
     else
-        Bdelete
-    endif
-endfunction
+        vim.cmd('Bdelete')
+    end
+end
 
-nnoremap <leader>q :call DeleteBuffer()<cr>
-vnoremap <leader>q <esc>:call DeleteBuffer()<cr>
-inoremap <leader>q <esc>:call DeleteBuffer()<cr>
+vim.api.nvim_set_keymap('n', '<leader>q', ':lua DeleteBuffer()<cr>', {noremap = true})
+vim.api.nvim_set_keymap('v', '<leader>q', '<esc>:lua DeleteBuffer()<cr>', {noremap = true})
+vim.api.nvim_set_keymap('i', '<leader>q', '<esc>:lua DeleteBuffer()<cr>', {noremap = true})
 
-" force close current buffer without saving and without messing up with splits
-nnoremap <leader>z :Bdelete!<cr>
-vnoremap <leader>z <esc>:Bdelete!<cr>
-inoremap <leader>z <esc>:Bdelete!<cr>
+-- force close current buffer without saving and without messing up with splits
+vim.api.nvim_set_keymap('n', '<leader>z', ':Bdelete!<cr>', {noremap = true})
+vim.api.nvim_set_keymap('v', '<leader>z', '<esc>:Bdelete!<cr>', {noremap = true})
+vim.api.nvim_set_keymap('i', '<leader>z', '<esc>:Bdelete!<cr>', {noremap = true})
+EOF
 
 " quit vim
 nnoremap qqq <esc>:NvimTreeClose<cr>:q<CR>
