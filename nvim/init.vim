@@ -124,83 +124,89 @@ call plug#end()
 "===================================================
 " basic vim configuration
 
-set t_Co=256
-set termguicolors
-syntax on
-set ruler
-set lazyredraw
 set nofsync
-
-" Indentation
-set autoindent
-set smartindent
-set cindent
-
-" Search
-set incsearch
-" set gdefault
-set showmatch
-
-set colorcolumn=101
-
-" disable code folding
-set foldenable
-set foldmethod=indent
-set foldnestmax=10
-set foldlevel=20
-set foldminlines=2
-
-set lbr
-
-set tabstop=4
-set softtabstop=4
-set shiftwidth=4
-set expandtab
-
-set nopaste
-
-set completeopt="menuone,noinsert,noselect"
-
-" sets backspace key functions, allows it to backspace over end of line
-" characters, start of line, and indentation
-set backspace=indent,eol,start
 
 " movement keys will take you to the next or previous line
 set whichwrap+=<,>,h,l
 
-" remember more commands and search history
-set history=9999
-" use many much of levels of undo  "
-set undolevels=9999
-
-" hide buffers instead of closing them, allows for changing files without saving
-set hidden
-
-" disable backup and swap files
-set backup
-set noswapfile
-set nowritebackup
 set backupdir^=~/.nvim/_backup/
 set directory=~/.nvim/_temp/
 set undodir=~/.nvim/_undo/
 
-" File name tab completion functions like bash, it gives you a list of
-" options instead of automatically filling in the first possible match.
-set wildmenu
-" It will however, with this option, complete up to the first character of ambiguity.
-set wildmode=list:longest
+lua << EOF
 
-" Disable archive files
-set wildignore+=*.zip,*.tar.gz,*.tar.bz2,*.rar,*.tar.xz
-" Ignore bundler and sass cache
-set wildignore+=*/vendor/gems/*,*/vendor/cache/*,*/.bundle/*,*/.sass-cache/*
-" Ignore rails temporary asset caches
-set wildignore+=*/tmp/cache/assets/*/sprockets/*,*/tmp/cache/assets/*/sass/*
-" Disable temp and backup files
-set wildignore+=*.swp,*~,._*
+vim.opt.termguicolors = true
+vim.opt.syntax = 'on'
+vim.opt.ruler = true
+vim.opt.lazyredraw = true
 
-" don't give |ins-completion-menu| messages.
-set shortmess+=c
+-- indentation
+vim.opt.autoindent = true
+vim.opt.smartindent = true
+vim.opt.cindent = true
+
+-- search
+vim.opt.incsearch = true
+vim.opt.showmatch = true
+
+vim.opt.colorcolumn = '99'
+
+vim.opt.foldenable = true
+vim.opt.foldmethod = "indent"
+vim.opt.foldnestmax = 10
+vim.opt.foldlevel = 20
+vim.opt.foldminlines = 2
+
+vim.opt.lbr = true
+
+vim.opt.tabstop = 4
+vim.opt.softtabstop = 4
+vim.opt.shiftwidth = 4
+vim.opt.expandtab = true
+
+vim.opt.completeopt = { 'menuone','noinsert','noselect' }
+
+vim.opt.history = 9999
+vim.opt.undolevels = 9999
+
+-- sets backspace key functions, allows it to backspace over end of line characters, start of line, and indentation
+vim.opt.backspace = { 'indent', 'eol', 'start' }
+
+-- hide buffers instead of closing them, allows for changing files without saving
+vim.opt.hidden = true
+
+vim.opt.backup = true
+vim.opt.swapfile = false
+
+vim.opt.wildmenu = true
+vim.opt.wildmode = 'list:longest'
+vim.opt.wildignore:append {
+    -- Disable archive files
+    '**.tar.gz',
+    '*.tar.bz2',
+    '*.rar',
+    '*.tar.xz',
+
+    -- Ignore bundler and sass cache
+    '*/vendora/gems/*',
+    '*/vendora/cache/*',
+    '*/.bundlae/*',
+    '*/.sass-acache/*',
+
+    -- Ignore rails temporary asset caches
+    '*/tmp/cache/assets/*/sprockets/*',
+    '*/tmp/cache/assets/*/sass/*',
+
+    -- Disable temp and backup files
+    '*.swp',
+    '*~',
+    '._*',
+}
+
+-- don't give |ins-completion-menu| messages.
+vim.opt.shortmess:append 'c'
+
+EOF
 
 " Better display for messages
 " set cmdheight=2
@@ -222,24 +228,10 @@ au FileType gitcommit let b:EditorConfig_disable = 1
 " highlight nonText ctermbg=NONE
 
 
-" " git blame configuration
-" Plug 'f-person/git-blame.nvim'
-" let g:gitblame_date_format = '%d %b %y'
-" let g:gitblame_message_when_not_committed = ''
+" git blame configuration
+let g:gitblame_date_format = '%d %b %y'
+let g:gitblame_message_when_not_committed = ''
 
-
-" disable automatic comment insertion on newlines after a comment
-autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
-
-" available mappings
-" R
-" Z
-" g
-" ,
-" nmap <leader>,
-" <leader>,
-" <leader>i
-" <leader>c
 inoremap <silent><script><expr> <leader><space> copilot#Accept()
 let g:copilot_no_tab_map = v:true
 
@@ -249,15 +241,29 @@ if filereadable(expand("~/.vimrc_background"))
     source ~/.vimrc_background
 endif
 
-if !executable('pbcopy') && executable('xclip')
-    " change system-copy plugin copy commands to use xclip when not on macos
-    let g:system_copy#copy_command='xclip -sel clipboard'
-    let g:system_copy#paste_command='xclip -sel clipboard -o'
-endif
-
 " ===================================================================================
 " lua configuration
 lua << EOF
+
+-- disable automatic comment insertion on newlines after a comment
+vim.cmd('autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o')
+
+-- available mappings
+-- R
+-- Z
+-- g
+-- ,
+-- nmap <leader>,
+-- <leader>,
+-- <leader>i
+-- <leader>c
+
+if vim.fn.executable('pbcopy') == 0 and vim.fn.executable('xclip') then
+    -- change system-copy plugin copy commands to use xclip when not on macos
+    vim.g['system_copy#copy_command'] = 'xclip -sel clipboard'
+    vim.g['system_copy#paste_command'] = 'xclip -sel clipboard -o'
+end
+
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
@@ -837,7 +843,7 @@ require("ibl").setup {
 }
 
 -- winbar setup
-vim.o.winbar = "%{expand(\"%:~:.\")} %m%=%{'ddddddddd'} "
+vim.opt.winbar = "%{expand(\"%:~:.\")} %m%=%{'ddddddddd'} "
 
 -- status line setup
 require('lualine').setup {
@@ -845,7 +851,7 @@ require('lualine').setup {
         theme = 'everforest', -- other values: powerline, powerline_dark, gruvbox_dark
         icons_enabled = false,
         section_separators = { left = '', right = '' },
-        component_separators = { left = '', right = '' }
+        component_separators = { left = '', right = '' },
     },
 }
 
