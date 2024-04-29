@@ -1,6 +1,5 @@
 #!/bin/zsh
 
-
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/projects/ohmyzsh"
 
@@ -60,7 +59,7 @@ alias md='mkdir -vp'
 alias p='popd'
 alias tree='tree -a -h -f --du'
 alias vim='nvim'
-alias vi='nvim'
+# alias vi='nvim'
 alias vimdiff='nvim -d'
 
 function ..() { cd ../$1; }
@@ -159,7 +158,7 @@ function serve() {
 # function compress() { echo "Compressing $1"; tar -cvzf $1; echo "Done compressing..."; }
 
 # function for downloading files from urls
-function download(){
+function download() {
     if [ -n "$2" ]; then
         curl -# $1 -o $2
     else
@@ -168,7 +167,7 @@ function download(){
 }
 
 # parses jwt token and passes the output to fx
-function jwtparse(){
+function jwtparse() {
     echo -n "Enter JWT token: "
 
     read token
@@ -188,7 +187,7 @@ function jwtparse(){
     echo -n $result | base64 -d | fx
 }
 
-function pg_connect(){
+function pg_connect() {
     echo -n "Enter DB host: "
     read db_host
 
@@ -240,7 +239,7 @@ alias remove='rm -rf'
 
 alias kctl='kubectl'
 alias lima='limactl'
-alias limacreate='limactl create template://debian-12 --plain --vm-type qemu --cpus=2 --memory 2 --disk 20 --network lima:user-v2 --name '
+alias limacreate='limactl create template://debian-12 --arch=x86_64 --plain --vm-type qemu --cpus=2 --memory 2 --disk 20 --network lima:user-v2 --name '
 alias dog='dog A AAAA MX TXT'
 
 # add kubectl completion
@@ -266,7 +265,7 @@ export NODE_BINARY="$(which node)"
 # disable the default virtualenv prompt change
 export VIRTUAL_ENV_DISABLE_PROMPT=1
 
-function virtualenv_info(){
+function virtualenv_info() {
     # Get Virtual Env
     if [[ -n "$VIRTUAL_ENV" ]]; then
         # Strip out the path and just leave the env name

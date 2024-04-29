@@ -32,7 +32,7 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 # install nodejs lts from homebrew
 # install bat https://github.com/sharkdp/bat
 brew install the following:
-zsh neovim git tmux gcc cmake tree btop git-delta node@20 yarn dog
+zsh vim neovim git tmux gcc cmake tree btop git-delta node@20 yarn dog
 bat ripgrep fzf fd fx jq yh lazygit mc libpq gh act cmatrix dust eza
 kubernetes-cli minikube helm python watchman go qemu lima ansible
 
@@ -166,7 +166,8 @@ echo 'export TMUX_STATUS_NETWORK_SPEED_INTERFACE="wlan0"' | tee -a ~/projects/.m
 =============================================================
 # neovim config
 mkdir -p ~/.config/nvim
-ln -s ~/projects/dotfiles/nvim/init.vim ~/.config/nvim/init.vim
+ln -s ~/projects/dotfiles/nvim/init.lua ~/.config/nvim/init.lua
+ln -s ~/projects/dotfiles/vim/.vimrc ~/.vimrc
 mkdir -p ~/.nvim/_temp
 mkdir -p ~/.nvim/_backup
 ln -s ~/projects/dotfiles/coc-settings.json ~/.config/nvim/coc-settings.json
