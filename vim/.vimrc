@@ -1,4 +1,10 @@
+"   ▄▄   █                    ▀▀█                    ▄▀▀
+"   ██   █▄▄▄   ▄   ▄   ▄▄▄     █   ▄     ▄  ▄▄▄   ▄▄█▄▄   ▄▄▄
+"  █  █  █▀ ▀█  █   █  █▀  █    █   ▀▄ ▄ ▄▀ ▀   █    █    ▀   █
+"  █▄▄█  █   █  █   █  █▀▀▀▀    █    █▄█▄█  ▄▀▀▀█    █    ▄▀▀▀█
+" █    █ ██▄█▀  ▀▄▄▀█  ▀█▄▄▀    ▀▄▄   █ █   ▀▄▄▀█    █    ▀▄▄▀█
 " Abuelwafa's vim config
+" simple vim config without plugins for use on servers
 
 " leader
 let mapleader = '\'
@@ -28,10 +34,12 @@ set selectmode=mouse,key
 
 set history=2000
 set undolevels=1000
-set undofile
+set noundofile
 
 " improve autocomplete menu color
 " " highlight Pmenu ctermbg=238 gui=bold
+
+set omnifunc=syntaxcomplete#Complete
 
 " disable backup and swap files
 set nobackup
@@ -39,19 +47,19 @@ set nowritebackup
 set noswapfile
 
 " enable mouse in console
-set mouse+=a
 set mousemodel=extend
+set mouse+=a
 set mousehide
 if &term =~ '^screen'
     " tmux knows the extended mouse mode
     set ttymouse=xterm2
 endif
 
-
 " don't give |ins-completion-menu| messages.
 set shortmess+=cI
 
 set autoread
+au FocusGained,BufEnter * silent! checktime
 set magic
 set title
 
@@ -72,17 +80,12 @@ set showmode
 set showmatch
 set matchtime=2
 set hidden
-
 set hlsearch
 set incsearch
 set ignorecase
 set smartcase
-" set gdefault
 set showmatch
-
 set colorcolumn=101
-
-
 set tabstop=4
 set softtabstop=4
 set shiftwidth=4
@@ -93,10 +96,9 @@ set autoindent
 set smartindent
 set cindent
 set shiftround
-
 set number
-" set relativenumber
 set cursorline
+set wrap
 
 " Open new windows on the bottom and right instead of the top and left.
 set splitbelow
@@ -141,7 +143,10 @@ set signcolumn=yes
 set updatetime=50
 
 set background=dark
-colorscheme murphy
+colorscheme default
+
+" set mouse shape to block in insert mode
+set guicursor=i:block
 
 " remove vim background - makes it transparent if the colorscheme has no background
 highlight nonText ctermbg=NONE
@@ -162,7 +167,7 @@ set ttimeoutlen=20
 " Quickly go to normal mode
 inoremap jj <esc>
 
-" adding new lines from normal mode - for speed factoring and cleaning
+" adding new lines from normal mode - for speed refactoring and cleaning
 nnoremap <CR> o<esc>
 nnoremap <leader><return> O<esc>
 inoremap <leader><return> <esc>O
@@ -178,11 +183,11 @@ vmap <C-j> 10j
 nmap <C-k> 10k
 vmap <C-k> 10k
 
-" single and double quotes in normal mode navigate forward and backwards 24 lines
+" single and double quotes in normal mode navigate forward and backwards 20 lines
 nnoremap ' 20j
 nnoremap " 20k
 
-"split resizing
+" split resizing
 " increase vertically
 nnoremap == <C-w>3+
 " decrease vertically
@@ -243,7 +248,7 @@ vnoremap <expr><silent> H max([line('.'),line('v')]) < line('$') ? ':m ''>+1<cr>
 nnoremap <silent> L :m .-2<cr>==
 vnoremap <expr><silent> L min([line('.'),line('v')]) > 1 ? ':m ''<-2<cr>gv=gv' : ''
 
-"easier colons in normal mode
+" easier colons in normal mode
 noremap <space> :
 
 " enabling paste - note that this mapping doesn't work when paste is on
@@ -260,6 +265,7 @@ inoremap <leader>v <esc>:set<space>paste<cr>
 :autocmd FileType js,javascript,typescript,javascriptreact,typescriptreact imap ifkj if () {<cr><esc>k$2hi
 inoremap xx $
 inoremap vv ``<esc>i
+inoremap VV ~
 
 " mappings for speed buffer switching
 nnoremap <leader>b :bprevious<CR>
@@ -384,3 +390,26 @@ augroup javascript_folding
     au FileType javascript setlocal foldmethod=syntax
     au FileType javascript.jsx setlocal foldmethod=syntax
 augroup END
+
+" map leader+space to omni completion in insert mode
+inoremap <leader><space> <c-x><c-o>
+inoremap <c-@> <c-x><c-o>
+
+command! Qfall call s:quickFixOpenAll()
+function! s:quickFixOpenAll()
+    let files = {}
+    for entry in getqflist()
+        let filename = bufname(entry.bufnr)
+        let files[filename] = 1
+    endfor
+
+    for file in keys(files)
+        silent exe "edit ".file
+    endfor
+endfunction
+
+" copy to clipboard using xclip
+vnoremap <leader>c :!clear && xclip -i -selection clipboard<cr>u
+
+" update vimrc file
+command! -nargs=0 UpdateVimrc :silent execute "!curl -fL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/vim/.vimrc -o ~/.vimrc" | echo "Vimrc has been udpated. Restart vim to activate the new changes"
