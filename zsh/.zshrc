@@ -239,7 +239,8 @@ alias remove='rm -rf'
 
 alias kctl='kubectl'
 alias lima='limactl'
-alias limacreate='limactl create template://debian-12 --arch=x86_64 --plain --vm-type qemu --cpus=2 --memory 2 --disk 20 --network lima:user-v2 --name '
+alias lima-create-debian='limactl create template://debian-12 --arch=x86_64 --plain --vm-type qemu --cpus=2 --memory 2 --disk 20 --network lima:user-v2 --name '
+alias lima-create-ubuntu='limactl create template://ubuntu-lts --arch=x86_64 --plain --vm-type qemu --cpus=2 --memory 2 --disk 20 --network lima:user-v2 --name '
 alias dog='dog A AAAA MX TXT'
 
 # add kubectl completion

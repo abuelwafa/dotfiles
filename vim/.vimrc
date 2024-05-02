@@ -175,7 +175,6 @@ inoremap jj <esc>
 " adding new lines from normal mode - for speed refactoring and cleaning
 nnoremap <CR> o<esc>
 nnoremap <leader><return> O<esc>
-inoremap <leader><return> <esc>O
 
 " make enter behave normally for quickfix
 augroup QuickFix
