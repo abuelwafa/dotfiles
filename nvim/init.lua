@@ -32,6 +32,8 @@ vim.opt.foldlevel = 20
 vim.opt.foldminlines = 2
 
 vim.opt.lbr = true
+vim.opt.autoread = true
+vim.cmd([[autocmd FocusGained,BufEnter * silent! checktime]])
 
 vim.opt.tabstop = 4
 vim.opt.softtabstop = 4
@@ -141,9 +143,6 @@ Plug 'f-person/git-blame.nvim'
 Plug 'eandrju/cellular-automaton.nvim'
 Plug 'rcarriga/nvim-notify'
 Plug 'preservim/tagbar'
-Plug 'tpope/vim-dadbod'
-Plug 'kristijanhusak/vim-dadbod-ui'
-Plug 'kristijanhusak/vim-dadbod-completion'
 Plug 'jackMort/ChatGPT.nvim'
 Plug 'stevearc/dressing.nvim'
 Plug 'folke/trouble.nvim'
@@ -211,6 +210,32 @@ endfunction
     {},
     {},
     {},
+    {
+        "kristijanhusak/vim-dadbod-ui",
+        dependencies = {
+            { "tpope/vim-dadbod", lazy = true },
+            { "kristijanhusak/vim-dadbod-completion", ft = { "sql", "mysql", "plsql" }, lazy = true },
+        },
+        cmd = {
+            "DBUI",
+            "DBUIToggle",
+            "DBUIAddConnection",
+            "DBUIFindBuffer",
+        },
+        init = function()
+            vim.g.db_ui_save_location = "~/projects/db-connections"
+            vim.g.db_ui_tmp_query_location = "~/.db-queries"
+            vim.g.db_ui_use_nvim_notify = 1
+            vim.g.db_ui_use_nerd_fonts = 1
+            vim.g.db_ui_show_database_icon = 1
+            vim.g.db_ui_win_position = "left"
+            vim.g.db_ui_execute_on_save = 0
+
+            vim.cmd(
+                [[autocmd FileType sql,mysql,plsql lua require('cmp').setup.buffer({ sources = {{ name = 'vim-dadbod-completion' }} })]]
+            )
+        end,
+    },
 }, {
     defaults = { version = "*" },
     checker = { enabled = true },
@@ -650,10 +675,6 @@ cmp.setup.cmdline(":", {
     }),
 })
 
-vim.cmd(
-    [[autocmd FileType sql,mysql,plsql lua require('cmp').setup.buffer({ sources = {{ name = 'vim-dadbod-completion' }} })]]
-)
-
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = vim.tbl_deep_extend("force", capabilities, require("cmp_nvim_lsp").default_capabilities())
 
@@ -1001,6 +1022,7 @@ vim.api.nvim_command([[
 ]])
 vim.api.nvim_set_keymap("i", "xx", "$", { noremap = true })
 vim.api.nvim_set_keymap("i", "vv", "``<esc>i", { noremap = true })
+vim.api.nvim_set_keymap("i", "VV", "~", { noremap = true })
 
 -- mappings for speed buffer switching
 vim.api.nvim_set_keymap("n", "<leader>b", ":bprevious<CR>", { noremap = true })
@@ -1029,14 +1051,7 @@ vim.api.nvim_set_keymap("n", "<leader>z", ":Bdelete!<cr>", { noremap = true })
 vim.api.nvim_set_keymap("v", "<leader>z", "<esc>:Bdelete!<cr>", { noremap = true })
 vim.api.nvim_set_keymap("i", "<leader>z", "<esc>:Bdelete!<cr>", { noremap = true })
 
-
-
-
-
-
-
 --[[
-
 " movement keys will take you to the next or previous line
 set whichwrap+=<,>,h,l
 
@@ -1060,13 +1075,8 @@ set guicursor=i:block
 let g:EditorConfig_exclude_patterns = ['fugitive://.*', 'scp://.*']
 au FileType gitcommit let b:EditorConfig_disable = 1
 
-" " remove vim background - makes it transparent if the colorscheme has no background
+" remove vim background - makes it transparent if the colorscheme has no background
 " highlight nonText ctermbg=NONE
-
-
-" git blame configuration
-let g:gitblame_date_format = '%d %b %y'
-let g:gitblame_message_when_not_committed = ''
 
 inoremap <silent><script><expr> <leader><space> copilot#Accept()
 let g:copilot_no_tab_map = v:true
@@ -1080,7 +1090,7 @@ endif
 " Quickly go to normal mode
 inoremap jj <esc>
 
-" adding new lines from normal mode - for speed factoring and cleaning
+" adding new lines from normal mode - for speed refactoring and cleaning
 nnoremap <CR> o<esc>
 nnoremap <leader><return> O<esc>
 inoremap <leader><return> <esc>O
@@ -1089,102 +1099,112 @@ inoremap <leader><return> <esc>O
 augroup QuickFix
      au FileType qf map <buffer> <CR> <CR>
 augroup END
+]]
 
-"split resizing
-" increase vertically
-nnoremap == <C-w>3+
-" decrease vertically
-nnoremap -- <C-w>3-
-" increase horizontally
-nnoremap <leader>] <C-w>4>
-" decrease horizontally
-nnoremap <leader>[ <C-w>4<
+-- git blame configuration
+vim.g.gitblame_date_format = "%d %b %y"
+vim.g.gitblame_message_when_not_committed = ""
 
-" leader+tab inserts a literal tab character in insert mode
-inoremap <leader><Tab> <C-V><Tab>
+-- split resizing
+-- increase vertically
+vim.api.nvim_set_keymap("n", "==", "<C-w>3+", { noremap = true })
+-- decrease vertically
+vim.api.nvim_set_keymap("n", "--", "<C-w>3-", { noremap = true })
+-- increase horizontally
+vim.api.nvim_set_keymap("n", "<leader>]", "<C-w>4>", { noremap = true })
+-- decrease horizontally
+vim.api.nvim_set_keymap("n", "<leader>[", "<C-w>4<", { noremap = true })
 
-nnoremap <Tab> za
+-- leader+tab inserts a literal tab character in insert mode
+vim.api.nvim_set_keymap("i", "<leader><Tab>", "<C-V><Tab>", { noremap = true })
 
-nnoremap <leader>sr <Plug>RestNvim
+vim.api.nvim_set_keymap("n", "<Tab>", "za", { noremap = true })
 
-" w moves to the end of word not the beginning of it
-noremap w e
+vim.api.nvim_set_keymap("n", "<leader>sr", "<Plug>RestNvim", { noremap = true })
 
-" Remap j and k to act as expected when used on long, wrapped, lines
-nnoremap <silent> j gj
-vnoremap <silent> j gj
-nnoremap <silent> k gk
-vnoremap <silent> k gk
-nnoremap <silent> <down> gj
-vnoremap <silent> <down> gj
-nnoremap <silent> <up> gk
-vnoremap <silent> <up> gk
+-- w moves to the end of word not the beginning of it
+vim.api.nvim_set_keymap("n", "w", "e", { noremap = true })
 
+-- Remap j and k to act as expected when used on long, wrapped, lines
+vim.api.nvim_set_keymap("n", "j", "gj", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("v", "j", "gj", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "k", "gk", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("v", "k", "gk", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "<down>", "gj", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("v", "<down>", "gj", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "<up>", "gk", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("v", "<up>", "gk", { noremap = true, silent = true })
 
-" quit vim
-nnoremap qqq <esc>:NvimTreeClose<cr>:q<CR>
+-- quit vim
+vim.api.nvim_set_keymap("n", "qqq", "<esc>:NvimTreeClose<cr>:q<CR>", { noremap = true })
 
-" force quit vim
-nnoremap <leader>fq <esc>:NvimTreeClose<CR>:q!<CR>
+-- force quit vim
+vim.api.nvim_set_keymap("n", "<leader>fq", "<esc>:NvimTreeClose<CR>:q!<CR>", { noremap = true })
 
-nmap <leader><leader>w :HopWord<cr>
+vim.api.nvim_set_keymap("n", "<leader><leader>w", ":HopWord<cr>", { noremap = true })
 
-"make < > keep selection after indentenation
-vnoremap < <gv
-vnoremap > >gv
+-- make < > keep selection after indentation
+vim.api.nvim_set_keymap("v", "<", "<gv", { noremap = true })
+vim.api.nvim_set_keymap("v", ">", ">gv", { noremap = true })
 
-" use single key stroke to indent single lines instead of double
-nnoremap > >>
-nnoremap < <<
+-- use single key stroke to indent single lines instead of double
+vim.api.nvim_set_keymap("n", ">", ">>", { noremap = true })
+vim.api.nvim_set_keymap("n", "<", "<<", { noremap = true })
 
-" keeps what's yanked after pasting(putting)
-nnoremap <expr> p 'p`[' . strpart(getregtype(), 0, 1) . '`]y'
-vnoremap <expr> p 'p`[' . strpart(getregtype(), 0, 1) . '`]y'
-nnoremap <leader>m :MaximizerToggle<cr>
+-- keeps what's yanked after pasting(putting)
+vim.api.nvim_set_keymap("n", "p", "'p`[' .. strpart(getregtype(), 0, 1) .. '`]y'", { noremap = true, expr = true })
+vim.api.nvim_set_keymap("v", "p", "'p`[' .. strpart(getregtype(), 0, 1) .. '`]y'", { noremap = true, expr = true })
+vim.api.nvim_set_keymap("n", "<leader>m", ":MaximizerToggle<cr>", { noremap = true })
 
+-- move splits
+vim.api.nvim_set_keymap("n", "<leader>h", "<c-w>H", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "<leader>u", "<c-w>K", { noremap = true, silent = true })
 
-" move splits
-nnoremap <silent> <leader>h <c-w>H
-nnoremap <silent> <leader>u <c-w>K
+vim.api.nvim_set_keymap(
+    "n",
+    "<C-p>",
+    '<cmd>lua require"telescope.builtin".find_files({ hidden = true })<CR>',
+    { noremap = true }
+)
+vim.api.nvim_set_keymap("n", "<C-o>", "<cmd>Telescope buffers<CR>", { noremap = true })
+vim.api.nvim_set_keymap("n", "<C-f>", "<cmd>Telescope live_grep<CR>", { noremap = true })
+vim.api.nvim_set_keymap(
+    "n",
+    "<leader>o",
+    "<cmd>Telescope file_browser path=%:p:h select_buffer=true initial_mode=normal<CR>",
+    { noremap = true }
+)
 
-nnoremap <C-p> <cmd>lua require"telescope.builtin".find_files({ hidden = true })<CR>
-nnoremap <C-o> <cmd>Telescope buffers<CR>
-nnoremap <C-f> <cmd>Telescope live_grep<CR>
-nnoremap <leader>o <cmd>Telescope file_browser path=%:p:h select_buffer=true initial_mode=normal<CR>
+-- toggle tag bar
+vim.api.nvim_set_keymap("n", "<leader>i", "<cmd>TagbarToggle<CR>", { noremap = true })
 
-" toggle tag bar
-nnoremap <leader>i <cmd>TagbarToggle<CR>
+vim.api.nvim_set_keymap("n", "ff", ":NvimTreeToggle<cr>", { noremap = true })
 
-nnoremap ff :NvimTreeToggle<cr>
-" nnoremap ff :Neotree source=filesystem position=left toggle reveal<cr>
+-- quickly switch currently open buffers
+vim.api.nvim_set_keymap("n", "<leader>1", "<Cmd>BufferLineGoToBuffer 1<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "<leader>2", "<Cmd>BufferLineGoToBuffer 2<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "<leader>3", "<Cmd>BufferLineGoToBuffer 3<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "<leader>4", "<Cmd>BufferLineGoToBuffer 4<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "<leader>5", "<Cmd>BufferLineGoToBuffer 5<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "<leader>6", "<Cmd>BufferLineGoToBuffer 6<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "<leader>7", "<Cmd>BufferLineGoToBuffer 7<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "<leader>8", "<Cmd>BufferLineGoToBuffer 8<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "<leader>9", "<Cmd>BufferLineGoToBuffer 9<CR>", { noremap = true, silent = true })
 
-" quickly switch currently open buffers
-nnoremap <silent><leader>1 <Cmd>BufferLineGoToBuffer 1<CR>
-nnoremap <silent><leader>2 <Cmd>BufferLineGoToBuffer 2<CR>
-nnoremap <silent><leader>3 <Cmd>BufferLineGoToBuffer 3<CR>
-nnoremap <silent><leader>4 <Cmd>BufferLineGoToBuffer 4<CR>
-nnoremap <silent><leader>5 <Cmd>BufferLineGoToBuffer 5<CR>
-nnoremap <silent><leader>6 <Cmd>BufferLineGoToBuffer 6<CR>
-nnoremap <silent><leader>7 <Cmd>BufferLineGoToBuffer 7<CR>
-nnoremap <silent><leader>8 <Cmd>BufferLineGoToBuffer 8<CR>
-nnoremap <silent><leader>9 <Cmd>BufferLineGoToBuffer 9<CR>
-
+--[[
 " Save file with sudo
 command! -nargs=0 WriteWithSudo :w !sudo tee % >/dev/null
 " Use :ww instead of :WriteWithSudo
 cnoreabbrev ww WriteWithSudo
 
-" database UI
-let g:db_ui_save_location = '~/projects/db-connections'
-let g:db_ui_tmp_query_location = '~/.db-queries'
-let g:db_ui_use_nvim_notify = 1
-let g:db_ui_use_nerd_fonts = 1
-let g:db_ui_show_database_icon = 1
-let g:db_ui_win_position = 'left'
-let g:db_ui_execute_on_save = 0
 
 let g:better_whitespace_filetypes_blacklist=['NvimTree', 'diff', 'git', 'gitcommit', 'unite', 'qf', 'help', 'markdown', 'fugitive', 'dbout']
 let g:strip_whitespace_on_save = 1
+
+hi FloatBorder ctermfg=Cyan
+
+" copy to clipboard using xclip
+vnoremap <leader>c :!clear && xclip -i -selection clipboard<cr>u
 
 command! Qfall call s:quickFixOpenAll()
 function! s:quickFixOpenAll()
@@ -1198,6 +1218,4 @@ function! s:quickFixOpenAll()
     silent exe "edit ".file
   endfor
 endfunction
-
-hi FloatBorder ctermfg=Cyan
 ]]

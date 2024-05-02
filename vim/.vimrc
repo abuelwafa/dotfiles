@@ -85,7 +85,7 @@ set incsearch
 set ignorecase
 set smartcase
 set showmatch
-set colorcolumn=101
+" set colorcolumn=99
 set tabstop=4
 set softtabstop=4
 set shiftwidth=4
@@ -144,6 +144,11 @@ set updatetime=50
 
 set background=dark
 colorscheme default
+hi Cursorline term=none cterm=none ctermbg=238
+hi CursorlineNR term=none cterm=none ctermbg=238
+" change background color to black or none for transparent, better for my eyes
+hi Normal term=none cterm=none ctermbg=black
+" hi Normal term=none cterm=none ctermbg=none
 
 " set mouse shape to block in insert mode
 set guicursor=i:block
