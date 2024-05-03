@@ -1190,21 +1190,21 @@ vim.api.nvim_set_keymap("n", "<leader>7", "<Cmd>BufferLineGoToBuffer 7<CR>", { n
 vim.api.nvim_set_keymap("n", "<leader>8", "<Cmd>BufferLineGoToBuffer 8<CR>", { noremap = true, silent = true })
 vim.api.nvim_set_keymap("n", "<leader>9", "<Cmd>BufferLineGoToBuffer 9<CR>", { noremap = true, silent = true })
 
+-- Save file with sudo
+vim.cmd([[command! -nargs=0 WriteWithSudo :w !sudo tee % >/dev/null]])
+-- Use :ww instead of :WriteWithSudo
+vim.cmd([[cnoreabbrev ww WriteWithSudo]])
+
+vim.g.better_whitespace_filetypes_blacklist =
+    { "NvimTree", "diff", "git", "gitcommit", "unite", "qf", "help", "markdown", "fugitive", "dbout" }
+vim.g.strip_whitespace_on_save = 1
+
+vim.cmd([[hi FloatBorder ctermfg=Cyan]])
+
+-- copy to clipboard using xclip
+vim.api.nvim_set_keymap("v", "<leader>c", ":!clear && xclip -i -selection clipboard<CR>u", { noremap = true })
+
 --[[
-" Save file with sudo
-command! -nargs=0 WriteWithSudo :w !sudo tee % >/dev/null
-" Use :ww instead of :WriteWithSudo
-cnoreabbrev ww WriteWithSudo
-
-
-let g:better_whitespace_filetypes_blacklist=['NvimTree', 'diff', 'git', 'gitcommit', 'unite', 'qf', 'help', 'markdown', 'fugitive', 'dbout']
-let g:strip_whitespace_on_save = 1
-
-hi FloatBorder ctermfg=Cyan
-
-" copy to clipboard using xclip
-vnoremap <leader>c :!clear && xclip -i -selection clipboard<cr>u
-
 command! Qfall call s:quickFixOpenAll()
 function! s:quickFixOpenAll()
   let files = {}
