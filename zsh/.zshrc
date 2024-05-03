@@ -12,6 +12,7 @@ export PATH="$PATH:$ANDROID_HOME/emulator"
 export PATH="$PATH:$ANDROID_HOME/platform-tools"
 
 ZSH_THEME="amuse"
+ZLE_REMOVE_SUFFIX_CHARS=""
 
 # display red dots while waiting for completion.
 COMPLETION_WAITING_DOTS="true"
