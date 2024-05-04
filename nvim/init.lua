@@ -1218,3 +1218,16 @@ function! s:quickFixOpenAll()
   endfor
 endfunction
 ]]
+
+vim.cmd([[command! Qfall lua require('my_module').quickFixOpenAll()]])
+_G.quickFixOpenAll = function()
+    local files = {}
+    for _, entry in ipairs(vim.fn.getqflist() or {}) do
+        local filename = vim.fn.bufname(entry.bufnr)
+        files[filename] = true
+    end
+
+    for file, _ in pairs(files) do
+        vim.cmd("silent edit " .. file)
+    end
+end

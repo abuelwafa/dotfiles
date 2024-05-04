@@ -18,21 +18,13 @@ main() {
     echo "creating projects folder"
     mkdir -p ~/projects
 
+    echo "=> Installing essential apt packages"
+    sudo apt install curl git build-essential
+
     read -p "Enter your email address: " -r private_email_address
     echo
     echo "generating SSH key"
     ssh-keygen -t ed25519 -C "$private_email_address"
-
-    echo "=> Installing essential apt packages"
-    sudo apt install curl git build-essential vim zsh
-
-    echo "=> changing default shell to ZSH"
-    chsh -s $(which zsh)
-
-    echo "=> Cloning repositories"
-    git clone git@github.com:ohmyzsh/ohmyzsh.git ~/projects/ohmyzsh
-    git clone git@github.com:bigH/git-fuzzy.git ~/projects/git-fuzzy
-    git clone git@github.com:tinted-theming/base16-shell.git ~/projects/base16-shell
 
     echo "=> Installing Homebrew"
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -82,6 +74,14 @@ main() {
         ruby-build
 
     ln -s ~/projects/dotfiles/.gitconfig ~/.gitconfig
+
+    echo "=> changing default shell to ZSH"
+    chsh -s $(which zsh)
+
+    echo "=> Cloning repositories"
+    git clone git@github.com:ohmyzsh/ohmyzsh.git ~/projects/ohmyzsh
+    git clone git@github.com:bigH/git-fuzzy.git ~/projects/git-fuzzy
+    git clone git@github.com:tinted-theming/base16-shell.git ~/projects/base16-shell
 
     echo "=> Setting up Neovim config"
     mkdir -p ~/.config/nvim
