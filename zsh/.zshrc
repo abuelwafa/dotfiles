@@ -243,6 +243,7 @@ alias lima='limactl'
 alias lima-create-debian='limactl create template://debian-12 --arch=x86_64 --plain --vm-type qemu --cpus=2 --memory 2 --disk 20 --network lima:user-v2 --name '
 alias lima-create-ubuntu='limactl create template://ubuntu-lts --arch=x86_64 --plain --vm-type qemu --cpus=2 --memory 2 --disk 20 --network lima:user-v2 --name '
 alias dog='dog A AAAA MX TXT'
+alias start-db='docker run -p 5432:5432 --env POSTGRES_PASSWORD=postgres --env PGDATA=/var/lib/postgresql/data/pgdata postgres'
 
 # add kubectl completion
 [[ $commands[kubectl] ]] && source <(kubectl completion zsh)
@@ -279,8 +280,10 @@ function virtualenv_info() {
     [[ -n "$venv" ]] && echo "(venv:$venv) "
 }
 
-PROMPT='$(rule)$(check-git-email)
-%{$fg_bold[green]%}%~%{$reset_color%}$(git_prompt_info) %{$fg_bold[red]%}%*%{$reset_color%} %{$bg_bold[green]%}%{$fg_bold[black]%} node: $(node -v) %{$reset_color%}
+# %{$bg_bold[green]%}%{$fg_bold[black]%} node: $(node -v) %{$reset_color%}
+
+PROMPT='%{$fg_bold[cyan]%}$(rule)%{$reset_color%}%{$bg[red]%}%{$fg_bold[white]%}$(check-git-email)%{$reset_color%}
+%{$fg_bold[green]%}%~%{$reset_color%}$(git_prompt_info) %{$fg_bold[red]%}%*%{$reset_color%}
 %{$bg_bold[red]%}%{$fg_bold[white]%}$(kubectx_prompt_info)%{$reset_color%}%{$bg_bold[magenta]%}%{$fg_bold[yellow]%}$(aws_prompt_info)%{$reset_color%}%{$fg[yellow]%}$(virtualenv_info)%{$reset_color%}%{$fg_bold[magenta]%}-> %{$reset_color%}'
 
 if command -v rbenv &>/dev/null; then
