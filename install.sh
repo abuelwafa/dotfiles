@@ -19,7 +19,7 @@ main() {
     mkdir -p ~/projects
 
     echo "=> Installing essential apt packages"
-    sudo apt install curl git build-essential
+    sudo apt install --assume-yes curl git build-essential
 
     read -p "Enter your email address: " -r private_email_address
     echo
