@@ -82,6 +82,7 @@ main() {
     git clone git@github.com:ohmyzsh/ohmyzsh.git ~/projects/ohmyzsh
     git clone git@github.com:bigH/git-fuzzy.git ~/projects/git-fuzzy
     git clone git@github.com:tinted-theming/base16-shell.git ~/projects/base16-shell
+    git clone git@github.com:tmux-plugins/tpm.git ~/projects/tpm
 
     echo "=> Setting up Neovim config"
     mkdir -p ~/.config/nvim
