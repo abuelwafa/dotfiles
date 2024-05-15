@@ -128,7 +128,7 @@ set wildmode=list:longest,list,full
 
 set list
 set listchars+=extends:>
-set listchars=trail:\·,tab:\|\-,nbsp:␣
+set listchars=trail:\·,tab:\»\ ,nbsp:␣
 match errorMsg /\s\+$/
 
 " Disable archive files
