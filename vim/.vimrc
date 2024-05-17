@@ -106,8 +106,6 @@ set splitright
 
 set scrolloff=4
 
-set completeopt="menuone,noinsert,noselect"
-
 " sets backspace key functions, allows it to backspace over end of line
 " characters, start of line, and indentation
 set backspace=indent,eol,start
@@ -122,7 +120,7 @@ set foldlevel=99
 set foldnestmax=10
 set foldminlines=2
 
-set completeopt=longest,menu
+set completeopt=menuone,noinsert,noselect
 set wildmenu                           " show a navigable menu for tab completion"
 set wildmode=list:longest,list,full
 
