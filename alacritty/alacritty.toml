@@ -1,0 +1,22 @@
+import = []
+working_directory = "./projects"
+
+[window]
+blur = true
+opacity = 0.8
+startup_mode = "Fullscreen"
+option_as_alt = "OnlyLeft"
+
+[font]
+size = 15
+normal.family = "MesloLGL Nerd font"
+offset.y = 4
+
+[cursor]
+style.shape = "Block"
+style.blinking = "Always"
+blink_interval = 300
+blink_timeout = 0
+
+[mouse]
+hide_when_typing = true

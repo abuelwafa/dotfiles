@@ -42,6 +42,7 @@ plugins=(
 export EDITOR='nvim'
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
+export LC_CTYPE=en_US.UTF-8
 export FX_THEME=6
 export PAGER='less -XFR'
 

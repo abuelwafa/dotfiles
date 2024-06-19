@@ -401,7 +401,7 @@ require("nvim-treesitter.configs").setup({
     indent = { enable = true },
 })
 
-function fxJSONFormat(content)
+local function fxJSONFormat(content)
     return vim.fn.system({ "fx", "." }, content)
 end
 
@@ -522,16 +522,20 @@ local ensure_installed = {
     "yamlls",
 }
 
-require("mason").setup()
+require("mason").setup({
+    ui = {
+        border = "single",
+        width = 0.8,
+        height = 0.8,
+    },
+})
 require("mason-tool-installer").setup({
     auto_update = true,
     run_on_start = true,
     ensure_installed = ensure_installed,
 })
 
-vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "single" })
-
-function show_documentation()
+local function show_documentation()
     vim.lsp.buf.hover()
     vim.lsp.buf.hover()
     -- vim.keymap.set('n', '<esc><esc>', function()
@@ -582,7 +586,11 @@ vim.api.nvim_create_autocmd("LspAttach", {
 require("mason-lspconfig").setup({
     handlers = {
         function(server_name)
-            require("lspconfig")[server_name].setup({})
+            require("lspconfig")[server_name].setup({
+                handlers = {
+                    ["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "single" }),
+                },
+            })
         end,
         -- overrides
         -- ["lsp_name"] = function ()
@@ -1076,7 +1084,10 @@ let g:EditorConfig_exclude_patterns = ['fugitive://.*', 'scp://.*']
 au FileType gitcommit let b:EditorConfig_disable = 1
 
 " remove vim background - makes it transparent if the colorscheme has no background
-" highlight nonText ctermbg=NONE
+highlight nonText ctermbg=NONE
+
+" custom highlights
+highlight WinBar cterm=bold gui=bold guifg=NvimLightGrey4 guibg=None
 
 inoremap <silent><script><expr> <leader><space> copilot#Accept()
 let g:copilot_no_tab_map = v:true
@@ -1086,6 +1097,8 @@ if filereadable(expand("~/.vimrc_background"))
     let base16colorspace=256
     source ~/.vimrc_background
 endif
+
+highlight WinBar cterm=bold gui=bold guifg=NvimLightGrey4 guibg=None
 
 " Quickly go to normal mode
 inoremap jj <esc>
