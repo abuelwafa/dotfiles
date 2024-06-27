@@ -8,7 +8,7 @@ startup_mode = "Fullscreen"
 option_as_alt = "OnlyLeft"
 
 [font]
-size = 15
+size = 14
 normal.family = "MesloLGL Nerd font"
 offset.y = 4
 
@@ -19,4 +19,4 @@ blink_interval = 300
 blink_timeout = 0
 
 [mouse]
-hide_when_typing = true
+hide_when_typing = false

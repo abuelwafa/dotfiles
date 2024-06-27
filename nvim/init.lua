@@ -288,7 +288,12 @@ vim.notify = require("notify")
 -- plugins
 require("hop").setup()
 require("Comment").setup()
-require("gitsigns").setup()
+require("gitsigns").setup({
+    signs = {
+        add = { text = "+" },
+    },
+    word_diff = true,
+})
 require("numb").setup()
 require("chatgpt").setup()
 require("colorizer").setup({ "*" }, {
@@ -477,7 +482,7 @@ local ensure_installed = {
     "gradle_ls",
     "graphql",
     "groovyls",
-    "harper-ls",
+    -- "harper-ls",
     "helm_ls",
     "html",
     "intelephense",
@@ -1017,8 +1022,9 @@ vim.api.nvim_set_keymap("v", "H", [[:m '']+1<cr>gv=gv]], { expr = true, noremap 
 vim.api.nvim_set_keymap("n", "L", ":m .-2<cr>==", { noremap = true })
 vim.api.nvim_set_keymap("v", "L", [[:m ''<-2<cr>gv=gv]], { expr = true, noremap = true })
 
--- easier colons in normal mode
+-- easier colons in normal/visual mode
 vim.api.nvim_set_keymap("n", "<space>", ":", { noremap = true })
+vim.api.nvim_set_keymap("v", "<space>", ":", { noremap = true })
 
 -- arrow mappings
 vim.api.nvim_command([[
@@ -1087,7 +1093,8 @@ au FileType gitcommit let b:EditorConfig_disable = 1
 highlight nonText ctermbg=NONE
 
 " custom highlights
-highlight WinBar cterm=bold gui=bold guifg=NvimLightGrey4 guibg=None
+highlight WinBar cterm=bold gui=bold guibg=NvimDarkGrey4 guifg=White
+highlight WinBarNC cterm=bold guibg=NvimDarkGrey2 gui=bold
 
 inoremap <silent><script><expr> <leader><space> copilot#Accept()
 let g:copilot_no_tab_map = v:true
@@ -1213,6 +1220,7 @@ vim.g.better_whitespace_filetypes_blacklist =
 vim.g.strip_whitespace_on_save = 1
 
 vim.cmd([[hi FloatBorder ctermfg=Cyan]])
+vim.cmd([[hi DiagnosticFloatingError ctermbg=None guibg=None ctermfg=1 guifg=#cc6666]])
 
 -- copy to clipboard using xclip
 vim.api.nvim_set_keymap("v", "<leader>c", ":!clear && xclip -i -selection clipboard<CR>u", { noremap = true })
@@ -1230,6 +1238,12 @@ function! s:quickFixOpenAll()
     silent exe "edit ".file
   endfor
 endfunction
+
+" command mode, ctrl-a to head, ctrl-e to tail
+cnoremap <C-j> <t_kd>
+cnoremap <C-k> <t_ku>
+cnoremap <C-a> <Home>
+cnoremap <C-e> <End>
 ]]
 
 vim.cmd([[command! Qfall lua require('my_module').quickFixOpenAll()]])

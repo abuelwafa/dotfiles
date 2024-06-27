@@ -5,6 +5,7 @@
 " █    █ ██▄█▀  ▀▄▄▀█  ▀█▄▄▀    ▀▄▄   █ █   ▀▄▄▀█    █    ▀▄▄▀█
 " Abuelwafa's vim config
 " simple vim config without plugins for use on servers
+" curl -L https://raw.githubusercontent.com/abuelwafa/dotfiles/master/vim/.vimrc > ~/.vimrc
 
 " leader
 let mapleader = '\'
@@ -229,7 +230,7 @@ vnoremap <silent> <up> gk
 noremap U <C-r>
 
 " open new buffer
-nnoremap <leader>gg :enew<cr>
+nnoremap <leader>g :enew<cr>
 
 " search for selection
 " use * for words under cursor
@@ -360,9 +361,15 @@ function! NetrwMapping()
     nmap <buffer> r R
 
     " create file
-    nmap <buffer> a %:w<CR>:buffer #<CR>
+    nmap <buffer> a %:w<CR>:buffer #<CR>:Lexplore<CR>:Lexplore<CR>
 
     nmap <buffer> ? I
+
+    " navigate splits
+    nnoremap <buffer><silent> <C-d> <C-W>j
+    nnoremap <buffer><silent> <C-u> <C-W>k
+    nnoremap <buffer><silent> <C-h> <C-W>h
+    nnoremap <buffer><silent> <C-l> <C-W>l
 endfunction
 
 augroup netrw_mapping
