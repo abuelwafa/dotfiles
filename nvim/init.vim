@@ -241,7 +241,8 @@ if filereadable(expand("~/.vimrc_background"))
 endif
 
 " remove vim background - makes it transparent if the colorscheme has no background
-highlight nonText ctermbg=NONE
+" highlight nonText ctermbg=NONE
+" hi Normal guibg=NONE ctermbg=NONE
 
 " custom highlights
 highlight WinBar cterm=bold gui=bold guibg=NvimDarkGrey4 guifg=White

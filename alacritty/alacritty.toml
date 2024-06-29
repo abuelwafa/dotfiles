@@ -3,7 +3,7 @@ working_directory = "./projects"
 
 [window]
 blur = true
-opacity = 0.8
+opacity = 0.9
 startup_mode = "Fullscreen"
 option_as_alt = "OnlyLeft"
 
@@ -20,3 +20,13 @@ blink_timeout = 0
 
 [mouse]
 hide_when_typing = false
+
+[scrolling]
+history = 10000
+multiplier = 3
+
+[keyboard]
+bindings = [
+    { key = "F11", action = "ToggleFullscreen" },
+    { key = "F12", action = "Minimize" },
+]
