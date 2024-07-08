@@ -142,7 +142,7 @@ set signcolumn=yes
 set updatetime=50
 
 set background=dark
-colorscheme default
+colorscheme murphy
 hi Cursorline term=none cterm=none ctermbg=238
 hi CursorlineNR term=none cterm=none ctermbg=238
 " change background color to black or none for transparent, better for my eyes
