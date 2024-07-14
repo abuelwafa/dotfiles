@@ -10,22 +10,13 @@ export ZSH="$HOME/projects/ohmyzsh"
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
 ZSH_THEME="robbyrussell"
-# ZSH_THEME="amuse"
-# ZSH_THEME="minimal"
-# ZSH_THEME="peepcode"
-# ZSH_THEME="refined"
-# ZSH_THEME="sorin"
-# ZSH_THEME="blinks"
-# ZSH_THEME="bureau"
-# ZSH_THEME="crcandy"
 
 zstyle ':omz:update' mode auto      # update automatically without asking
 
 # Uncomment the following line if pasting URLs and other text is messed up.
 # DISABLE_MAGIC_FUNCTIONS="true"
 
-# Uncomment the following line to disable auto-setting terminal title.
-# DISABLE_AUTO_TITLE="true"
+DISABLE_AUTO_TITLE="true"
 
 # Uncomment the following line to display red dots whilst waiting for completion.
 # You can also set it to another string to have that shown instead of the default red dots.
@@ -50,25 +41,13 @@ zstyle ':omz:update' mode auto      # update automatically without asking
 # ZSH_CUSTOM=/path/to/new-custom-folder
 
 plugins=(git)
-
 source $ZSH/oh-my-zsh.sh
-
 # export MANPATH="/usr/local/man:$MANPATH"
-
 export LANG=en_US.UTF-8
-
-# Preferred editor for local and remote sessions
-if [[ -n $SSH_CONNECTION ]]; then
-  export EDITOR='nvim'
-else
-  export EDITOR='mvim'
-fi
+export EDITOR='vim'
 
 alias ssh_setup='eval `ssh-agent -s` && ssh-add -k ~/.ssh/id_rsa'
 alias vim='nvim'
 alias cls='clear'
 alias gdif='git diff'
-
-# Compilation flags
-# export ARCHFLAGS="-arch x86_64"
-
+alias gst='git status'
