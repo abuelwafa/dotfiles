@@ -3,6 +3,7 @@ apk upgrae
 -------------------------
 # apk add the following packages
 - zsh-vcs
+- coreutils
 - bash
 - sudo
 - git
@@ -10,19 +11,18 @@ apk upgrae
 - wget
 - mosh
 - grep
-- neovim
+- vim
 - bat
 - python3
 - zsh
 - tmux
-- go
 - gcc
 - sqlite
 - htop
 - jq
-- mc
 - tput
 - grep
+- p7zip
 -------------------------
 adduser username
 useradd -m username
@@ -41,7 +41,7 @@ su - username
 # optional
 # change shell from ash to zsh
 apk add zsh
-sudo nvim /etc/passwd
+sudo vim /etc/passwd
 # change the shell path to `/bin/zsh`
 -------------------------
 mkdir ~/projects
@@ -49,8 +49,4 @@ mkdir ~/projects
 # clone dotfiles and ohmyzsh repos
 -------------------------
 link zsh, git and tmux configs
--------------------------
-
--------------------------
-
 -------------------------
