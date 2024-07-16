@@ -150,7 +150,7 @@ vim.opt.cindent = true
 vim.opt.incsearch = true
 vim.opt.showmatch = true
 
-vim.opt.colorcolumn = '80'
+vim.opt.colorcolumn = '99'
 
 vim.opt.foldenable = true
 vim.opt.foldmethod = "indent"
@@ -639,6 +639,7 @@ require('telescope').setup({
         },
         layout_strategy = 'flex',
         sorting_strategy = "ascending",
+        scroll_strategy = "limit",
         layout_config = { width = 0.95, prompt_position = 'top', scroll_speed = 1 },
     },
     pickers = {
