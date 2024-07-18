@@ -4,12 +4,10 @@ apk upgrae
 # apk add the following packages
 - zsh-vcs
 - coreutils
-- bash
 - sudo
 - git
 - curl
 - wget
-- mosh
 - grep
 - vim
 - bat
@@ -18,10 +16,7 @@ apk upgrae
 - tmux
 - gcc
 - sqlite
-- htop
 - jq
-- tput
-- grep
 - p7zip
 -------------------------
 adduser username
