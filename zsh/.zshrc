@@ -24,7 +24,6 @@ COMPLETION_WAITING_DOTS="true"
 
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 plugins=(
-    adb
     aws
     git-prompt
     colored-man-pages
@@ -33,7 +32,6 @@ plugins=(
     helm
     ssh-agent
     podman
-    ripgrep
     terraform
     minikube
     kubectx
