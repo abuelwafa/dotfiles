@@ -331,6 +331,14 @@ require("todo-comments").setup()
 require("conform").setup({
     notify_on_error = true,
     format_on_save = { timeout_ms = 1000, lsp_fallback = true },
+    formatters = {
+        sql_formatter = {
+            prepend_args = {
+                "--config",
+                '{"tabWidth":4,"keywordCase":"upper","dataTypeCase":"upper","functionCase":"upper"}'
+            }
+        }
+    },
     formatters_by_ft = {
         lua = { "stylua" },
         go = { "goimports", "golines", { "gofumpt", "gofmt" } },
@@ -344,7 +352,7 @@ require("conform").setup({
         bash = { "shfmt" },
         zsh = { "shfmt" },
         css = { "stylelint" },
-        sql = { "sqlfmt" },
+        sql = { "sql_formatter" },
         tf = { "terraform_fmt" },
         yaml = { "yamlfmt" },
         html = { "djlint" },
@@ -429,9 +437,9 @@ local ensure_installed = {
     'helm_ls', 'html', 'intelephense', 'isort', 'java-debug-adapter', 'java-test', 'jdtls',
     'js-debug-adapter', 'jsonlint', 'jsonls', 'kotlin-debug-adapter', 'kotlin_language_server',
     'lua_ls', 'marksman', 'mdx_analyzer', 'omnisharp', 'prettierd', 'prismals', 'pylint', 'pyright',
-    'rust-analyzer', 'shfmt', 'sqlfluff', 'stylelint', 'stylua',
+    'rust-analyzer', 'shfmt', 'sql-formatter', 'stylelint', 'stylua',
     'tailwindcss', 'taplo', 'templ', 'terraformls', 'tflint', 'tsserver', 'vale', 'vale-ls',
-    'vimls', 'vint', 'volar', 'xmlformatter', 'yamlfmt' , 'yamllint', 'yamlls', 'autopep8', 'sqlfmt',
+    'vimls', 'vint', 'volar', 'xmlformatter', 'yamlfmt' , 'yamllint', 'yamlls', 'autopep8',
 }
 
 require("mason").setup({
