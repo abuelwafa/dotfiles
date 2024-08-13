@@ -3,8 +3,8 @@ working_directory = "./projects"
 
 [window]
 blur = true
-opacity = 0.9
-startup_mode = "Fullscreen"
+opacity = 0.95
+startup_mode = "Maximized"
 option_as_alt = "OnlyLeft"
 
 [font]

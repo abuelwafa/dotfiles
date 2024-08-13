@@ -197,7 +197,10 @@ endfunction
 
 " Plug 'gelguy/wilder.nvim', { 'do': function('UpdateRemotePlugins') }
 ]]
-    {},
+    {
+        'nvim-telescope/telescope.nvim', tag = '0.1.8',
+        dependencies = { 'nvim-lua/plenary.nvim' }
+    },
     {},
     {},
     {},
@@ -225,7 +228,7 @@ endfunction
         init = function()
             vim.g.db_ui_save_location = "~/projects/db-connections"
             vim.g.db_ui_tmp_query_location = "~/.db-queries"
-            vim.g.db_ui_use_nvim_notify = 1
+            -- vim.g.db_ui_use_nvim_notify = 1
             vim.g.db_ui_use_nerd_fonts = 1
             vim.g.db_ui_show_database_icon = 1
             vim.g.db_ui_win_position = "left"
