@@ -335,7 +335,7 @@ require("conform").setup({
         sql_formatter = {
             prepend_args = {
                 "--config",
-                '{"tabWidth": 4, "linesBetweenQueries": 2, "keywordCase": "upper", "dataTypeCase": "upper", "functionCase": "upper"}'
+                '{"language": "postgresql", "dialect": "postgresql", "tabWidth": 4, "linesBetweenQueries": 2, "keywordCase": "upper", "dataTypeCase": "upper", "functionCase": "upper"}'
             }
         }
     },
