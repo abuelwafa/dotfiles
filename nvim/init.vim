@@ -309,7 +309,9 @@ require('Comment').setup()
 require('gitsigns').setup({
     signs = {
         add = { text = '+' },
+        change = { text = '~' },
     },
+    signs_staged_enable = false
 })
 require('numb').setup()
 require("chatgpt").setup()
@@ -352,7 +354,7 @@ require("conform").setup({
         bash = { "shfmt" },
         zsh = { "shfmt" },
         css = { "stylelint" },
-        sql = { "sql_formatter" },
+        sql = { "sql_fluff" },
         tf = { "terraform_fmt" },
         yaml = { "yamlfmt" },
         html = { "djlint" },
@@ -437,7 +439,7 @@ local ensure_installed = {
     'helm_ls', 'html', 'intelephense', 'isort', 'java-debug-adapter', 'java-test', 'jdtls',
     'js-debug-adapter', 'jsonlint', 'jsonls', 'kotlin-debug-adapter', 'kotlin_language_server',
     'lua_ls', 'marksman', 'mdx_analyzer', 'omnisharp', 'prettierd', 'prismals', 'pylint', 'pyright',
-    'rust-analyzer', 'shfmt', 'sql-formatter', 'stylelint', 'stylua',
+    'rust-analyzer', 'shfmt', 'sqlfluff', 'stylelint', 'stylua',
     'tailwindcss', 'taplo', 'templ', 'terraformls', 'tflint', 'tsserver', 'vale', 'vale-ls',
     'vimls', 'vint', 'volar', 'xmlformatter', 'yamlfmt' , 'yamllint', 'yamlls', 'autopep8',
 }
