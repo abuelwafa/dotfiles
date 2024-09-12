@@ -28,6 +28,10 @@ eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 # macos
 eval "$(/opt/homebrew/bin/brew shellenv)"
 =============================================================
+macos
+install GNU version of sed
+brew install gsed
+=============================================================
 # install latest essentials using homebrew
 # install nodejs lts from homebrew
 # install bat https://github.com/sharkdp/bat

@@ -9,3 +9,4 @@ source ~/projects/dotfiles/zsh/.zshrc
 
 alias ql='qlmanage -p'
 alias copy='pbcopy'
+alias sed='gsed'
