@@ -244,6 +244,9 @@ alias lima-create-ubuntu='limactl create template://ubuntu-lts --arch=x86_64 --p
 alias dog='dog A AAAA MX TXT'
 alias start-db='docker run -p 5432:5432 --env POSTGRES_PASSWORD=postgres --env PGDATA=/var/lib/postgresql/data/pgdata postgres'
 
+alias venv='source venv/bin/activate'
+alias venvinit='python3 -m venv venv'
+
 # add kubectl completion
 [[ $commands[kubectl] ]] && source <(kubectl completion zsh)
 
