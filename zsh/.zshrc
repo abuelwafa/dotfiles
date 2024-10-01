@@ -50,11 +50,11 @@ source $ZSH/oh-my-zsh.sh
 
 # My aliases
 alias cls='clear'
-alias l='eza -la --color=always --icons'
-alias la='eza -la --color=always --icons'
-alias ls='eza --color=always'
+alias l='eza -la --color=always --icons=always'
+alias la='eza -la --color=always --icons=always'
+alias ls='eza --color=always --icons=always'
 unalias ll
-alias ll='eza -la --color=always | less -XFR'
+alias ll='eza -la --color=always --icons=always | less -XFR'
 alias md='mkdir -vp'
 alias p='popd'
 alias tree='tree -a -h -f --du'
