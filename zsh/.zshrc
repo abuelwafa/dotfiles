@@ -222,15 +222,6 @@ function pg_connect() {
     eval $cmd
 }
 
-function check-git-email() {
-    local currentEmail=$(git config --global user.email)
-    if [[ $currentEmail != $WORK_EMAIL_ADDRESS ]]; then
-        echo "================================================"
-        echo "   GIT EMAIL IS NOT SET TO WORK EMAIL ADDRESS   "
-        echo "================================================"
-    fi
-}
-
 # remember when copying directories, adding a slash to the directory name like directory/
 # makes the copying action to perform on the contents of the directory and not the directory itself
 alias cp='cp -iR'
@@ -246,6 +237,10 @@ alias start-db='docker run -p 5432:5432 --env POSTGRES_PASSWORD=postgres --env P
 
 alias venv='source venv/bin/activate'
 alias venvinit='python3 -m venv venv'
+alias generate-ansible-config='ansible-config init --disabled > ansible.cfg'
+
+# backup_window,included_traffic,ingoing_traffic,outgoing_traffic,placement_group,primary_disk_size
+alias hetzner_list_servers="hcloud server list --output columns=id,name,status,ipv4,ipv6,private_net,datacenter,type,volumes,created,age,location,locked,protection,rescue_enabled,labels | show --wrap=never"
 
 # add kubectl completion
 [[ $commands[kubectl] ]] && source <(kubectl completion zsh)
@@ -259,9 +254,10 @@ BASE16_SHELL_PATH="$HOME/projects/base16-shell"
     source "$BASE16_SHELL_PATH/profile_helper.sh"
 
 # setting up correct paths and variables from homebrew
-node_path="$(brew --prefix node@20)"
+node_path="$(brew --prefix node@22)"
 export PATH="$(brew --prefix python)/libexec/bin:$PATH"
 export PATH="$(brew --prefix libpq)/bin:$PATH"
+export PATH="$(brew --prefix gsed)/libexec/gnubin:$PATH"
 export PATH="$node_path/bin:$PATH"
 export LDFLAGS="-L$node_path/lib"
 export CPPFLAGS="-I$node_path/include"
@@ -284,7 +280,7 @@ function virtualenv_info() {
 
 # %{$bg_bold[green]%}%{$fg_bold[black]%} node: $(node -v) %{$reset_color%}
 
-PROMPT='%{$fg_bold[cyan]%}$(rule)%{$reset_color%}%{$bg[red]%}%{$fg_bold[white]%}$(check-git-email)%{$reset_color%}
+PROMPT='%{$fg_bold[cyan]%}$(rule)%{$reset_color%}
 %{$fg_bold[green]%}%~%{$reset_color%}$(git_prompt_info) %{$fg_bold[red]%}%*%{$reset_color%}
 %{$bg_bold[red]%}%{$fg_bold[white]%}$(kubectx_prompt_info)%{$reset_color%}%{$bg_bold[magenta]%}%{$fg_bold[yellow]%}$(aws_prompt_info)%{$reset_color%}%{$fg[yellow]%}$(virtualenv_info)%{$reset_color%}%{$fg_bold[magenta]%}-> %{$reset_color%}'
 

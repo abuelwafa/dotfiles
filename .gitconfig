@@ -1,6 +1,7 @@
 [user]
     name = Mohamed Ali Abuelwafa
     email = mohamed.abuelwafa@gmail.com
+    useConfigOnly = true
 [color]
     ui = true
 [color "diff"]

@@ -345,7 +345,7 @@ require("conform").setup({
         lua = { "stylua" },
         go = { "goimports", "golines", { "gofumpt", "gofmt" } },
         rust = { "rustfmt" },
-        python = { "isort", { "autopep8", "ruff_lsp" } },
+        -- python = { "ruff_lsp" },
         javascript = { "prettierd" },
         javascriptreact = { "prettierd" },
         typescript = { "prettierd" },
@@ -431,17 +431,78 @@ vim.api.nvim_create_autocmd({ "CursorHold" }, {
 })
 
 local ensure_installed = {
-    'actionlint', 'ansiblels', 'astro', 'bash-debug-adapter', 'bashls', 'chrome-debug-adapter',
-    'clangd', 'cmake', 'cssls', 'cssmodules_ls', 'debugpy', 'delve', 'djlint',
-    'docker_compose_language_service', 'dockerls', 'eslint', 'eslint_d', 'flake8', 'gofumpt',
-    'goimports', 'golangci-lint', 'golangci_lint_ls', 'golines', 'gomodifytags',
-    'google-java-format', 'gopls', 'gotests', 'gradle_ls', 'graphql', 'groovyls',
-    'helm_ls', 'html', 'intelephense', 'isort', 'java-debug-adapter', 'java-test', 'jdtls',
-    'js-debug-adapter', 'jsonlint', 'jsonls', 'kotlin-debug-adapter', 'kotlin_language_server',
-    'lua_ls', 'marksman', 'mdx_analyzer', 'omnisharp', 'prettierd', 'prismals', 'pylint', 'pyright',
-    'rust-analyzer', 'shfmt', 'sqlfluff', 'stylelint', 'stylua',
-    'tailwindcss', 'taplo', 'templ', 'terraformls', 'tflint', 'tsserver', 'vale', 'vale-ls',
-    'vimls', 'vint', 'volar', 'xmlformatter', 'yamlfmt' , 'yamllint', 'yamlls', 'autopep8',
+    'actionlint',
+    'ansiblels',
+    'astro',
+    'bash-debug-adapter',
+    'bashls',
+    'chrome-debug-adapter',
+    'clangd',
+    'cmake',
+    'cssls',
+    'cssmodules_ls',
+    'debugpy',
+    'delve',
+    'djlint',
+    'docker_compose_language_service',
+    'dockerls',
+    'eslint',
+    'eslint_d',
+    'flake8',
+    'gofumpt',
+    'goimports',
+    'golangci-lint',
+    'golangci_lint_ls',
+    'golines',
+    'gomodifytags',
+    'google-java-format',
+    'gopls',
+    'gotests',
+    'gradle_ls',
+    'graphql',
+    'groovyls',
+    'helm_ls',
+    'html',
+    'intelephense',
+    'isort',
+    'java-debug-adapter',
+    'java-test',
+    'jdtls',
+    'js-debug-adapter',
+    'jsonlint',
+    'jsonls',
+    'json-to-struct',
+    'kotlin-debug-adapter',
+    'kotlin_language_server',
+    'lua_ls',
+    'mdx_analyzer',
+    'omnisharp',
+    'prettierd',
+    'prismals',
+    'pylint',
+    'pyright',
+    'ruff',
+    'rust-analyzer',
+    'shfmt',
+    'shellcheck',
+    'sqlfluff',
+    'stylelint',
+    'stylua',
+    'tailwindcss',
+    'taplo',
+    'templ',
+    'terraformls',
+    'tflint',
+    'typescript-language-server',
+    'vale',
+    'vimls',
+    'vint',
+    'volar',
+    'xmlformatter',
+    'yamlfmt' ,
+    'yamllint',
+    'yamlls',
+    'autopep8',
 }
 
 require("mason").setup({
@@ -553,14 +614,14 @@ cmp.setup({
             end
         end,
         ['<s-k>'] = function(fallback)
-            if cmp.visible() then
+            if cmp.visible_docs() then
                 cmp.scroll_docs(-2)
             else
                 fallback()
             end
         end,
         ['<s-j>'] = function(fallback)
-            if cmp.visible() then
+            if cmp.visible_docs() then
                 cmp.scroll_docs(2)
             else
                 fallback()

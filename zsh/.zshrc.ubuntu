@@ -8,7 +8,7 @@ source ~/projects/dotfiles/zsh/.zshrc
 # TODO: not needed in ubuntu, but consider adding working ones
 alias shutdown='sudo shutdown now'
 alias restart='sudo shutdown -r now'
-alias reboot='sudo reboot now'
+alias reboot='sudo shutdown -r now'
 
 if [ "$TERM" = "xterm" ]; then
     export TERM=xterm-256color

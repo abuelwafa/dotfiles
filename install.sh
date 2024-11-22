@@ -118,3 +118,12 @@ main() {
 }
 
 main "$@"
+
+
+
+# ===============================================================
+sudo apt install build-essential git curl python3-pip python3-venv python3-dev
+# brew install command
+
+
+

@@ -9,8 +9,9 @@ option_as_alt = "OnlyLeft"
 
 [font]
 size = 14
+# normal.family = "JetBrainsMono Nerd font"
 normal.family = "MesloLGL Nerd font"
-offset.y = 4
+offset.y = 2
 
 [cursor]
 style.shape = "Block"

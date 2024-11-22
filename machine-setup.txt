@@ -2,14 +2,16 @@
 mkdir -p ~/projects
 # create the machine config file. this file contains customizations specific to the current machine
 touch ~/projects/.machine-config
-echo 'export WORK_EMAIL_ADDRESS="mohamed.abuelwafa@gmail.com"' | tee -a ~/projects/.machine-config
+echo 'export GIT_COMMITTER_EMAIL="mohamed.abuelwafa@gmail.com"' | tee -a ~/projects/.machine-config
+echo 'export GIT_AUTHOR_EMAIL="mohamed.abuelwafa@gmail.com"' | tee -a ~/projects/.machine-config
 echo 'export OPENAI_API_KEY="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"' | tee -a ~/projects/.machine-config
 =============================================================
 /* generate ssh keys */
 ssh-keygen -t ed25519 -C "your_email@example.com"
 =============================================================
-# ubuntu/debian only: install the following packages
-curl git xclip build-essential
+# debian install the following packages
+curl git xclip build-essential ufw
+python3-venv python3-pip python3-dev
 =============================================================
 # ubuntu/debian: setup firewall
 sudo apt install ufw
@@ -28,17 +30,14 @@ eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 # macos
 eval "$(/opt/homebrew/bin/brew shellenv)"
 =============================================================
-macos
-install GNU version of sed
-brew install gsed
-=============================================================
 # install latest essentials using homebrew
 # install nodejs lts from homebrew
 # install bat https://github.com/sharkdp/bat
+# install GNU version of sed (for MACOS)
 brew install the following:
 zsh vim neovim git tmux gcc cmake tree htop btop git-delta node@22 yarn dog luarocks
-bat ripgrep fzf fd fx jq yh lazygit mc libpq gh act cmatrix dust eza
-kubernetes-cli minikube helm python watchman go qemu lima ansible
+bat ripgrep fzf fd fx jq yh lazygit mc libpq gh act cmatrix dust eza hcloud
+kubernetes-cli minikube helm python watchman go qemu lima ansible gsed
 
 rbenv ruby-build
 youtube-dl
@@ -69,7 +68,6 @@ brew install pgcli litecli mycli iredis
 # link zshrc
 # ubuntu
 ln -s ~/projects/dotfiles/zsh/.zshrc.ubuntu ~/.zshrc
-
 # mac
 ln -s ~/projects/dotfiles/zsh/.zshrc.mac ~/.zshrc
 ================================================================
@@ -77,12 +75,12 @@ ln -s ~/projects/dotfiles/zsh/.zshrc.mac ~/.zshrc
 mkdir -p ~/.config/alacritty
 ln -s ~/projects/dotfiles/alacritty/alacritty.toml ~/.config/alacritty/alacritty.toml
 ================================================================
-# language server when using graphql for use with nvim and coc
-npm i -g graphql-language-service-cli
-=============================================================
 # install k9s cli from homebrew
 brew install derailed/k9s/k9s
 =============================================================
+# TODO: install nerd-fonts using homebrew
+brew install font-jetbrains-mono-nerd-font
+brew install font-meslo-lg-nerd-font
 # download and install meslo font from nerd font releases
 https://github.com/ryanoasis/nerd-fonts
 # terminal preferences: change font to be Meslo LG L Regular
@@ -175,7 +173,6 @@ ln -s ~/projects/dotfiles/nvim/init.lua ~/.config/nvim/init.lua
 ln -s ~/projects/dotfiles/vim/.vimrc ~/.vimrc
 mkdir -p ~/.nvim/_temp
 mkdir -p ~/.nvim/_backup
-ln -s ~/projects/dotfiles/coc-settings.json ~/.config/nvim/coc-settings.json
 ln -s ~/projects/dotfiles/vim/.vimrc_background ~/.vimrc_background
 =============================================================
 # change the default shell to be zsh (ubuntu only - mac already comes with zsh as the default shell)
