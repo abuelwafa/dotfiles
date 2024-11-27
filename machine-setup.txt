@@ -40,7 +40,6 @@ bat ripgrep fzf fd fx jq yh lazygit mc libpq gh act cmatrix dust eza hcloud
 kubernetes-cli minikube helm python watchman go qemu lima ansible gsed
 
 rbenv ruby-build
-youtube-dl
 =============================================================
 brew tap hashicorp/tap
 brew install hashicorp/tap/terraform
