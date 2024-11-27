@@ -154,6 +154,7 @@ set guicursor=i:block
 
 " remove vim background - makes it transparent if the colorscheme has no background
 highlight nonText ctermbg=NONE
+highlight EndOfBuffer ctermbg=NONE
 
 " set mark column color
 hi! link SignColumn   LineNr
