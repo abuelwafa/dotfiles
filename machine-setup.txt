@@ -35,8 +35,8 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 # install bat https://github.com/sharkdp/bat
 # install GNU version of sed (for MACOS)
 brew install the following:
-zsh vim neovim git tmux gcc cmake tree htop btop git-delta node@22 yarn dog luarocks
-bat ripgrep fzf fd fx jq yh lazygit mc libpq gh act cmatrix dust eza hcloud
+zsh vim neovim git tmux gcc cmake tree htop btop git-delta node@22 yarn doggo luarocks
+bat ripgrep fzf fd fx jq yh lazygit mc libpq gh act cmatrix dust eza hcloud kanata
 kubernetes-cli minikube helm python watchman go qemu lima ansible gsed
 
 rbenv ruby-build

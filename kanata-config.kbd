@@ -1,0 +1,30 @@
+;; This config does the following:
+;; - Change hjkl keys to arrow keys upon holding the caps key.
+;; - Upon holding the caps+tab key, Change ijkl keys to mouse movement keys, make return left
+;;   mouse key, and backslash the right mouse key
+
+(defcfg
+    process-unmapped-keys yes
+)
+
+(defsrc
+    caps tab h j k l ret \
+)
+
+(deflayer default
+    @caps-mod tab h j k l ret \
+)
+
+
+(deflayer arrows_layer
+    lctl @mouse-mod left down up right ret \
+)
+
+(deflayer mouse_layer
+    lctl - (movemouse-left 1 1) (movemouse-down 1 1) (movemouse-up 1 1) (movemouse-right 1 1) mlft mrgt
+)
+
+(defalias
+    caps-mod (tap-hold-release 100 100 lctl (layer-toggle arrows_layer))
+    mouse-mod (tap-hold-release 100 100 tab (layer-toggle mouse_layer))
+)
