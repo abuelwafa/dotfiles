@@ -2,24 +2,22 @@ apk update
 apk upgrae
 -------------------------
 # apk add the following packages
-- zsh-vcs
-- coreutils
-- sudo
-- git
 - curl
-- wget
+- git
+- sudo
 - grep
-- vim
-- bat
-- python3
-- zsh
 - tmux
-- gcc
+- vim
 - sqlite
+- python3
+- gcc
 - jq
-- p7zip
+- bash
+- bash-doc
+- bash-completion
+- openssh
+- p7zip (optional)
 -------------------------
-adduser username
 useradd -m username
 -------------------------
 # allow the newly create user to run sudo commands
