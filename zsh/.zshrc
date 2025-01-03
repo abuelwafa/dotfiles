@@ -242,6 +242,8 @@ alias generate-ansible-config='ansible-config init --disabled > ansible.cfg'
 # backup_window,included_traffic,ingoing_traffic,outgoing_traffic,placement_group,primary_disk_size
 alias hetzner_list_servers="hcloud server list --output columns=id,name,status,ipv4,ipv6,private_net,datacenter,type,volumes,created,age,location,locked,protection,rescue_enabled,labels | show --wrap=never"
 
+alias pomodoro-start="tclock timer -d 45m -M"
+
 # add kubectl completion
 [[ $commands[kubectl] ]] && source <(kubectl completion zsh)
 
@@ -255,7 +257,6 @@ BASE16_SHELL_PATH="$HOME/projects/base16-shell"
 
 # setting up correct paths and variables from homebrew
 node_path="$(brew --prefix node@22)"
-export PATH="$(brew --prefix python)/libexec/bin:$PATH"
 export PATH="$(brew --prefix libpq)/bin:$PATH"
 export PATH="$(brew --prefix gsed)/libexec/gnubin:$PATH"
 export PATH="$node_path/bin:$PATH"

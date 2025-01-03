@@ -13,6 +13,8 @@ ssh-keygen -t ed25519 -C "your_email@example.com"
 curl git xclip build-essential ufw
 python3-venv python3-pip python3-dev
 =============================================================
+cargo install tclock
+=============================================================
 # ubuntu/debian: setup firewall
 sudo apt install ufw
 sudo ufw default deny incoming
