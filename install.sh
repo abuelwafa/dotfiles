@@ -81,7 +81,7 @@ main() {
     echo "=> Cloning repositories"
     git clone git@github.com:ohmyzsh/ohmyzsh.git ~/projects/ohmyzsh
     git clone git@github.com:bigH/git-fuzzy.git ~/projects/git-fuzzy
-    git clone git@github.com:tinted-theming/base16-shell.git ~/projects/base16-shell
+    git clone git@github.com:tinted-theming/tinted-shell.git ~/projects/tinted-shell
     git clone git@github.com:tmux-plugins/tpm.git ~/projects/tpm
 
     echo "=> Setting up Neovim config"
@@ -89,7 +89,6 @@ main() {
     mkdir -p ~/.nvim/_temp
     mkdir -p ~/.nvim/_backup
     ln -s ~/projects/dotfiles/nvim/init.vim ~/.config/nvim/init.lua
-    ln -s ~/projects/dotfiles/vim/.vimrc_background ~/.vimrc_background
 
     # -n return after n characters, useful for yes/no questions with a value of 1
     # read -p "your prompt question here? (y/n) " -n 1 -r install_docker
@@ -101,8 +100,6 @@ main() {
 
     echo "=> Wiring up configurations"
     ln -s ~/projects/dotfiles/.zshrc.ubuntu ~/.zshrc
-    mkdir -p ~/.config/base16-project
-    ln -s ~/projects/base16-shell/scripts/base16-seti.sh ~/.config/base16-project/base16_shell_theme
 
     echo "=> Installing SDKMAN"
     curl -s "https://get.sdkman.io" | bash
@@ -119,11 +116,6 @@ main() {
 
 main "$@"
 
-
-
 # ===============================================================
 sudo apt install build-essential git curl python3-pip python3-venv python3-dev
 # brew install command
-
-
-

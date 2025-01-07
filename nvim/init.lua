@@ -126,7 +126,7 @@ Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install' }
 Plug 'christoomey/vim-system-copy'
 Plug 'numToStr/Comment.nvim'
 Plug 'lewis6991/gitsigns.nvim'
-Plug 'tinted-theming/base16-vim'
+Plug 'tinted-theming/tinted-vim'
 Plug 'MarcWeber/vim-addon-mw-utils'
 Plug 'mattn/emmet-vim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
@@ -198,8 +198,9 @@ endfunction
 " Plug 'gelguy/wilder.nvim', { 'do': function('UpdateRemotePlugins') }
 ]]
     {
-        'nvim-telescope/telescope.nvim', tag = '0.1.8',
-        dependencies = { 'nvim-lua/plenary.nvim' }
+        "nvim-telescope/telescope.nvim",
+        tag = "0.1.8",
+        dependencies = { "nvim-lua/plenary.nvim" },
     },
     {},
     {},
@@ -1104,10 +1105,11 @@ inoremap <silent><script><expr> <leader><space> copilot#Accept()
 let g:copilot_no_tab_map = v:true
 
 set background=dark
-if filereadable(expand("~/.vimrc_background"))
-    let base16colorspace=256
-    source ~/.vimrc_background
-endif
+lua << EOF
+if os.getenv('BASE16_THEME') ~= nil then
+    vim.cmd.colorscheme('base16-' .. os.getenv('BASE16_THEME'))
+end
+EOF
 
 highlight WinBar cterm=bold gui=bold guifg=NvimLightGrey4 guibg=None
 

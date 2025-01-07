@@ -45,7 +45,7 @@ Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install' }
 Plug 'christoomey/vim-system-copy'
 Plug 'numToStr/Comment.nvim'
 Plug 'lewis6991/gitsigns.nvim'
-Plug 'tinted-theming/base16-vim'
+Plug 'tinted-theming/tinted-vim'
 Plug 'MarcWeber/vim-addon-mw-utils'
 Plug 'mattn/emmet-vim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
@@ -235,10 +235,11 @@ inoremap <silent><script><expr> <leader><space> copilot#Accept()
 let g:copilot_no_tab_map = v:true
 
 set background=dark
-if filereadable(expand("~/.vimrc_background"))
-    let base16colorspace=256
-    source ~/.vimrc_background
-endif
+lua << EOF
+if os.getenv('BASE16_THEME') ~= nil then
+    vim.cmd.colorscheme('base16-' .. os.getenv('BASE16_THEME'))
+end
+EOF
 
 " remove vim background - makes it transparent if the colorscheme has no background
 " highlight nonText ctermbg=NONE
@@ -946,7 +947,7 @@ vim.opt.winbar = "%!v:lua.build_winbar()"
 -- status line setup
 require('lualine').setup {
     options = {
-        theme = 'everforest', -- other values: powerline, powerline_dark, gruvbox_dark
+        theme = 'powerline_dark', -- other values: powerline, powerline_dark, gruvbox_dark, everforest
         icons_enabled = false,
         section_separators = { left = '', right = '' },
         component_separators = { left = '', right = '' },

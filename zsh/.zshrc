@@ -44,7 +44,7 @@ export LC_CTYPE=en_US.UTF-8
 export FX_THEME=6
 export PAGER='less -XFR'
 
-export BASE16_THEME_DEFAULT="ayu-mirage"
+export BASE16_THEME_DEFAULT="seti"
 
 source $ZSH/oh-my-zsh.sh
 
@@ -250,7 +250,7 @@ alias pomodoro-start="tclock timer -d 45m -M"
 export BAT_THEME="base16"
 
 # Base16 Shell
-BASE16_SHELL_PATH="$HOME/projects/base16-shell"
+BASE16_SHELL_PATH="$HOME/projects/tinted-shell"
 [ -n "$PS1" ] &&
     [ -s "$BASE16_SHELL_PATH/profile_helper.sh" ] &&
     source "$BASE16_SHELL_PATH/profile_helper.sh"

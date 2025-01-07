@@ -51,7 +51,7 @@ cd ~/projects
 git clone git@github.com:abuelwafa/dotfiles.git
 git clone https://github.com/ohmyzsh/ohmyzsh.git
 git clone https://github.com/bigH/git-fuzzy.git
-git clone https://github.com/tinted-theming/base16-shell.git
+git clone https://github.com/tinted-theming/tinted-shell.git
 git clone https://github.com/tmux-plugins/tpm
 =============================================================
 # install universal-ctags
@@ -148,6 +148,9 @@ sdk install maven
 base16_gruvbox-dark-hard
 base16_seti
 base16_material-darker
+base16_catppuccin
+base16_catppuccin-mocha
+base16_da-one-black
 =============================================================
 # git configuration
 ln -s ~/projects/dotfiles/.gitconfig ~/.gitconfig
@@ -174,7 +177,6 @@ ln -s ~/projects/dotfiles/nvim/init.lua ~/.config/nvim/init.lua
 ln -s ~/projects/dotfiles/vim/.vimrc ~/.vimrc
 mkdir -p ~/.nvim/_temp
 mkdir -p ~/.nvim/_backup
-ln -s ~/projects/dotfiles/vim/.vimrc_background ~/.vimrc_background
 =============================================================
 # change the default shell to be zsh (ubuntu only - mac already comes with zsh as the default shell)
 # you should have zsh install from homebrew from the previous step
