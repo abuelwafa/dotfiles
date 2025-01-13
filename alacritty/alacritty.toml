@@ -12,6 +12,10 @@ size = 15
 # normal.family = "JetBrainsMono Nerd font"
 normal.family = "MesloLGL Nerd font"
 offset.y = 2
+glyph_offset.y = 0
+normal.style = "Medium"
+italic.style = "Medium"
+bold_italic.style = "Bold"
 
 [cursor]
 style.shape = "Block"
