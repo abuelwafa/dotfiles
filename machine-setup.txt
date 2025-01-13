@@ -40,6 +40,8 @@ brew install the following:
 zsh vim neovim git tmux gcc cmake tree htop btop git-delta node@22 yarn doggo luarocks
 bat ripgrep fzf fd fx jq yh lazygit mc libpq gh act cmatrix dust eza hcloud kanata
 kubernetes-cli minikube helm python watchman go qemu lima ansible gsed
+jesseduffield/lazydocker/lazydocker
+derailed/k9s/k9s
 
 rbenv ruby-build
 =============================================================
@@ -75,9 +77,6 @@ ln -s ~/projects/dotfiles/zsh/.zshrc.mac ~/.zshrc
 # link alacritty config
 mkdir -p ~/.config/alacritty
 ln -s ~/projects/dotfiles/alacritty/alacritty.toml ~/.config/alacritty/alacritty.toml
-================================================================
-# install k9s cli from homebrew
-brew install derailed/k9s/k9s
 =============================================================
 # TODO: install nerd-fonts using homebrew
 brew install font-jetbrains-mono-nerd-font
