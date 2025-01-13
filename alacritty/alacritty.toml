@@ -8,26 +8,25 @@ startup_mode = "Maximized"
 option_as_alt = "OnlyLeft"
 
 [font]
-size = 15
-# normal.family = "JetBrainsMono Nerd font"
+size = 14
 normal.family = "MesloLGL Nerd font"
 offset.y = 2
 glyph_offset.y = 0
-normal.style = "Medium"
-italic.style = "Medium"
+# force italics to be displayed as regular font
+italic.style = "Regular"
 bold_italic.style = "Bold"
 
 [cursor]
 style.shape = "Block"
 style.blinking = "Always"
-blink_interval = 300
+blink_interval = 200
 blink_timeout = 0
 
 [mouse]
 hide_when_typing = false
 
 [scrolling]
-history = 10000
+history = 100000
 multiplier = 3
 
 [keyboard]
