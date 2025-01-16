@@ -36,12 +36,17 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 # install nodejs lts from homebrew
 # install bat https://github.com/sharkdp/bat
 # install GNU version of sed (for MACOS)
+# MacOS doesn't have the watch command 
 brew install the following:
 zsh vim neovim git tmux gcc cmake tree htop btop git-delta node@22 yarn doggo luarocks
-bat ripgrep fzf fd fx jq yh lazygit mc libpq gh act cmatrix dust eza hcloud kanata
-kubernetes-cli minikube helm python watchman go qemu lima ansible gsed
+bat ripgrep fzf fd fx jq yh lazygit mc libpq gh act cmatrix dust eza hcloud
+kubernetes-cli minikube helm python watchman go qemu lima ansible
 jesseduffield/lazydocker/lazydocker
 derailed/k9s/k9s
+lnav goaccess
+
+Mac only: 
+gsed watch
 
 rbenv ruby-build
 =============================================================
