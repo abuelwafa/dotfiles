@@ -246,8 +246,8 @@ EOF
 " hi Normal guibg=NONE ctermbg=NONE
 
 " custom highlights
-highlight WinBar cterm=bold gui=bold guibg=NvimDarkGrey4 guifg=White
-highlight WinBarNC cterm=bold guibg=NvimDarkGrey2 gui=bold
+highlight WinBar cterm=bold gui=bold guibg=NvimDarkGrey3 guifg=White
+highlight WinBarNC cterm=bold guibg=NvimDarkGrey3 gui=bold
 
 
 " ===================================================================================
@@ -533,8 +533,15 @@ vim.api.nvim_create_autocmd('LspAttach', {
         local map = function(keys, func, desc)
             vim.keymap.set('n', keys, func, { buffer = event.buf, desc = 'LSP: ' .. desc })
         end
+
         --  To jump back, press <C-T>.
         map('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
+
+        map('gvd', function()
+            vim.cmd("vsplit")
+            require('telescope.builtin').lsp_definitions()
+        end, '[G]oto [D]efinition')
+
         -- Jump to the type definition
         map('gD', require('telescope.builtin').lsp_type_definitions, 'Type [D]efinition')
         -- Goto Declaration. For example, in C this would take you to the header
@@ -940,7 +947,7 @@ local function getWinBarDiagnostics()
 end
 
 function build_winbar()
-    return "%{expand(\"%:~:.\")} %m%=" .. getWinBarDiagnostics() .. " "
+    return " %{expand(\"%:~:.\")} %m%=" .. getWinBarDiagnostics() .. " "
 end
 vim.opt.winbar = "%!v:lua.build_winbar()"
 
