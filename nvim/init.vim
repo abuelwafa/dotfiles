@@ -417,7 +417,7 @@ require("rest-nvim").setup({
 ------------------------------------------------
 -- lsp config
 
-local signs = { Error = "󰅚 ", Warn = "󰀪 ", Hint = "󰌶 ", Info = " " }
+local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
 for type, icon in pairs(signs) do
   local hl = "DiagnosticSign" .. type
   vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
@@ -931,16 +931,16 @@ local function getWinBarDiagnostics()
     local info = ""
 
     if count["errors"] ~= 0 then
-        errors = "  " .. count["errors"]
+        errors = "%#DiagnosticError#  " .. count["errors"]
     end
     if count["warnings"] ~= 0 then
-        warnings = "  " .. count["warnings"]
+        warnings = "%#DiagnosticWarn#  " .. count["warnings"]
     end
     if count["hints"] ~= 0 then
-        hints = "  " .. count["hints"]
+        hints = "%#DiagnosticHint#  " .. count["hints"]
     end
     if count["info"] ~= 0 then
-        info = "  " .. count["info"]
+        info = "%#DiagnosticInfo#  " .. count["info"]
     end
 
     return errors .. warnings .. hints .. info
