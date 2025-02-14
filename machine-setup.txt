@@ -35,18 +35,22 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 # install latest essentials using homebrew
 # install nodejs lts from homebrew
 # install bat https://github.com/sharkdp/bat
-# install GNU version of sed (for MACOS)
-# MacOS doesn't have the watch command 
 brew install the following:
-zsh vim neovim git tmux gcc cmake tree htop btop git-delta node@22 yarn doggo luarocks
-bat ripgrep fzf fd fx jq yh lazygit mc libpq gh act cmatrix dust eza hcloud
-kubernetes-cli minikube helm python watchman go qemu lima ansible
+zsh vim neovim git tmux gcc cmake tree htop git-delta node@22
+doggo luarocks
+bat ripgrep fzf fd fx jq yh lazygit libpq gh dust eza hcloud
+cmatrix
+kubernetes-cli helm python watchman go ansible
 jesseduffield/lazydocker/lazydocker
 derailed/k9s/k9s
 lnav goaccess
+yarn
 
-Mac only: 
-gsed watch
+Desktop only: act minikube qemu lima
+
+# install GNU version of sed (for MACOS)
+# MacOS doesn't have the watch command 
+Mac only: gsed watch
 
 rbenv ruby-build
 =============================================================
@@ -276,7 +280,8 @@ cp /root/.ssh/authorized_keys /home/username/.ssh/authorized_keys
 chown --recursive username:username /home/username/.ssh
 # disable root user login
 # disable password login
-# install mosh
-sudo apt install mosh
+sudoedit /etc/ssh/sshd_config
+
+# download server vim config
 ================================================================
 

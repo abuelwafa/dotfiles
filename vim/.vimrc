@@ -5,7 +5,7 @@
 " █    █ ██▄█▀  ▀▄▄▀█  ▀█▄▄▀    ▀▄▄   █ █   ▀▄▄▀█    █    ▀▄▄▀█
 " Abuelwafa's vim config
 " simple vim config without plugins for use on servers
-" curl -L https://raw.githubusercontent.com/abuelwafa/dotfiles/master/vim/.vimrc > ~/.vimrc
+" curl -fL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/vim/.vimrc > ~/.vimrc
 
 " leader
 let mapleader = '\'
