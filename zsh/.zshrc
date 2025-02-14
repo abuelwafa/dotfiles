@@ -148,6 +148,8 @@ alias gsavestash='git stash push'
 # function show(){ bat "$1"; }
 alias show=bat
 
+alias highlight="grep --color=always -e \"^\" -e"
+
 function serve() {
     docker run --rm -p $1:80/tcp -v $(pwd):/usr/share/nginx/html:ro nginx:stable-alpine
 }
