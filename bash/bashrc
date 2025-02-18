@@ -1,0 +1,165 @@
+#!/bin/bash
+# simple bashrc for use on servers (debian/ubuntu)
+# curl -fL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/bash/bashrc > ~/.bashrc
+
+echo "   ▄▄   █                    ▀▀█                    ▄▀▀"
+echo "   ██   █▄▄▄   ▄   ▄   ▄▄▄     █   ▄     ▄  ▄▄▄   ▄▄█▄▄   ▄▄▄"
+echo "  █  █  █▀ ▀█  █   █  █▀  █    █   ▀▄ ▄ ▄▀ ▀   █    █    ▀   █"
+echo "  █▄▄█  █   █  █   █  █▀▀▀▀    █    █▄█▄█  ▄▀▀▀█    █    ▄▀▀▀█"
+echo " █    █ ██▄█▀  ▀▄▄▀█  ▀█▄▄▀    ▀▄▄   █ █   ▀▄▄▀█    █    ▀▄▄▀█"
+echo ""
+
+export EDITOR='vim'
+export PAGER='less'
+export LESS='-XFRi -x4'
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
+export LC_CTYPE=en_US.UTF-8
+
+alias cls='clear'
+alias l='ls -lahp'
+alias ll='ls -lahp | $PAGER'
+alias md='mkdir -vp'
+alias tree='tree -a -h -f --du'
+
+function ..() { cd ../$1; }
+function ...() { cd ../../$1; }
+function ....() { cd ../../../$1; }
+function .....() { cd ../../../../$1; }
+function ......() { cd ../../../../../$1; }
+function .......() { cd ../../../../../../$1; }
+function ........() { cd ../../../../../../../$1; }
+
+rule() {
+    printf "%$(tput cols)s\n" | tr " " "-"
+}
+
+# to make sudo work with aliases
+alias sudo='sudo '
+
+# git aliases
+alias gcm='git commit'
+alias glog='git log --graph --all --decorate --format=medium --date-order'
+alias glogp='git log --graph --all --decorate --format=medium --stat --summary --date-order'
+alias glogpp='git log --graph --all --decorate --format=medium --stat --summary --patch --date-order'
+
+alias glog1='git log --graph --decorate --format=medium --date-order'
+alias glog1p='git log --graph --decorate --format=medium --stat --summary --date-order'
+alias glog1pp='git log --graph --decorate --format=medium --stat --summary --patch --date-order'
+alias gst='git status'
+alias gs='git status -sb'
+alias gdif='git diff --minimal --color --patch --stat'
+alias gdiftool='git difftool'
+alias gpush='git push'
+alias ga='git add'
+alias gremote='git remote -v'
+alias gaa='git add .'
+alias gpull='git fetch --all --prune && git pull --rebase'
+alias gshow='git show'
+alias gfetch='git fetch --all --prune'
+alias gbranch='git branch --all'
+alias gnewbranch='git checkout -b'
+alias gdelbranch='git branch -d'
+alias greset='git checkout --'
+alias gclean='git clean -ifdx'
+
+function gstash() {
+    if [ -z $1 ]; then
+        git stash list
+    else
+        git stash show stash@{$1} -p
+    fi
+}
+
+function gdropstash() {
+    if [ -z $1 ]; then
+        echo "Specify the id of the stash you want to drop."
+    else
+        git stash drop stash@{$1}
+    fi
+}
+
+function gpopstash() {
+    if [ -z $1 ]; then
+        echo "Specify the id of the stash you want to apply."
+    else
+        git stash pop stash@{$1}
+    fi
+}
+alias gsavestash='git stash push'
+
+alias cp='cp -ir'
+alias mv='mv -i'
+alias remove='rm -rf'
+
+alias kctl='kubectl'
+
+alias venv='source venv/bin/activate'
+alias venvinit='python3 -m venv venv'
+alias generate-ansible-config='ansible-config init --disabled > ansible.cfg'
+
+alias highlight="grep --color=always -e \"^\" -e"
+
+alias start-db='docker run -p 5432:5432 --env POSTGRES_PASSWORD=postgres --env PGDATA=/var/lib/postgresql/data/pgdata postgres'
+
+# show file contents
+function show(){ less -XRci -x4 "$1"; }
+
+function serve() {
+    docker run --rm -p $1:80/tcp -v $(pwd):/usr/share/nginx/html:ro nginx:stable-alpine
+}
+
+# parses jwt token and passes the output to fx
+function jwtparse() {
+    echo -n "Enter JWT token: "
+
+    read token
+
+    local payload="$(echo -n $token | cut -d "." -f 2)"
+    local result="$payload"
+
+    # pad the end of string by appending = to make
+    # the encoded string length equals to multiples of 4
+    local padlen=$((${#payload} % 4))
+    if [ $padlen -eq 2 ]; then
+        result="$payload"'=='
+    elif [ $padlen -eq 3 ]; then
+        result="$payload"'='
+    fi
+
+    echo -n $result | base64 -d | jq '.' | $PAGER
+}
+
+function pg_connect() {
+    echo -n "Enter DB host: "
+    read db_host
+
+    echo -n "Enter DB name: "
+    read db_name
+
+    echo -n "Enter DB user: "
+    read db_user
+
+    echo -n "Enter DB password: "
+    read -s db_password
+    echo
+
+    echo -n "Enter DB port(5432): "
+    read db_port
+
+    local cmd="psql postgresql://$db_user:$db_password@$db_host:$db_port/$db_name"
+
+    eval $cmd
+}
+
+# compressing and extracting zip files
+function extract() { echo "Extracting $1"; tar -xzf $1; echo "Done extracting $1..."; }
+function compress() { echo "Compressing $1"; tar -cvzf $1; echo "Done compressing..."; }
+
+# enable kubectl completions
+source <(kubectl completion bash)
+complete -o default -F __start_kubectl kctl
+
+# machine specific config/overrides
+[[ -s "$HOME/.machine-config" ]] && source "$HOME/.machine-config"
+

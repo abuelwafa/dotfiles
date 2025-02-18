@@ -274,6 +274,8 @@ echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo s
 adduser username
 # add the newly created user to the sudo group
 adduser username sudo
+# or
+usermod -aG sudo username
 # copy ssh public keys to the new user
 mkdir -p /home/username/.ssh
 cp /root/.ssh/authorized_keys /home/username/.ssh/authorized_keys
