@@ -405,6 +405,14 @@ augroup END
 inoremap <leader><space> <c-x><c-o>
 inoremap <c-@> <c-x><c-o>
 
+" automatically close brackets/quotes
+inoremap [ []<esc>i
+inoremap ( ()<esc>i
+inoremap { {}<esc>i
+inoremap " ""<esc>i
+inoremap ' ''<esc>i
+inoremap ` ``<esc>i
+
 command! Qfall call s:quickFixOpenAll()
 function! s:quickFixOpenAll()
     let files = {}
@@ -417,9 +425,6 @@ function! s:quickFixOpenAll()
         silent exe "edit ".file
     endfor
 endfunction
-
-" copy to clipboard using xclip
-vnoremap <leader>c :!clear && xclip -i -selection clipboard<cr>u
 
 " update vimrc file
 command! -nargs=0 UpdateVimrc :silent execute "!curl -fL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/vim/.vimrc -o ~/.vimrc" | echo "Vimrc has been udpated. Restart vim to activate the new changes"
