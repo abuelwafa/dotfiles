@@ -1,0 +1,30 @@
+installed packages
+======================
+clang
+vim
+neovim
+tmux
+fzf
+python
+golang
+nodejs-lts
+git
+tsu
+lua54
+bat
+eza
+git-delta
+jq
+cmatrix
+man
+tree
+bash-completion
+kubectl
+lazygit
+k9s
+
+kotlin
+openjdk-21
+===========================
+run termux-setup-storage to give termux access to external storage
+===========================
