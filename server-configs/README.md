@@ -5,7 +5,7 @@ Personal minimal server configs for use on jump servers or development machines.
 ## Installation
 
 ```sh
-curl -fL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/server-configs/setup.sh | sh
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/server-configs/setup.sh)"
 ```
 
 ## Whats included
