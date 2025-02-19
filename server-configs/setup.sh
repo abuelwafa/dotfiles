@@ -6,8 +6,8 @@
 #  █▄▄█  █   █  █   █  █▀▀▀▀    █    █▄█▄█  ▄▀▀▀█    █    ▄▀▀▀█
 # █    █ ██▄█▀  ▀▄▄▀█  ▀█▄▄▀    ▀▄▄   █ █   ▀▄▄▀█    █    ▀▄▄▀█
 #
-# Interactive bash script for configuring servers
-# curl -fL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/server-configs/setup.sh | bash
+# Interactive bash script for configuring Debian/Ubuntu servers
+# /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/server-configs/setup.sh)"
 
 set -o errexit
 set -o nounset
@@ -22,11 +22,19 @@ function setup_git() {
     echo
     if [[ $install_git =~ ^[Yy]$ ]]; then
         echo "=> installing git"
-        sudo apt install git
+        sudo apt-get install git
         echo "=> configuring git"
+
+        local git_email
+        local git_name
+        read -p "Enter git config email: " -r git_email
+        echo
+        read -p "Enter git config name: " -r git_name
+        echo
         git config --global user.email "${git_email}"
         git config --global user.name "${git_name}"
     fi
+    echo
 }
 
 function setup_tmux() {
@@ -34,9 +42,9 @@ function setup_tmux() {
     echo
     if [[ $install_tmux =~ ^[Yy]$ ]]; then
         echo "=> installing tmux"
-        sudo apt install tmux
+        sudo apt-get install -y tmux
         echo "=> configuring tmux"
-        curl -fL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/tmux/tmux-minimal.conf > ~/.tmux.conf
+        curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/tmux/tmux-minimal.conf > ~/.tmux.conf
     fi
     echo
 }
@@ -46,7 +54,7 @@ function setup_ufw() {
     echo
     if [[ $install_ufw =~ ^[Yy]$ ]]; then
         echo "=> installing and configuring ufw"
-        sudo apt install ufw
+        sudo apt-get install -y ufw
         sudo ufw default deny incoming
         sudo ufw allow ssh
         sudo ufw enable
@@ -61,7 +69,7 @@ function setup_fail2ban() {
     echo
     if [[ $install_fail2ban =~ ^[Yy]$ ]]; then
         echo "=> installing fail2ban"
-        sudo apt install fail2ban
+        sudo apt-get install -y fail2ban
 
         echo "=> configuring fail2ban"
         echo
@@ -75,10 +83,10 @@ function setup_containerd() {
     echo
     if [[ $install_containerd =~ ^[Yy]$ ]]; then
         local containerd_version
-        containerd_version = "$(curl https://api.github.com/repos/containerd/containerd/releases/latest | jq -r '.tag_name')"
+        containerd_version="$(curl https://api.github.com/repos/containerd/containerd/releases/latest | jq -r '.tag_name')"
 
         local cpu_arch
-        cpu_arch = "$(uname --machine)"
+        cpu_arch="$(uname --machine)"
 
         echo "=> installing containerd"
 
@@ -88,12 +96,12 @@ function setup_containerd() {
 }
 
 main() {
-    sudo apt update
-    sudo apt upgrade
-    sudo apt install vim curl jq
+    sudo apt-get update
+    sudo apt-get upgrade -y
+    sudo apt-get install -y vim curl jq locales locales-all
 
-    curl -fL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/bash/bashrc > ~/.bashrc
-    curl -fL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/vim/.vimrc > ~/.vimrc
+    curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/bash/bashrc > ~/.bashrc
+    curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/vim/.vimrc > ~/.vimrc
 
     setup_git
     setup_tmux
