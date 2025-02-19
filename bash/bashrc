@@ -157,9 +157,11 @@ function extract() { echo "Extracting $1"; tar -xzf $1; echo "Done extracting $1
 function compress() { echo "Compressing $1"; tar -cvzf $1; echo "Done compressing..."; }
 
 # enable kubectl completions
-source <(kubectl completion bash)
-complete -o default -F __start_kubectl kctl
+if command -v kubectl 2>&1 >/dev/null
+then
+    source <(kubectl completion bash)
+    complete -o default -F __start_kubectl kctl
+fi
 
 # machine specific config/overrides
 [[ -s "$HOME/.machine-config" ]] && source "$HOME/.machine-config"
-
