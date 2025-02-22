@@ -22,7 +22,7 @@ function setup_git() {
     echo
     if [[ $install_git =~ ^[Yy]$ ]]; then
         echo "=> installing git"
-        sudo apt-get install git
+        sudo apt-get install -y git
         echo "=> configuring git"
 
         local git_email
@@ -88,7 +88,7 @@ function setup_containerd() {
     echo
     if [[ $install_containerd =~ ^[Yy]$ ]]; then
         local containerd_version
-        containerd_version="$(curl https://api.github.com/repos/containerd/containerd/releases/latest | jq -r '.tag_name')"
+        containerd_version="$(curl -fsSL https://api.github.com/repos/containerd/containerd/releases/latest | jq -r '.tag_name')"
 
         local cpu_arch
         cpu_arch="$(uname --machine)"
@@ -107,6 +107,8 @@ main() {
 
     curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/bash/bashrc > ~/.bashrc
     curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/vim/.vimrc > ~/.vimrc
+
+    echo
 
     setup_git
     setup_tmux
