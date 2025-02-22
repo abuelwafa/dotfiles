@@ -33,6 +33,11 @@ function setup_git() {
         echo
         git config --global user.email "${git_email}"
         git config --global user.name "${git_name}"
+        git config --global user.useConfigOnly true
+        git config --global color.ui true
+        git config --global core.editor vim
+        git config --global autocrlf input
+        git config --global status.showUntrackedFiles all
     fi
     echo
 }
@@ -98,7 +103,7 @@ function setup_containerd() {
 main() {
     sudo apt-get update
     sudo apt-get upgrade -y
-    sudo apt-get install -y vim curl jq locales locales-all
+    sudo apt-get install -y vim curl jq locales locales-all bash-completion python3 python3-venv
 
     curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/bash/bashrc > ~/.bashrc
     curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/vim/.vimrc > ~/.vimrc
