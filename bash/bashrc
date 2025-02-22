@@ -2,16 +2,19 @@
 # simple bashrc for use on servers (debian/ubuntu)
 # curl -fL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/bash/bashrc > ~/.bashrc
 
-echo "   ▄▄   █                    ▀▀█                    ▄▀▀"
-echo "   ██   █▄▄▄   ▄   ▄   ▄▄▄     █   ▄     ▄  ▄▄▄   ▄▄█▄▄   ▄▄▄"
-echo "  █  █  █▀ ▀█  █   █  █▀  █    █   ▀▄ ▄ ▄▀ ▀   █    █    ▀   █"
-echo "  █▄▄█  █   █  █   █  █▀▀▀▀    █    █▄█▄█  ▄▀▀▀█    █    ▄▀▀▀█"
-echo " █    █ ██▄█▀  ▀▄▄▀█  ▀█▄▄▀    ▀▄▄   █ █   ▀▄▄▀█    █    ▀▄▄▀█"
-echo ""
+function banner() {
+    echo
+    echo "   ▄▄   █                    ▀▀█                    ▄▀▀         "
+    echo "   ██   █▄▄▄   ▄   ▄   ▄▄▄     █   ▄     ▄  ▄▄▄   ▄▄█▄▄   ▄▄▄   "
+    echo "  █  █  █▀ ▀█  █   █  █▀  █    █   ▀▄ ▄ ▄▀ ▀   █    █    ▀   █  "
+    echo "  █▄▄█  █   █  █   █  █▀▀▀▀    █    █▄█▄█  ▄▀▀▀█    █    ▄▀▀▀█  "
+    echo " █    █ ██▄█▀  ▀▄▄▀█  ▀█▄▄▀    ▀▄▄   █ █   ▀▄▄▀█    █    ▀▄▄▀█  "
+    echo
+}
 
 export EDITOR='vim'
 export PAGER='less'
-export LESS='-XFRi -x4'
+export LESS='-XRi -x4'
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 export LC_CTYPE=en_US.UTF-8
@@ -30,8 +33,24 @@ function ......() { cd ../../../../../$1; }
 function .......() { cd ../../../../../../$1; }
 function ........() { cd ../../../../../../../$1; }
 
-rule() {
+function rule() {
     printf "%$(tput cols)s\n" | tr " " "-"
+}
+
+function setup_tmux_popup() {
+    local session
+    session="_popup_$(tmux display -p '#S')"
+
+    if ! tmux has -t "$session" 2>/dev/null; then
+        local session_id
+        session_id="$(tmux new-session -dP -s "$session" -F '#{session_id}')"
+        tmux set-option -s -t "$session_id" key-table popup
+        # tmux set-option -s -t "$session_id" status off
+        # tmux set-option -s -t "$session_id" prefix None
+        session="$session_id"
+    fi
+
+    tmux attach -t "$session" >/dev/null
 }
 
 # to make sudo work with aliases
@@ -94,6 +113,7 @@ alias remove='rm -rf'
 
 alias kctl='kubectl'
 
+alias python='python3'
 alias venv='source venv/bin/activate'
 alias venvinit='python3 -m venv venv'
 alias generate-ansible-config='ansible-config init --disabled > ansible.cfg'
@@ -103,7 +123,7 @@ alias highlight="grep --color=always -e \"^\" -e"
 alias start-db='docker run -p 5432:5432 --env POSTGRES_PASSWORD=postgres --env PGDATA=/var/lib/postgresql/data/pgdata postgres'
 
 # show file contents
-function show(){ less -XRci -x4 "$1"; }
+alias show=less
 
 function serve() {
     docker run --rm -p $1:80/tcp -v $(pwd):/usr/share/nginx/html:ro nginx:stable-alpine
@@ -153,15 +173,24 @@ function pg_connect() {
 }
 
 # compressing and extracting zip files
-function extract() { echo "Extracting $1"; tar -xzf $1; echo "Done extracting $1..."; }
-function compress() { echo "Compressing $1"; tar -cvzf $1; echo "Done compressing..."; }
+function extract() {
+    echo "Extracting $1"
+    tar -xzf $1
+    echo "Done extracting $1..."
+}
+function compress() {
+    echo "Compressing $1"
+    tar -cvzf $1
+    echo "Done compressing..."
+}
 
 # enable kubectl completions
-if command -v kubectl 2>&1 >/dev/null
-then
+if command -v kubectl 2>&1 >/dev/null; then
     source <(kubectl completion bash)
     complete -o default -F __start_kubectl kctl
 fi
 
 # machine specific config/overrides
 [[ -s "$HOME/.machine-config" ]] && source "$HOME/.machine-config"
+
+banner
