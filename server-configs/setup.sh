@@ -36,7 +36,7 @@ function setup_git() {
         git config --global user.useConfigOnly true
         git config --global color.ui true
         git config --global core.editor vim
-        git config --global autocrlf input
+        git config --global core.autocrlf input
         git config --global status.showUntrackedFiles all
     fi
     echo
