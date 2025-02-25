@@ -702,10 +702,6 @@ require('telescope').setup({
                 ["jj"] = { "<esc>", type = "command" },
                 ["<C-j>"] = require('telescope.actions').move_selection_next,
                 ["<C-k>"] = require('telescope.actions').move_selection_previous,
-                ["J"] = require('telescope.actions').preview_scrolling_down,
-                ["K"] = require('telescope.actions').preview_scrolling_up,
-                ["H"] = require('telescope.actions').preview_scrolling_left,
-                ["L"] = require('telescope.actions').preview_scrolling_right,
             },
             n = {
                 ["<C-j>"] = require('telescope.actions').move_selection_next,
