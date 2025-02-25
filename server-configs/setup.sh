@@ -87,15 +87,35 @@ function setup_containerd() {
     read -p "Setup and configure containerd and nerdctl? (y/n) " -n 1 -r install_containerd
     echo
     if [[ $install_containerd =~ ^[Yy]$ ]]; then
-        local containerd_version
-        containerd_version="$(curl -fsSL https://api.github.com/repos/containerd/containerd/releases/latest | jq -r '.tag_name')"
+        echo '=> Installing nerdctl (full version)'
+
+        local hardware_name
+        hardware_name="$(uname --machine)"
 
         local cpu_arch
-        cpu_arch="$(uname --machine)"
+        if [[ "$hardware_name" == "arm64" ]]; then
+            cpu_arch="arm64"
+        else
+            cpu_arch="amd64"
+        fi
 
-        echo "=> installing containerd"
+        local tag_name # v2.0.3
+        tag_name="$(curl -fsSL https://api.github.com/repos/containerd/nerdctl/releases/latest | jq -r '.tag_name')"
 
-        echo "installing nerdctl"
+        local nerdctl_version # 2.0.3
+        nerdctl_version="$(echo $tag_name | cut -d 'v' -f 2)"
+
+        local file_name
+        file_name="nerdctl-full-${nerdctl_version}-linux-${cpu_arch}.tar.gz"
+
+        local download_url
+        download_url="https://github.com/containerd/nerdctl/releases/download/${tag_name}/${file_name}"
+
+        curl -fSLO $download_url
+
+        sudo tar Cxzvvf -f $file_name
+
+        containerd-rootless-setuptool.sh install
     fi
     echo
 }
