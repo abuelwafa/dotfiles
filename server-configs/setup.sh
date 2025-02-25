@@ -112,10 +112,8 @@ function setup_containerd() {
         download_url="https://github.com/containerd/nerdctl/releases/download/${tag_name}/${file_name}"
 
         curl -fSLO $download_url
-
         sudo tar Cxzvvf -f $file_name
-
-        containerd-rootless-setuptool.sh install
+        sudo systemctl enable --now containerd
     fi
     echo
 }
