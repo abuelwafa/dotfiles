@@ -112,6 +112,7 @@ alias mv='mv -i'
 alias remove='rm -rf'
 
 alias kctl='kubectl'
+alias docker='nerdctl'
 
 alias python='python3'
 alias venv='source venv/bin/activate'
