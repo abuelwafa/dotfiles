@@ -149,6 +149,8 @@ hi CursorlineNR term=none cterm=none ctermbg=238
 hi Normal term=none cterm=none ctermbg=black
 " hi Normal term=none cterm=none ctermbg=none
 
+hi! link Search IncSearch
+
 " set mouse shape to block in insert mode
 set guicursor=i:block
 
@@ -355,7 +357,7 @@ let g:netrw_keepdir = 0
 let g:netrw_winsize = 20
 let g:netrw_banner = 0
 let g:netrw_localcopydircmd = 'cp -r'
-hi! link netrwMarkFile Search
+hi! link netrwMarkFile IncSearch
 
 function! NetrwMapping()
     " rename
