@@ -329,10 +329,35 @@ nnoremap <silent> <leader>h <c-w>H
 nnoremap <silent> <leader>u <c-w>K
 
 " navigate splits
-nnoremap <silent> <C-d> <C-W>j
-nnoremap <silent> <C-u> <C-W>k
-nnoremap <silent> <C-h> <C-W>h
-nnoremap <silent> <C-l> <C-W>l
+function IsMostDirection(direction)
+    let oldw = winnr()
+    silent! execute "normal! \<c-w>" . a:direction
+    let neww = winnr()
+    silent! execute oldw . 'wincmd w'
+    return oldw == neww
+endfunction
+
+let s:motion_to_direction_mapping = {'h': 'L', 'j': 'D', 'k': 'U', 'l': 'R'}
+function TmuxAwareNavigate(direction)
+    if IsMostDirection(a:direction)
+        silent! execute "!tmux select-pane -" . s:motion_to_direction_mapping[a:direction] . "Z"
+        silent! execute "redraw!"
+    else
+        silent! execute "normal! \<c-w>" . a:direction
+    endif
+endfunction
+
+if empty($TMUX)
+    nnoremap <silent> <C-d> <C-W>j
+    nnoremap <silent> <C-u> <C-W>k
+    nnoremap <silent> <C-h> <C-W>h
+    nnoremap <silent> <C-l> <C-W>l
+else
+    nnoremap <silent> <C-d> :call TmuxAwareNavigate('j')<cr>
+    nnoremap <silent> <C-u> :call TmuxAwareNavigate('k')<cr>
+    nnoremap <silent> <C-h> :call TmuxAwareNavigate('h')<cr>
+    nnoremap <silent> <C-l> :call TmuxAwareNavigate('l')<cr>
+endif
 
 " Save file with sudo
 command! -nargs=0 WriteWithSudo :w !sudo tee % >/dev/null
