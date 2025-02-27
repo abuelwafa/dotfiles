@@ -22,6 +22,7 @@ sudo ufw allow in http
 sudo ufw allow ssh
 sudo ufw allow in 3000/tcp
 sudo ufw enable
+sudo ufw status verbose
 =============================================================
 # install Homebrew from it's website
 https://brew.sh/
@@ -49,7 +50,7 @@ yarn
 Desktop only: act minikube qemu lima
 
 # install GNU version of sed (for MACOS)
-# MacOS doesn't have the watch command 
+# MacOS doesn't have the watch command
 Mac only: gsed watch
 
 rbenv ruby-build
@@ -250,7 +251,7 @@ https://github.com/leits/MeetingBar
 =============================================================
 MACOS
 # create ssh config file with config to use ssh keys without password
-ln -s ~/projects/dotfiles/ssh-config ~/.ssh/config
+echo "Include ~/projects/dotfiles/ssh-config-mac" >> ~/.ssh/config
 =============================================================
 MACOS
 # optional: disable accented characters (key press and hold to view accents)
