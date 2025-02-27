@@ -366,15 +366,7 @@ require("conform").setup({
 
 require'nvim-treesitter.configs'.setup({ autotag = { enable = true } })
 require('nvim-treesitter.configs').setup({
-    ensure_installed = {
-        "astro", "bash", "c", "c_sharp", "cmake", "comment", "cpp", "css", "diff", "dockerfile",
-        "git_config", "git_rebase", "gitattributes", "gitcommit", "gitignore", "go", "gomod",
-        "gosum", "gowork", "graphql", "groovy", "html", "htmldjango", "http", "java",
-        "javascript", "jq", "jsdoc", "json", "json5", "jsonc", "kotlin", "lua", "luadoc", "make",
-        "markdown", "php", "phpdoc", "po", "prisma", "python", "query",
-        "regex", "rust", "scss", "sql", "terraform", "toml", "tsx", "typescript", "vim", "vimdoc",
-        "vue", "yaml"
-    },
+    ensure_installed = "all",
     auto_install = true,
     sync_install = false,
     ignore_install = {},
