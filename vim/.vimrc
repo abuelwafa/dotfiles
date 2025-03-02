@@ -291,9 +291,9 @@ function! DeleteBuffer()
     endif
 endfunction
 
-nnoremap <leader>q :call DeleteBuffer()<cr>
-vnoremap <leader>q <esc>:call DeleteBuffer()<cr>
-inoremap <leader>q <esc>:call DeleteBuffer()<cr>
+nnoremap <silent> <leader>q :call DeleteBuffer()<cr>
+vnoremap <silent> <leader>q <esc>:call DeleteBuffer()<cr>
+inoremap <silent> <leader>q <esc>:call DeleteBuffer()<cr>
 
 " force close current buffer without saving and without messing up with splits
 nnoremap <leader>z :bd!<cr>
@@ -476,8 +476,8 @@ function! Toggle_comment()
         execute ':silent! s/^\(\s*\)\(' . l:comment_identifier . '\)\@!/\1' . l:comment_identifier . ' /'
     endif
 endfunction
-nnoremap gcc :call Toggle_comment()<cr>
-vnoremap gc :call Toggle_comment()<cr>
+nnoremap <silent> gcc :call Toggle_comment()<cr>
+vnoremap <silent> gc :call Toggle_comment()<cr>
 
 command! Qfall call s:quickFixOpenAll()
 function! s:quickFixOpenAll()
