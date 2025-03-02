@@ -468,9 +468,9 @@ function! Toggle_comment()
     endif
 
     let line = getline('.')
-    if line =~# '^\s*' . l:comment_identifier . ' '
+    if line =~# '^\s*' . l:comment_identifier . ' \?'
         " a comment
-        execute ':silent! s/^\(\s*\)' . l:comment_identifier . ' /\1/'
+        execute ':silent! s/^\(\s*\)' . l:comment_identifier . ' \?/\1/'
     else
         " not a comment
         execute ':silent! s/^\(\s*\)\(' . l:comment_identifier . '\)\@!/\1' . l:comment_identifier . ' /'
