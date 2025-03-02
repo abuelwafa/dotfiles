@@ -329,7 +329,7 @@ nnoremap <silent> <leader>h <c-w>H
 nnoremap <silent> <leader>u <c-w>K
 
 " navigate splits
-function IsMostDirection(direction)
+function! IsMostDirection(direction)
     let oldw = winnr()
     silent! execute "normal! \<c-w>" . a:direction
     let neww = winnr()
@@ -338,7 +338,7 @@ function IsMostDirection(direction)
 endfunction
 
 let s:motion_to_direction_mapping = {'h': 'L', 'j': 'D', 'k': 'U', 'l': 'R'}
-function TmuxAwareNavigate(direction)
+function! TmuxAwareNavigate(direction)
     if IsMostDirection(a:direction)
         silent! execute "!tmux select-pane -" . s:motion_to_direction_mapping[a:direction] . "Z"
         silent! execute "redraw!"
@@ -439,6 +439,45 @@ inoremap { {}<esc>i
 inoremap " ""<esc>i
 inoremap ' ''<esc>i
 inoremap ` ``<esc>i
+
+" commenting function
+let g:c_style_languages = [
+    \'c',
+    \'cpp',
+    \'cs',
+    \'go',
+    \'java',
+    \'jsonc',
+    \'javascript',
+    \'javascriptreact',
+    \'typescript',
+    \'typescriptreact',
+    \'rust',
+    \'php',
+\]
+function! Toggle_comment()
+    let b:filetype = &filetype
+    let l:comment_identifier = '#' " default value
+
+    if index(g:c_style_languages, b:filetype) != -1
+        let l:comment_identifier = '\/\/'
+    elseif b:filetype ==? 'vim'
+        let l:comment_identifier = '"'
+    elseif b:filetype ==? 'lua'
+        let l:comment_identifier = '--'
+    endif
+
+    let line = getline('.')
+    if line =~# '^\s*' . l:comment_identifier . ' '
+        " a comment
+        execute ':silent! s/^\(\s*\)' . l:comment_identifier . ' /\1/'
+    else
+        " not a comment
+        execute ':silent! s/^\(\s*\)\(' . l:comment_identifier . '\)\@!/\1' . l:comment_identifier . ' /'
+    endif
+endfunction
+nnoremap gcc :call Toggle_comment()<cr>
+vnoremap gc :call Toggle_comment()<cr>
 
 command! Qfall call s:quickFixOpenAll()
 function! s:quickFixOpenAll()
