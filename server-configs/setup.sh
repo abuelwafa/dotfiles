@@ -77,6 +77,8 @@ function setup_fail2ban() {
         sudo apt-get install -y fail2ban
 
         echo "=> configuring fail2ban"
+        sudo systemctl enable --now fail2ban.service
+
         echo
         systemctl status fail2ban.service
     fi
