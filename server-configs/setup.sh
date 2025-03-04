@@ -49,6 +49,11 @@ function setup_tmux() {
         echo "=> installing tmux"
         sudo apt-get install -y tmux
         echo "=> configuring tmux"
+        # backup .tmux.conf file if it already exists
+        if [[ -f "$HOME/.tmux.conf" ]]; then
+            cp ~/.tmux.conf ~/.tmux.conf-bak-"$(date +%s)"
+            echo '=> old ~/.tmux.conf have been backed up'
+        fi
         curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/tmux/tmux-minimal.conf > ~/.tmux.conf
     fi
     echo
@@ -113,8 +118,8 @@ function setup_containerd() {
         local download_url
         download_url="https://github.com/containerd/nerdctl/releases/download/${tag_name}/${file_name}"
 
-        curl -fSLO $download_url
-        sudo tar Cxzvvf -f $file_name
+        curl -fSLO "$download_url"
+        sudo tar Cxzvvf -f "$file_name"
         sudo systemctl enable --now containerd
     fi
     echo
@@ -125,7 +130,20 @@ main() {
     sudo apt-get upgrade -y
     sudo apt-get install -y vim curl jq locales locales-all bash-completion python3 python3-venv
 
+    # TODO: ubuntu/debian has already a bashrc file, think about how we can add our config without messing with current config
+
+    # backup .bashrc file if it already exists
+    if [[ -f "$HOME/.bashrc" ]]; then
+        cp ~/.bashrc ~/.bashrc-bak-"$(date +%s)"
+        echo '=> old ~/.bashrc have been backed up'
+    fi
     curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/bash/bashrc > ~/.bashrc
+
+    # backup .vimrc file if it already exists
+    if [[ -f "$HOME/.vimrc" ]]; then
+        cp ~/.vimrc ~/.vimrc-bak-"$(date +%s)"
+        echo '=> old ~/.vimrc have been backed up'
+    fi
     curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/vim/.vimrc > ~/.vimrc
 
     echo
