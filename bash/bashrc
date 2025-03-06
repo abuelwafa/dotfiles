@@ -268,5 +268,7 @@ bgcyan='\e[46m'
 bggray='\e[47m'
 
 export PS1="${bldgreen}$(rule)${txtrst}\n${debian_chroot:+($debian_chroot)}${bldblue}\u@\H\n${bldyellow}\w${bldpurple}\$(__git_ps1)\n\$(virtualenv_info)${bldcyan}-> ${txtrst}"
-
+if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
+    export PS1="${bldred}$(rule)${txtrst}\n${debian_chroot:+($debian_chroot)}${bgred}${bldwhite} \u@\H ${txtrst} ${bldred}(SSH)${txtrst} \n${bldyellow}\w${bldpurple}\$(__git_ps1)\n\$(virtualenv_info)${bldcyan}-> ${txtrst}"
+fi
 banner
