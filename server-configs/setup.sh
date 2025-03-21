@@ -17,13 +17,27 @@ if [[ "${TRACE-0}" == "1" ]]; then
 fi
 
 function harden_ssh() {
+    # TODO: change to sed instead of appending to the config file
     echo "=> hardening SSH"
     # disable root login
+    sudo echo 'PermitRootLogin no' >> /etc/ssh/sshd_config
+    
     # disable password authentication
-    # restrict users allowed to use SSH
-    # change listen address of the server
-    # change the SSH port
+    sudo echo 'PasswordAuthentication no' >> /etc/ssh/sshd_config
 
+    # restrict users allowed to use SSH
+    read -p "Enter usernames allowed to SSH (space separated list): " -r ssh_allowed_users
+    sudo echo 'AllowUsers $ssh_allowed_users' >> /etc/ssh/sshd_config
+    
+    # change the SSH port
+    read -p "SSH listen port: " -r ssh_listen_port
+    sudo echo 'Port $ssh_listen_port' >> /etc/ssh/sshd_config
+    command -v ufw >/dev/null 2>&1 && sudo ufw allow $ssh_listen_port/tcp
+
+    # change listen address of the server
+    read -p "SSH listen address: " -r ssh_listen_address
+    sudo echo 'ListenAddress $ssh_listen_address' >> /etc/ssh/sshd_config
+    
     # restart the ssh service
     sudo systemctl restart ssh
     echo
@@ -35,6 +49,7 @@ function setup_nginx() {
     if [[ $install_nginx =~ ^[Yy]$ ]]; then
         echo "=> installing Nginx"
         sudo apt-get install -y nginx nginx-extras
+        command -v ufw >/dev/null 2>&1 && sudo ufw allow www
     else
         echo "Skipping install of Nginx"
     fi
@@ -44,10 +59,45 @@ function setup_nginx() {
 function setup_docker() {
     read -p "Setup and configure Docker? (y/n) " -r install_docker
     echo
-    if [[ $install_node_exporter =~ ^[Yy]$ ]]; then
+    if [[ $install_docker =~ ^[Yy]$ ]]; then
         echo "=> installing Docker"
     else
         echo "Skipping install of Docker"
+    fi
+    echo
+}
+
+function setup_wireguard() {
+    read -p "Setup and configure Wireguard? (y/n) " -r install_wireguard
+    echo
+    if [[ $install_wireguard =~ ^[Yy]$ ]]; then
+        echo "=> installing Wireguard"
+        sudo apt-get install -y wireguard wireguard-tools
+        wg genkey > /etc/wireguard/wg0.key
+        wg pubkey < /etc/wireguard/wg0.key > /etc/wireguard/wg0.key.pub
+
+        read -p "VPN server host: " -r vpn_server_host
+        read -p "VPN server port: " -r vpn_server_port
+        read -p "VPN server public key: " -r vpn_server_public_key
+        read -p "Client assigned IP: " -r vpn_client_ip
+        read -p "Client allowed IPs: " -r vpn_client_allowed_ips
+        cat >/etc/wireguard/wg0.conf <<EOL
+[Interface]
+Address = $vpn_client_ip/32
+PrivateKey = $(cat /etc/wireguard/wg0.key)
+
+[Peer]
+Endpoint = $vpn_server_host:$vpn_server_port
+AllowedIPs = $vpn_client_allowed_ips
+PersistentKeepalive = 25
+PublicKey = $vpn_server_public_key
+EOL
+        sudo systemctl enable wg-quick@wg0
+        sudo systemctl start wg-quick@wg0
+        wg-quick down wg0
+        wg-quick up wg0
+    else
+        echo "Skipping Wireguard setup"
     fi
     echo
 }
@@ -148,6 +198,7 @@ function setup_ufw() {
         echo "=> installing and configuring ufw"
         sudo apt-get install -y ufw
         sudo ufw default deny incoming
+        sudo ufw default deny outgoing
         sudo ufw allow ssh
         sudo ufw enable
         echo
@@ -246,11 +297,13 @@ main() {
     install_build_essential
     setup_git
     setup_tmux
+    setup_wireguard
     setup_ufw
+    harden_ssh
+    setup_nginx
     setup_fail2ban
     setup_containerd
     setup_docker
-    setup_nginx
     setup_prometheus_node_exporter
 }
 
