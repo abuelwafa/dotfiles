@@ -1,0 +1,19 @@
+---
+line_ending: lf
+formatter:
+    type: basic
+    indent: 4
+    include_document_start: true
+    line_ending: lf
+    max_line_length: 99
+    retain_line_breaks: true
+    retain_line_breaks_single: true
+    eof_newline: true
+    trim_trailing_whitespace: true
+    indentless_arrays: false
+    array_indent: 4
+    indent_root_array: false
+    pad_line_comments: 0
+    scan_folded_as_literal: false
+    disallow_anchors: false
+    drop_merge_tag: false

@@ -1,10 +1,10 @@
-# make the projects folder
-mkdir -p ~/projects
+# make the workspace folder
+mkdir -p ~/workspace
 # create the machine config file. this file contains customizations specific to the current machine
-touch ~/projects/.machine-config
-echo 'export GIT_COMMITTER_EMAIL="mohamed.abuelwafa@gmail.com"' | tee -a ~/projects/.machine-config
-echo 'export GIT_AUTHOR_EMAIL="mohamed.abuelwafa@gmail.com"' | tee -a ~/projects/.machine-config
-echo 'export OPENAI_API_KEY="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"' | tee -a ~/projects/.machine-config
+touch ~/workspace/.machine-config
+echo 'export GIT_COMMITTER_EMAIL="mohamed.abuelwafa@gmail.com"' | tee -a ~/workspace/.machine-config
+echo 'export GIT_AUTHOR_EMAIL="mohamed.abuelwafa@gmail.com"' | tee -a ~/workspace/.machine-config
+echo 'export OPENAI_API_KEY="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"' | tee -a ~/workspace/.machine-config
 =============================================================
 /* generate ssh keys */
 ssh-keygen -t ed25519 -C "your_email@example.com"
@@ -42,7 +42,6 @@ doggo luarocks
 bat ripgrep fzf fd fx jq yh lazygit libpq gh dust eza hcloud
 cmatrix
 kubernetes-cli helm python watchman go ansible
-jesseduffield/lazydocker/lazydocker
 derailed/k9s/k9s
 lnav goaccess
 yarn
@@ -59,7 +58,7 @@ brew tap hashicorp/tap
 brew install hashicorp/tap/terraform
 =============================================================
 clone essential repos
-cd ~/projects
+cd ~/workspace
 git clone git@github.com:abuelwafa/dotfiles.git
 git clone https://github.com/ohmyzsh/ohmyzsh.git
 git clone https://github.com/bigH/git-fuzzy.git
@@ -80,13 +79,13 @@ brew install pgcli litecli mycli iredis
 =============================================================
 # link zshrc
 # ubuntu
-ln -s ~/projects/dotfiles/zsh/.zshrc.ubuntu ~/.zshrc
+ln -s ~/workspace/dotfiles/zsh/.zshrc.ubuntu ~/.zshrc
 # mac
-ln -s ~/projects/dotfiles/zsh/.zshrc.mac ~/.zshrc
+ln -s ~/workspace/dotfiles/zsh/.zshrc.mac ~/.zshrc
 ================================================================
 # link alacritty config
 mkdir -p ~/.config/alacritty
-ln -s ~/projects/dotfiles/alacritty/alacritty.toml ~/.config/alacritty/alacritty.toml
+ln -s ~/workspace/dotfiles/alacritty/alacritty.toml ~/.config/alacritty/alacritty.toml
 =============================================================
 # TODO: install nerd-fonts using homebrew
 brew install font-jetbrains-mono-nerd-font
@@ -162,14 +161,17 @@ base16_catppuccin-mocha
 base16_da-one-black
 =============================================================
 # git configuration
-ln -s ~/projects/dotfiles/.gitconfig ~/.gitconfig
+ln -s ~/workspace/dotfiles/.gitconfig ~/.gitconfig
+=============================================================
+# yamlfmt configuration
+ln -s ~/workspace/dotfiles/yamlfmt.yml ~/yamlfmt.yml
 =============================================================
 # pgcli config
 mkdir -p ~/.config/pgcli
-ln -s ~/projects/dotfiles/pgcli.config ~/.config/pgcli/config
+ln -s ~/workspace/dotfiles/pgcli.config ~/.config/pgcli/config
 =============================================================
 # tmux
-ln -s ~/projects/dotfiles/tmux/tmux.conf ~/.tmux.conf
+ln -s ~/workspace/dotfiles/tmux/tmux.conf ~/.tmux.conf
 # run tmux and install plugins with <prefix>I
 # edit network speed arrow icons (MACOS only)
 sed -i -e 's/↓//' ~/.tmux/plugins/tmux-network-speed/network_speed.sh
@@ -178,12 +180,12 @@ sed -i -e 's/↑//' ~/.tmux/plugins/tmux-network-speed/network_speed.sh
 # linux only: export the correct network interface to get online speeds correctly if not on macos
 # for macos, it should be already configured. no need to export this variable
 # you can look at available interfaces in /proc/net/dev for linux.
-echo 'export TMUX_STATUS_NETWORK_SPEED_INTERFACE="wlan0"' | tee -a ~/projects/.machine-config
+echo 'export TMUX_STATUS_NETWORK_SPEED_INTERFACE="wlan0"' | tee -a ~/workspace/.machine-config
 =============================================================
 # neovim config
 mkdir -p ~/.config/nvim
-ln -s ~/projects/dotfiles/nvim/init.lua ~/.config/nvim/init.lua
-ln -s ~/projects/dotfiles/vim/.vimrc ~/.vimrc
+ln -s ~/workspace/dotfiles/nvim/init.lua ~/.config/nvim/init.lua
+ln -s ~/workspace/dotfiles/vim/.vimrc ~/.vimrc
 mkdir -p ~/.nvim/_temp
 mkdir -p ~/.nvim/_backup
 =============================================================
@@ -251,7 +253,7 @@ https://github.com/leits/MeetingBar
 =============================================================
 MACOS
 # create ssh config file with config to use ssh keys without password
-echo "Include ~/projects/dotfiles/ssh-config-mac" >> ~/.ssh/config
+echo "Include ~/workspace/dotfiles/ssh-config-mac" >> ~/.ssh/config
 =============================================================
 MACOS
 # optional: disable accented characters (key press and hold to view accents)

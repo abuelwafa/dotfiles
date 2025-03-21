@@ -112,7 +112,7 @@ alias mv='mv -i'
 alias remove='rm -rf'
 
 alias kctl='kubectl'
-alias docker='nerdctl'
+alias docker='sudo nerdctl'
 
 alias python='python3'
 alias venv='source venv/bin/activate'
@@ -129,6 +129,8 @@ alias show=less
 function serve() {
     docker run --rm -p $1:80/tcp -v $(pwd):/usr/share/nginx/html:ro nginx:stable-alpine
 }
+
+alias lzd='docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock lazyteam/lazydocker'
 
 # parses jwt token and passes the output to fx
 function jwtparse() {

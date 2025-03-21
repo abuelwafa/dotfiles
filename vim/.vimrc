@@ -494,4 +494,9 @@ function! s:quickFixOpenAll()
 endfunction
 
 " update vimrc file
-command! -nargs=0 UpdateVimrc :silent execute "!curl -fL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/vim/.vimrc -o ~/.vimrc" | echo "Vimrc has been udpated. Restart vim to activate the new changes"
+function! UpdateVimrc()
+    silent! execute "!curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/vim/.vimrc -o ~/.vimrc"
+    silent! execute "redraw!"
+    echom "Vimrc has been udpated."
+endfunction
+command! -nargs=0 UpdateVimrc call UpdateVimrc()

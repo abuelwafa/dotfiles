@@ -154,6 +154,8 @@ function serve() {
     docker run --rm -p $1:80/tcp -v $(pwd):/usr/share/nginx/html:ro nginx:stable-alpine
 }
 
+alias lzd='docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock -v ~/workspace/dotfiles/lazydocker.config:/.config/jesseduffield/lazydocker lazyteam/lazydocker'
+
 # make an alias for compressing and extracting zip files
 # new alternative: just use zip and unzip
 # function extract() { echo "Extracting $1"; tar -xzf $1; echo "Done extracting $1..."; }
@@ -222,6 +224,27 @@ function pg_connect() {
     local cmd="pgcli postgresql://$db_user:$db_password@$db_host:$db_port/$db_name --ssh-tunnel $ssh_username:$ssh_pwd@$ssh_host:$ssh_port"
 
     eval $cmd
+}
+
+function pg_select() {
+    local db_name
+    db_name="$(cat $HOME/projects/db-connections/connections.json | jq -r '.[] | .name' | fzf)"
+
+    local connection_string
+    connection_string="$(cat $HOME/projects/db-connections/connections.json | jq -r "map(select(.name == \"$db_name\")) | .[0].url")"
+
+    if [[ $connection_string =~ ^postgres ]]; then
+        local cmd="pgcli $connection_string"
+        eval $cmd
+    elif [[ $connection_string =~ ^mysql ]]; then
+        local cmd="mycli $connection_string"
+        eval $cmd
+    elif [[ $connection_string =~ ^sqlite ]]; then
+        local cmd="litecli $connection_string"
+        eval $cmd
+    else
+        >&2 echo "Connection string does not point to a postgresql database"
+    fi
 }
 
 # remember when copying directories, adding a slash to the directory name like directory/
