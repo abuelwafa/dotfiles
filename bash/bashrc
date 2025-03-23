@@ -221,53 +221,53 @@ function virtualenv_info() {
 # 4 => underline
 
 # 30 gray
-txtgray='\e[0;30m'
-bldgray='\e[1;30m'
+txtgray='\[\e[0;30m\]'
+bldgray='\[\e[1;30m\]'
 
 # 31 red
-txtred='\e[0;31m'
-bldred='\e[1;31m'
+txtred='\[\e[0;31m\]'
+bldred='\[\e[1;31m\]'
 
 # 32 green
-txtgreen='\e[0;32m'
-bldgreen='\e[1;32m'
+txtgreen='\[\e[0;32m\]'
+bldgreen='\[\e[1;32m\]'
 
 # 33 yellow
-txtyellow='\e[0;33m'
-bldyellow='\e[1;33m'
+txtyellow='\[\e[0;33m\]'
+bldyellow='\[\e[1;33m\]'
 
 # 34 blue
-txtblue='\e[0;34m'
-bldblue='\e[1;34m'
-invblue='\e[3;34m'
-undblue='\e[4;34m'
+txtblue='\[\e[0;34m\]'
+bldblue='\[\e[1;34m\]'
+invblue='\[\e[3;34m\]'
+undblue='\[\e[4;34m\]'
 
 # 35 purple
-txtpurple='\e[0;35m'
-bldpurple='\e[1;35m'
+txtpurple='\[\e[0;35m\]'
+bldpurple='\[\e[1;35m\]'
 
 # 36 cyan
-txtcyan='\e[0;36m'
-bldcyan='\e[1;36m'
+txtcyan='\[\e[0;36m\]'
+bldcyan='\[\e[1;36m\]'
 
 # 37 white
-txtwhite='\e[0;37m'
-bldwhite='\e[1;37m'
+txtwhite='\[\e[0;37m\]'
+bldwhite='\[\e[1;37m\]'
 
 # Text Reset
-txtrst='\e[m'
+txtrst='\[\e[m\]'
 
 export GIT_PS1_SHOWCONFLICTSTATE=1
 export GIT_PS1_SHOWSTASHSTATE=1
 
-bgblack='\e[40m'
-bgred='\e[41m'
-bggreen='\e[42m'
-bgyellow='\e[43m'
-bgblue='\e[44m'
-bgmagenta='\e[45m'
-bgcyan='\e[46m'
-bggray='\e[47m'
+bgblack='\[\e[40m\]'
+bgred='\[\e[41m\]'
+bggreen='\[\e[42m\]'
+bgyellow='\[\e[43m\]'
+bgblue='\[\e[44m\]'
+bgmagenta='\[\e[45m\]'
+bgcyan='\[\e[46m\]'
+bggray='\[\e[47m\]'
 
 export PS1="${bldgreen}$(rule)${txtrst}\n${debian_chroot:+($debian_chroot)}${bldblue}\u@\H\n${bldyellow}\w${bldpurple}\$(__git_ps1)\n\$(virtualenv_info)${bldcyan}-> ${txtrst}"
 if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
