@@ -17,29 +17,35 @@ if [[ "${TRACE-0}" == "1" ]]; then
 fi
 
 function harden_ssh() {
-    # TODO: change to sed instead of appending to the config file
-    echo "=> hardening SSH"
-    # disable root login
-    sudo echo 'PermitRootLogin no' >> /etc/ssh/sshd_config
+    read -p "Setup and configure Nginx? (y/n) " -r harden_ssh
+    echo
+    if [[ $harden_ssh =~ ^[Yy]$ ]]; then
+        # TODO: change to sed instead of appending to the config file
+        echo "=> hardening SSH"
+        # disable root login
+        sudo echo 'PermitRootLogin no' >> /etc/ssh/sshd_config
+        
+        # disable password authentication
+        sudo echo 'PasswordAuthentication no' >> /etc/ssh/sshd_config
     
-    # disable password authentication
-    sudo echo 'PasswordAuthentication no' >> /etc/ssh/sshd_config
-
-    # restrict users allowed to use SSH
-    read -p "Enter usernames allowed to SSH (space separated list): " -r ssh_allowed_users
-    sudo echo 'AllowUsers $ssh_allowed_users' >> /etc/ssh/sshd_config
+        # restrict users allowed to use SSH
+        read -p "Enter usernames allowed to SSH (space separated list): " -r ssh_allowed_users
+        sudo echo 'AllowUsers $ssh_allowed_users' >> /etc/ssh/sshd_config
+        
+        # change the SSH port
+        read -p "SSH listen port: " -r ssh_listen_port
+        sudo echo 'Port $ssh_listen_port' >> /etc/ssh/sshd_config
+        command -v ufw >/dev/null 2>&1 && sudo ufw allow $ssh_listen_port/tcp
     
-    # change the SSH port
-    read -p "SSH listen port: " -r ssh_listen_port
-    sudo echo 'Port $ssh_listen_port' >> /etc/ssh/sshd_config
-    command -v ufw >/dev/null 2>&1 && sudo ufw allow $ssh_listen_port/tcp
-
-    # change listen address of the server
-    read -p "SSH listen address: " -r ssh_listen_address
-    sudo echo 'ListenAddress $ssh_listen_address' >> /etc/ssh/sshd_config
-    
-    # restart the ssh service
-    sudo systemctl restart ssh
+        # change listen address of the server
+        read -p "SSH listen address: " -r ssh_listen_address
+        sudo echo 'ListenAddress $ssh_listen_address' >> /etc/ssh/sshd_config
+        
+        # restart the ssh service
+        sudo systemctl restart ssh
+    else
+        echo "Skipping SSH hardening"
+    fi
     echo
 }
 
@@ -268,15 +274,30 @@ function install_build_essential() {
     read -p "Install build essential?\n[no] for a production webserver. [yes] for a development machine. (y/n) " -r install_build_essential
     echo
     if [[ $install_build_essential =~ ^[Yy]$ ]]; then
+        echo "=> Installing build-essential"
+        echo
         sudo apt-get install -y build-essential
+    else
+        echo "Skipping installation of build-essential package
     fi
     echo
+}
+
+function check_system_reboot() {
+    echo "=> Checking if system reboot is required..."
+    if [ -f /var/run/reboot-required ]; then
+        echo -e "\n\e[90;103;2m WARNING \e[m System restart required. Consider rebooting by running:\n\e[90;43;2m \e[m         sudo shutdown -r now\n"
+    fi
 }
 
 main() {
     sudo apt-get update
     sudo apt-get upgrade -y
-    sudo apt-get install -y vim curl jq locales locales-all bash-completion python3 python3-venv
+    sudo apt-get install -y vim curl jq htop locales locales-all bash-completion python3 python3-venv
+
+    echo
+    
+    check_system_reboot
 
     # backup .bashrc file if it already exists
     if [[ -f "$HOME/.bash_aliases" ]]; then
