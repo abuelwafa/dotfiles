@@ -307,7 +307,7 @@ main() {
 
     # backup .bashrc file if it already exists
     if [[ -f "$HOME/.bash_aliases" ]]; then
-        cp ~/.bashrc ~/.bash_aliases-bak-"$(date +%s)"
+        cp ~/.bash_aliases ~/.bash_aliases-bak-"$(date +%s)"
         echo '=> old ~/.bash_aliases have been backed up'
     fi
     curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/bash/bashrc > ~/.bash_aliases
