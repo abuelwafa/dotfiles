@@ -17,10 +17,13 @@ if [[ "${TRACE-0}" == "1" ]]; then
 fi
 
 function harden_ssh() {
-    read -p "Setup and configure Nginx? (y/n) " -r harden_ssh
+    read -p "Harden SSH? (y/n) " -r harden_ssh
     echo
     if [[ $harden_ssh =~ ^[Yy]$ ]]; then
         # TODO: change to sed instead of appending to the config file
+        # backing up current sshd_config file
+        sudo cp /etc/ssh/sshd_config /etc/ssh/sshd_config-bak-"$(date +%s)"
+        
         echo "=> hardening SSH"
         # disable root login
         sudo echo 'PermitRootLogin no' >> /etc/ssh/sshd_config
@@ -42,6 +45,7 @@ function harden_ssh() {
         sudo echo 'ListenAddress $ssh_listen_address' >> /etc/ssh/sshd_config
         
         # restart the ssh service
+        echo -e "\n\e[90;103;2m WARNING \e[m Restarting SSH service. Check that your SSH connection still works in another terminal.\n"
         sudo systemctl restart ssh
     else
         echo "Skipping SSH hardening"
@@ -271,7 +275,8 @@ function setup_containerd() {
 }
 
 function install_build_essential() {
-    read -p "Install build essential?\n[no] for a production webserver. [yes] for a development machine. (y/n) " -r install_build_essential
+    echo -e "Install build essential?\n[no] for a production webserver. [yes] for a development machine. (y/n)\nInstall build-essential?: "
+    read -r install_build_essential
     echo
     if [[ $install_build_essential =~ ^[Yy]$ ]]; then
         echo "=> Installing build-essential"
@@ -288,6 +293,7 @@ function check_system_reboot() {
     if [ -f /var/run/reboot-required ]; then
         echo -e "\n\e[90;103;2m WARNING \e[m System restart required. Consider rebooting by running:\n\e[90;43;2m \e[m         sudo shutdown -r now\n"
     fi
+    echo
 }
 
 main() {
