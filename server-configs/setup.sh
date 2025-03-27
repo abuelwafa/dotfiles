@@ -278,7 +278,7 @@ function install_build_essential() {
         echo
         sudo apt-get install -y build-essential
     else
-        echo "Skipping installation of build-essential package
+        echo "Skipping installation of build-essential package"
     fi
     echo
 }
