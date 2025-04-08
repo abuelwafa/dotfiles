@@ -441,7 +441,6 @@ local ensure_installed = {
     'dockerls',
     'eslint',
     'eslint_d',
-    'flake8',
     'gofumpt',
     'goimports',
     'golangci-lint',
@@ -457,7 +456,6 @@ local ensure_installed = {
     'helm_ls',
     'html',
     'intelephense',
-    'isort',
     'java-debug-adapter',
     'java-test',
     'jdtls',
@@ -472,7 +470,6 @@ local ensure_installed = {
     'omnisharp',
     'prettierd',
     'prismals',
-    'pylint',
     'pyright',
     'ruff',
     'rust-analyzer',
@@ -495,7 +492,6 @@ local ensure_installed = {
     'yamlfmt' ,
     'yamllint',
     'yamlls',
-    'autopep8',
 }
 
 require("mason").setup({
