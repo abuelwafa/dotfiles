@@ -16,34 +16,45 @@ if [[ "${TRACE-0}" == "1" ]]; then
     set -o xtrace
 fi
 
+function setup_aws_cli() {
+    read -p "Setup and configure AWS CLI? (y/n): " -r install_aws_cli
+    echo
+    if [[ $install_aws_cli =~ ^[Yy]$ ]]; then
+        echo "=> installing AWS CLL"
+    else
+        echo "Skipping install of AWS CLI"
+    fi
+    echo
+}
+
 function harden_ssh() {
-    read -p "Harden SSH? (y/n) " -r harden_ssh
+    read -p "Harden SSH? (y/n): " -r harden_ssh
     echo
     if [[ $harden_ssh =~ ^[Yy]$ ]]; then
         # TODO: change to sed instead of appending to the config file
         # backing up current sshd_config file
         sudo cp /etc/ssh/sshd_config /etc/ssh/sshd_config-bak-"$(date +%s)"
-        
+
         echo "=> hardening SSH"
         # disable root login
         sudo echo 'PermitRootLogin no' >> /etc/ssh/sshd_config
-        
+
         # disable password authentication
         sudo echo 'PasswordAuthentication no' >> /etc/ssh/sshd_config
-    
+
         # restrict users allowed to use SSH
         read -p "Enter usernames allowed to SSH (space separated list): " -r ssh_allowed_users
         sudo echo 'AllowUsers $ssh_allowed_users' >> /etc/ssh/sshd_config
-        
+
         # change the SSH port
         read -p "SSH listen port: " -r ssh_listen_port
         sudo echo 'Port $ssh_listen_port' >> /etc/ssh/sshd_config
         command -v ufw >/dev/null 2>&1 && sudo ufw allow $ssh_listen_port/tcp
-    
+
         # change listen address of the server
         read -p "SSH listen address: " -r ssh_listen_address
         sudo echo 'ListenAddress $ssh_listen_address' >> /etc/ssh/sshd_config
-        
+
         # restart the ssh service
         echo -e "\n\e[90;103;2m WARNING \e[m Restarting SSH service. Check that your SSH connection still works in another terminal.\n"
         sudo systemctl restart ssh
@@ -54,7 +65,7 @@ function harden_ssh() {
 }
 
 function setup_nginx() {
-    read -p "Setup and configure Nginx? (y/n) " -r install_nginx
+    read -p "Setup and configure Nginx? (y/n): " -r install_nginx
     echo
     if [[ $install_nginx =~ ^[Yy]$ ]]; then
         echo "=> installing Nginx"
@@ -67,7 +78,7 @@ function setup_nginx() {
 }
 
 function setup_docker() {
-    read -p "Setup and configure Docker? (y/n) " -r install_docker
+    read -p "Setup and configure Docker? (y/n): " -r install_docker
     echo
     if [[ $install_docker =~ ^[Yy]$ ]]; then
         echo "=> installing Docker"
@@ -78,7 +89,7 @@ function setup_docker() {
 }
 
 function setup_wireguard() {
-    read -p "Setup and configure Wireguard? (y/n) " -r install_wireguard
+    read -p "Setup and configure Wireguard? (y/n): " -r install_wireguard
     echo
     if [[ $install_wireguard =~ ^[Yy]$ ]]; then
         echo "=> installing Wireguard"
@@ -113,15 +124,20 @@ EOL
 }
 
 function setup_prometheus_node_exporter() {
-    read -p "Setup and configure Prometheus Node Exporter? (y/n) " -r install_node_exporter
+    read -p "Setup and configure Prometheus Node Exporter? (y/n): " -r install_node_exporter
     echo
     if [[ $install_node_exporter =~ ^[Yy]$ ]]; then
+        echo "=> setting up user account/group for monitoring"
+        # create group and user account if they doesn't exist
+        getent group monitoring &>/dev/null || sudo groupadd monitoring
+        id -u node_exporter &>/dev/null || sudo useradd \
+            --no-create-home \
+            --no-user-group \
+            --shell /usr/sbin/nologin \
+            --groups monitoring \
+            node_exporter
+
         echo "=> installing Prometheus Node Exporter"
-
-        # tar xvfz node_exporter-*.*-amd64.tar.gz
-        # cd node_exporter-*.*-amd64
-        # ./node_exporter
-
         local hardware_name
         hardware_name="$(uname --machine)"
 
@@ -134,20 +150,75 @@ function setup_prometheus_node_exporter() {
 
         local tag_name # v2.0.3
         tag_name="$(curl -fsSL https://api.github.com/repos/prometheus/node_exporter/releases/latest | jq -r '.tag_name')"
+        echo "=> found Prometheus Node Exporter version ${tag_name}"
 
         local node_exporter_version # 2.0.3
         node_exporter_version="$(echo $tag_name | cut -d 'v' -f 2)"
 
         local file_name
-        file_name="node_exporter-${node_exporter_version}.linux-${cpu_arch}.tar.gz"
+        file_name="node_exporter-${node_exporter_version}.linux-${cpu_arch}"
 
         local download_url
-        download_url="https://github.com/prometheus/node_exporter/releases/download/${tag_name}/${file_name}"
+        download_url="https://github.com/prometheus/node_exporter/releases/download/${tag_name}/${file_name}.tar.gz"
 
-        curl -fSLO "$download_url" --output-dir /usr/local/bin
-        sudo tar Cxzvvf -f "$file_name"
+        curl -fSLO "$download_url" --output-dir /tmp
+        tar --extract -C /tmp -zvv -f "/tmp/${file_name}.tar.gz"
+        sudo mv /tmp/$file_name/node_exporter /usr/local/bin/node_exporter
+        sudo chmod ug+x /usr/local/bin/node_exporter
+        sudo chown node_exporter:monitoring /usr/local/bin/node_exporter
+
+        # cleaning up
+        rm -rf "/tmp/${file_name}"
+        rm -rf "/tmp/${file_name}.tar.gz"
 
         echo "=> Setting up systemd service"
+        sudo mkdir -p /etc/prometheus/exporters/node-exporter
+
+        sudo touch /etc/prometheus/exporters/node-exporter/web-config.yml
+        sudo tee -a /etc/prometheus/exporters/node-exporter/web-config.yml &>/dev/null << EOL
+EOL
+
+        local node_exporter_listen_address
+        read -p "Node Exporter listen address (:9100): " -r node_exporter_listen_address
+        if [[ -z "${node_exporter_listen_address}" ]]; then
+            node_exporter_listen_address=":9100"
+        fi
+
+        sudo touch /etc/systemd/system/prometheus-node-exporter.service
+        sudo tee -a /etc/systemd/system/prometheus-node-exporter.service &>/dev/null << EOL
+[Unit]
+Description=Prometheus Node Exporter
+After=network-online.target
+Requires=network-online.target
+
+[Service]
+Type=simple
+User=node_exporter
+Group=monitoring
+Restart=always
+RestartSec=3
+StartLimitInterval=0 # disables rate limiting
+ProtecHome=read-only
+NoNewPriviliges=yes
+ProtectSystem=strict
+ProtectControlGroups=true
+ProtectKernelModules=true
+ProtectKernelTunables=yes
+SyslogIdentifier=node_exporter
+ExecStart=/usr/local/bin/node_exporter \
+    --web.listen-address=$node_exporter_listen_address \
+    # --web.config.file=/etc/prometheus/web.config.yml \
+
+[Install]
+WantedBy=multi-user.target
+EOL
+        # adjust ownership and permissions
+        sudo chown --recursive node_exporter:monitoring /etc/prometheus
+
+        sudo systemctl daemon-reload
+        sudo systemctl enable prometheus-node-exporter
+        sudo systemctl start prometheus-node-exporter
+        echo -e "\n\e[90;102;2m INFO \e[m Prometheus Node exporter has been setup successfully."
     else
         echo "Skipping install of Prometheus Node Exporter"
     fi
@@ -156,7 +227,7 @@ function setup_prometheus_node_exporter() {
 
 function setup_git() {
     local install_git
-    read -p "Setup and configure git? (y/n) " -r install_git
+    read -p "Setup and configure git? (y/n): " -r install_git
     echo
     if [[ $install_git =~ ^[Yy]$ ]]; then
         echo "=> installing git"
@@ -183,7 +254,7 @@ function setup_git() {
 }
 
 function setup_tmux() {
-    read -p "Setup and configure tmux? (y/n) " -r install_tmux
+    read -p "Setup and configure tmux? (y/n): " -r install_tmux
     echo
     if [[ $install_tmux =~ ^[Yy]$ ]]; then
         echo "=> installing tmux"
@@ -202,7 +273,7 @@ function setup_tmux() {
 }
 
 function setup_ufw() {
-    read -p "Setup and configure ufw? (y/n) " -r install_ufw
+    read -p "Setup and configure ufw? (y/n): " -r install_ufw
     echo
     if [[ $install_ufw =~ ^[Yy]$ ]]; then
         echo "=> installing and configuring ufw"
@@ -220,7 +291,7 @@ function setup_ufw() {
 }
 
 function setup_fail2ban() {
-    read -p "Setup and configure fail2ban? (y/n) " -r install_fail2ban
+    read -p "Setup and configure fail2ban? (y/n): " -r install_fail2ban
     echo
     if [[ $install_fail2ban =~ ^[Yy]$ ]]; then
         echo "=> installing fail2ban"
@@ -238,7 +309,7 @@ function setup_fail2ban() {
 }
 
 function setup_containerd() {
-    read -p "Setup and configure containerd and nerdctl? (y/n) " -r install_containerd
+    read -p "Setup and configure containerd and nerdctl? (y/n): " -r install_containerd
     echo
     if [[ $install_containerd =~ ^[Yy]$ ]]; then
         echo '=> Installing nerdctl (full version)'
@@ -266,7 +337,7 @@ function setup_containerd() {
         download_url="https://github.com/containerd/nerdctl/releases/download/${tag_name}/${file_name}"
 
         curl -fSLO "$download_url"
-        sudo tar Cxzvvf /usr/local "$file_name"
+        sudo tar --extract -C /usr/local -zvv -f "$file_name"
         sudo systemctl enable --now containerd
     else
         echo "Skipping install of containerd/nerdctl"
@@ -275,7 +346,7 @@ function setup_containerd() {
 }
 
 function install_build_essential() {
-    echo -e "Install build essential?\n[no] for a production webserver. [yes] for a development machine. (y/n)\nInstall build-essential?: "
+    echo -ne "Install build essential?\n[no] for a production webserver. [yes] for a development machine. (y/n)\nInstall build-essential?: "
     read -r install_build_essential
     echo
     if [[ $install_build_essential =~ ^[Yy]$ ]]; then
@@ -296,13 +367,35 @@ function check_system_reboot() {
     echo
 }
 
+function setup_hostname() {
+    read -p "Update machine hostname? (y/n): " -r update_hostname
+    echo
+    if [[ $update_hostname =~ ^[Yy]$ ]]; then
+        echo "=> changing hostname "
+
+        echo -e "\n\e[90;103;2m WARNING \e[m System restart is required after chaning hostname. Consider rebooting by running:\n\e[90;43;2m \e[m         sudo shutdown -r now\n"
+    else
+        echo "Skipping setting hostname"
+    fi
+    echo
+}
+
 main() {
     sudo apt-get update
     sudo apt-get upgrade -y
-    sudo apt-get install -y vim curl jq htop locales locales-all bash-completion python3 python3-venv
+    sudo apt-get install -y \
+        vim \
+        curl \
+        jq \
+        htop \
+        locales \
+        locales-all \
+        bash-completion \
+        python3 \
+        python3-venv
 
     echo
-    
+
     check_system_reboot
 
     # backup .bashrc file if it already exists
@@ -324,6 +417,7 @@ main() {
     install_build_essential
     setup_git
     setup_tmux
+    setup_hostname
     setup_wireguard
     setup_ufw
     harden_ssh
@@ -331,6 +425,7 @@ main() {
     setup_fail2ban
     setup_containerd
     setup_docker
+    setup_aws_cli
     setup_prometheus_node_exporter
 }
 

@@ -86,7 +86,7 @@ set incsearch
 set ignorecase
 set smartcase
 set showmatch
-" set colorcolumn=99
+set colorcolumn=101
 set tabstop=4
 set softtabstop=4
 set shiftwidth=4
@@ -228,6 +228,8 @@ nnoremap <silent> <down> gj
 vnoremap <silent> <down> gj
 nnoremap <silent> <up> gk
 vnoremap <silent> <up> gk
+
+nnoremap ; '
 
 " redo with capital U
 noremap U <C-r>
@@ -407,7 +409,8 @@ augroup netrw_mapping
 augroup END
 
 " strip trailing whitespace
-autocmd FileType c,cpp,java,go,php,javascript,puppet,python,rust,twig,xml,yml,perl autocmd BufWritePre <buffer> :call <SID>StripTrailingWhitespaces()
+autocmd FileType * autocmd BufWritePre <buffer> :call <SID>StripTrailingWhitespaces()
+command! -nargs=0 TrimTrailingWhitespace call <SID>StripTrailingWhitespaces()
 fun! <SID>StripTrailingWhitespaces()
     let l = line(".")
     let c = col(".")

@@ -1,0 +1,105 @@
+---
+# deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ___
+  annotations:
+  labels:
+    ___: ___
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      ___: ___
+  minReadySeconds: 5
+  template:
+    metadata:
+      labels:
+        ___: ___
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:stable-alpine
+          ports:
+            - containerPort: 80
+
+----
+# service
+api
+
+# job
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: ___
+spec:
+  backoffLimit: 3
+  template:
+    spec:
+      containers:
+        - name: ___
+          image: ___
+          command: ['python3', 'some-script.py']
+        restartPolicy: Never
+
+# cronjob
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: ___
+spec:
+  schedule: "* * * * *"
+  jobTemplate:
+    # job template without name or api version
+    spec:
+      template:
+        spec:
+          containers:
+            restartPolicy: OnFailure
+            - name: ___
+              image: ___
+              imagePullPolicy: IfNotPresent
+              command: ['python3', 'some-script.py''']
+
+# configmap
+
+# secret
+
+# daemon-set
+
+# namespace
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ___
+  labels:
+
+# persistent-volume
+
+# persistent-volume-claim
+
+# cluster-role
+
+# cluster-role-binding
+
+# kustomization-patch
+apiVersion: -
+kind: -
+
+# helm-repository
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: ___
+  namespace: ___
+spec:
+  interval: 5m
+  url: ___
+
+# helm-release
+apiVersion:
+kind: HelmRelease
+metadata:
+spec:
+

@@ -41,7 +41,7 @@ zsh vim neovim git tmux gcc cmake tree htop git-delta node@22
 doggo luarocks
 bat ripgrep fzf fd fx jq yh lazygit libpq gh dust eza hcloud
 cmatrix
-kubernetes-cli helm python watchman go ansible
+kubernetes-cli helm python watchman go ansible fluxcd/tap/flux
 derailed/k9s/k9s
 lnav goaccess
 yarn
@@ -275,18 +275,28 @@ echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo s
 # for ubuntu cloud vms
 # create new non-root user
 adduser username
-# add the newly created user to the sudo group
+# or
+useradd \
+    --create-home \
+    --shell $(which bash) \
+    --user-group \
+    --groups sudo,group1,group2 \
+    username
+
+# set a password for the newly created user
+passwd username
+
+# expire the password to prompt the user to enter a new password
+passwd --expire username
+
+# add the newly created user to the sudo group if not done upon creation
 adduser username sudo
 # or
 usermod -aG sudo username
+
 # copy ssh public keys to the new user
 mkdir -p /home/username/.ssh
 cp /root/.ssh/authorized_keys /home/username/.ssh/authorized_keys
 chown --recursive username:username /home/username/.ssh
-# disable root user login
-# disable password login
-sudoedit /etc/ssh/sshd_config
-
-# download server vim config
-================================================================
+============================================================
 

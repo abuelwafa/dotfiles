@@ -12,6 +12,8 @@ function banner() {
     echo
 }
 
+export PATH=/usr/sbin/:$PATH
+
 export EDITOR='vim'
 export PAGER='less'
 export LESS='-XRi -x4'
@@ -25,13 +27,13 @@ alias ll='ls -lahp | $PAGER'
 alias md='mkdir -vp'
 alias tree='tree -a -h -f --du'
 
-function ..() { cd ../$1; }
-function ...() { cd ../../$1; }
-function ....() { cd ../../../$1; }
-function .....() { cd ../../../../$1; }
-function ......() { cd ../../../../../$1; }
-function .......() { cd ../../../../../../$1; }
-function ........() { cd ../../../../../../../$1; }
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+alias .....='cd ../../../..'
+alias ......='cd ../../../../..'
+alias .......='cd ../../../../../..'
+alias ........='cd ../../../../../../..'
 
 function rule() {
     printf "%$(tput cols)s\n" | tr " " "-"
@@ -193,6 +195,16 @@ if command -v kubectl 2>&1 >/dev/null; then
     complete -o default -F __start_kubectl kctl
 fi
 
+# enable fluxcd completions
+if command -v flux 2>&1 >/dev/null; then
+    source <(flux completion bash)
+fi
+
+# enable helm completion
+if command -v helm 2>&1 >/dev/null; then
+    source <(helm completion bash)
+fi
+
 # machine specific config/overrides
 [[ -s "$HOME/.machine-config" ]] && source "$HOME/.machine-config"
 
@@ -216,8 +228,8 @@ function virtualenv_info() {
 
 # 0 => normal text
 # 1 => bright/bold
-# 2 => 
-# 3 => 
+# 2 =>
+# 3 =>
 # 4 => underline
 
 # 30 gray
@@ -269,8 +281,17 @@ bgmagenta='\[\e[45m\]'
 bgcyan='\[\e[46m\]'
 bggray='\[\e[47m\]'
 
-export PS1="${bldgreen}$(rule)${txtrst}\n${debian_chroot:+($debian_chroot)}${bldblue}\u@\H\n${bldyellow}\w${bldpurple}\$(__git_ps1)\n\$(virtualenv_info)${bldcyan}-> ${txtrst}"
-if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
-    export PS1="${bldred}$(rule)${txtrst}\n${debian_chroot:+($debian_chroot)}${bgred}${bldwhite} \u@\H ${txtrst} ${bldred}(SSH)${txtrst} \n${bldyellow}\w${bldpurple}\$(__git_ps1)\n\$(virtualenv_info)${bldcyan}-> ${txtrst}"
-fi
+function system_reboot_prompt() {
+    if [ -f /var/run/reboot-required ]; then
+        echo -ne "${bldred} [ REBOOT REQUIRED ]${txtrst}"
+    fi
+}
+
+function in_ssh_prompt() {
+    if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
+        echo -ne "${bldred} (SSH)${txtrst}"
+    fi
+}
+
+export PS1="${bldgreen}$(rule)${txtrst}\n${debian_chroot:+($debian_chroot)}${bldblue}\u@\H${txtrst}$(in_ssh_prompt)$(system_reboot_prompt)\n${bldyellow}\w${bldpurple}\$(__git_ps1)\n\$(virtualenv_info)${bldcyan}-> ${txtrst}"
 banner

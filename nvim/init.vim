@@ -150,7 +150,7 @@ vim.opt.cindent = true
 vim.opt.incsearch = true
 vim.opt.showmatch = true
 
-vim.opt.colorcolumn = '99'
+vim.opt.colorcolumn = '101'
 
 vim.opt.foldenable = true
 vim.opt.foldmethod = "indent"
@@ -1065,6 +1065,8 @@ nnoremap <silent> <down> gj
 vnoremap <silent> <down> gj
 nnoremap <silent> <up> gk
 vnoremap <silent> <up> gk
+
+nnoremap ; '
 
 lua << EOF
 -- redo with capital U

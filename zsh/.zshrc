@@ -1,11 +1,11 @@
 #!/bin/zsh
 
 # Path to your oh-my-zsh installation.
-export ZSH="$HOME/projects/ohmyzsh"
+export ZSH="$HOME/workspace/ohmyzsh"
 
 # If you come from bash you might have to change your $PATH.
 export PATH="$HOME/bin:/usr/local/bin:$PATH"
-export PATH="$HOME/projects/git-fuzzy/bin:$PATH"
+export PATH="$HOME/workspace/git-fuzzy/bin:$PATH"
 
 export ANDROID_SDK_ROOT="$ANDROID_HOME"
 export PATH="$PATH:$ANDROID_HOME/emulator"
@@ -42,7 +42,9 @@ export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 export LC_CTYPE=en_US.UTF-8
 export FX_THEME=6
-export PAGER='less -XFR'
+export PAGER='less'
+export LESS='-FR -x4'
+# export LESS='-XFRi -x4'
 
 export BASE16_THEME_DEFAULT="seti"
 
@@ -62,13 +64,13 @@ alias vim='nvim'
 # alias vi='nvim'
 alias vimdiff='nvim -d'
 
-function ..() { cd ../$1; }
-function ...() { cd ../../$1; }
-function ....() { cd ../../../$1; }
-function .....() { cd ../../../../$1; }
-function ......() { cd ../../../../../$1; }
-function .......() { cd ../../../../../../$1; }
-function ........() { cd ../../../../../../../$1; }
+alias ..='cd ../$1; '
+alias ...='cd ../../$1; '
+alias ....='cd ../../..'
+alias .....='cd ../../../..'
+alias ......='cd ../../../../..'
+alias .......='cd ../../../../../..'
+alias ........='cd ../../../../../../..'
 
 alias y='yarn'
 alias yarn-clean='yarn cache clean'
@@ -228,10 +230,10 @@ function pg_connect() {
 
 function pg_select() {
     local db_name
-    db_name="$(cat $HOME/projects/db-connections/connections.json | jq -r '.[] | .name' | fzf)"
+    db_name="$(cat $HOME/workspace/db-connections/connections.json | jq -r '.[] | .name' | fzf)"
 
     local connection_string
-    connection_string="$(cat $HOME/projects/db-connections/connections.json | jq -r "map(select(.name == \"$db_name\")) | .[0].url")"
+    connection_string="$(cat $HOME/workspace/db-connections/connections.json | jq -r "map(select(.name == \"$db_name\")) | .[0].url")"
 
     if [[ $connection_string =~ ^postgres ]]; then
         local cmd="pgcli $connection_string"
@@ -275,7 +277,7 @@ alias pomodoro-start="tclock timer -d 45m -M"
 export BAT_THEME="base16"
 
 # Base16 Shell
-BASE16_SHELL_PATH="$HOME/projects/tinted-shell"
+BASE16_SHELL_PATH="$HOME/workspace/tinted-shell"
 [ -n "$PS1" ] &&
     [ -s "$BASE16_SHELL_PATH/profile_helper.sh" ] &&
     source "$BASE16_SHELL_PATH/profile_helper.sh"
@@ -319,4 +321,4 @@ export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
 
 # machine specific config/overrides
-[[ -s "$HOME/projects/.machine-config" ]] && source "$HOME/projects/.machine-config"
+[[ -s "$HOME/workspace/.machine-config" ]] && source "$HOME/workspace/.machine-config"

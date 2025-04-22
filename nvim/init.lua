@@ -23,7 +23,7 @@ vim.opt.cindent = true
 vim.opt.incsearch = true
 vim.opt.showmatch = true
 
-vim.opt.colorcolumn = "99"
+vim.opt.colorcolumn = "101"
 
 vim.opt.foldenable = true
 vim.opt.foldmethod = "indent"
@@ -1159,6 +1159,9 @@ vim.api.nvim_set_keymap("n", "<down>", "gj", { noremap = true, silent = true })
 vim.api.nvim_set_keymap("v", "<down>", "gj", { noremap = true, silent = true })
 vim.api.nvim_set_keymap("n", "<up>", "gk", { noremap = true, silent = true })
 vim.api.nvim_set_keymap("v", "<up>", "gk", { noremap = true, silent = true })
+
+-- use ; to set marks instead of '
+vim.api.nvim_set_keymap("n", ";", "'", { noremap = true, silent = false })
 
 -- quit vim
 vim.api.nvim_set_keymap("n", "qqq", "<esc>:NvimTreeClose<cr>:q<CR>", { noremap = true })
