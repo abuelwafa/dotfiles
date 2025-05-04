@@ -15,8 +15,8 @@ fi
 cd "$(dirname "$0")"
 
 main() {
-    echo "creating projects folder"
-    mkdir -p ~/projects
+    echo "creating workspace folder"
+    mkdir -p ~/workspace
 
     echo "=> Installing essential apt packages"
     sudo apt install --assume-yes curl git build-essential
@@ -73,22 +73,22 @@ main() {
         rbenv \
         ruby-build
 
-    ln -s ~/projects/dotfiles/.gitconfig ~/.gitconfig
+    ln -s ~/workspace/dotfiles/.gitconfig ~/.gitconfig
 
     echo "=> changing default shell to ZSH"
     chsh -s $(which zsh)
 
     echo "=> Cloning repositories"
-    git clone git@github.com:ohmyzsh/ohmyzsh.git ~/projects/ohmyzsh
-    git clone git@github.com:bigH/git-fuzzy.git ~/projects/git-fuzzy
-    git clone git@github.com:tinted-theming/tinted-shell.git ~/projects/tinted-shell
-    git clone git@github.com:tmux-plugins/tpm.git ~/projects/tpm
+    git clone git@github.com:ohmyzsh/ohmyzsh.git ~/workspace/ohmyzsh
+    git clone git@github.com:bigH/git-fuzzy.git ~/workspace/git-fuzzy
+    git clone git@github.com:tinted-theming/tinted-shell.git ~/workspace/tinted-shell
+    git clone git@github.com:tmux-plugins/tpm.git ~/workspace/tpm
 
     echo "=> Setting up Neovim config"
     mkdir -p ~/.config/nvim
     mkdir -p ~/.nvim/_temp
     mkdir -p ~/.nvim/_backup
-    ln -s ~/projects/dotfiles/nvim/init.vim ~/.config/nvim/init.lua
+    ln -s ~/workspace/dotfiles/nvim/init.vim ~/.config/nvim/init.lua
 
     # -n return after n characters, useful for yes/no questions with a value of 1
     # read -p "your prompt question here? (y/n) " -n 1 -r install_docker
@@ -99,7 +99,7 @@ main() {
     # fi
 
     echo "=> Wiring up configurations"
-    ln -s ~/projects/dotfiles/.zshrc.ubuntu ~/.zshrc
+    ln -s ~/workspace/dotfiles/.zshrc.ubuntu ~/.zshrc
 
     echo "=> Installing SDKMAN"
     curl -s "https://get.sdkman.io" | bash

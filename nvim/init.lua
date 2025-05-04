@@ -227,7 +227,7 @@ endfunction
             "DBUIFindBuffer",
         },
         init = function()
-            vim.g.db_ui_save_location = "~/projects/db-connections"
+            vim.g.db_ui_save_location = "~/workspace/db-connections"
             vim.g.db_ui_tmp_query_location = "~/.db-queries"
             -- vim.g.db_ui_use_nvim_notify = 1
             vim.g.db_ui_use_nerd_fonts = 1
@@ -996,14 +996,14 @@ vim.api.nvim_set_keymap(
 vim.api.nvim_set_keymap("n", "<leader>gd", ':lua require"gitsigns".reset_hunk()<CR>', { noremap = true, silent = true })
 
 -- faster movoment - multiple line jumping
-vim.api.nvim_set_keymap("n", "<C-j>", "10j", { noremap = true })
-vim.api.nvim_set_keymap("v", "<C-j>", "10j", { noremap = true })
-vim.api.nvim_set_keymap("n", "<C-k>", "10k", { noremap = true })
-vim.api.nvim_set_keymap("v", "<C-k>", "10k", { noremap = true })
+vim.api.nvim_set_keymap("n", "<C-j>", "10jzz", { noremap = true })
+vim.api.nvim_set_keymap("v", "<C-j>", "10jzz", { noremap = true })
+vim.api.nvim_set_keymap("n", "<C-k>", "10kzz", { noremap = true })
+vim.api.nvim_set_keymap("v", "<C-k>", "10kzz", { noremap = true })
 
 -- single and double quotes in normal mode navigate forward and backwards 24 lines
-vim.api.nvim_set_keymap("n", "'", "20j", { noremap = true })
-vim.api.nvim_set_keymap("n", '"', "20k", { noremap = true })
+vim.api.nvim_set_keymap("n", "'", "20jzz", { noremap = true })
+vim.api.nvim_set_keymap("n", '"', "20kzz", { noremap = true })
 
 -- redo with capital U
 vim.api.nvim_set_keymap("n", "U", "<C-r>", { noremap = true })

@@ -1026,14 +1026,14 @@ augroup END
 
 lua << EOF
 -- faster movoment - multiple line jumping
-vim.api.nvim_set_keymap('n', '<C-j>', '10j', {noremap = true})
-vim.api.nvim_set_keymap('v', '<C-j>', '10j', {noremap = true})
-vim.api.nvim_set_keymap('n', '<C-k>', '10k', {noremap = true})
-vim.api.nvim_set_keymap('v', '<C-k>', '10k', {noremap = true})
+vim.api.nvim_set_keymap('n', '<C-j>', '10jzz', {noremap = true})
+vim.api.nvim_set_keymap('v', '<C-j>', '10jzz', {noremap = true})
+vim.api.nvim_set_keymap('n', '<C-k>', '10kzz', {noremap = true})
+vim.api.nvim_set_keymap('v', '<C-k>', '10kzz', {noremap = true})
 
 -- single and double quotes in normal mode navigate forward and backwards 24 lines
-vim.api.nvim_set_keymap('n', "'", '20j', {noremap = true})
-vim.api.nvim_set_keymap('n', '"', '20k', {noremap = true})
+vim.api.nvim_set_keymap('n', "'", '20jzz', {noremap = true})
+vim.api.nvim_set_keymap('n', '"', '20kzz', {noremap = true})
 EOF
 
 "split resizing
@@ -1188,7 +1188,7 @@ command! -nargs=0 WriteWithSudo :w !sudo tee % >/dev/null
 cnoreabbrev ww WriteWithSudo
 
 " database UI
-let g:db_ui_save_location = '~/projects/db-connections'
+let g:db_ui_save_location = '~/workspace/db-connections'
 let g:db_ui_tmp_query_location = '~/.db-queries'
 let g:db_ui_use_nvim_notify = 1
 let g:db_ui_use_nerd_fonts = 1

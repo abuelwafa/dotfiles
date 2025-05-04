@@ -1,5 +1,5 @@
 [general]
-working_directory = "./projects"
+working_directory = "./workspace"
 import = []
 
 [window]

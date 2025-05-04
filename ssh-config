@@ -1,5 +1,3 @@
-Include ~/projects/ssh_config
-
 Host *
   AddKeysToAgent yes
   UseKeychain yes

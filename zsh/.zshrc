@@ -77,7 +77,7 @@ alias yarn-clean='yarn cache clean'
 alias yarn-upgrade='yarn upgrade-interactive --latest'
 alias npm-upgrade='npx npm-upgrade check && npm update --save'
 alias npm-clean='npm cache clean --force'
-alias rnstart="watchman-clean && y start --reset-cache"
+alias rnstart="watchman-clean && yarn start --reset-cache"
 alias gradle-clean="cd android && ./gradlew clean && .."
 alias blowup="rm -rf node_modules ios/Pods && yarn cache clean && watchman watch-del-all && pod cache clean --all && npm cache clean --force"
 
@@ -321,4 +321,4 @@ export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
 
 # machine specific config/overrides
-[[ -s "$HOME/workspace/.machine-config" ]] && source "$HOME/workspace/.machine-config"
+[[ -s "$HOME/.machine-config" ]] && source "$HOME/.machine-config"

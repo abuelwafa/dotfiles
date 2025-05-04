@@ -37,23 +37,23 @@ function harden_ssh() {
 
         echo "=> hardening SSH"
         # disable root login
-        sudo echo 'PermitRootLogin no' >> /etc/ssh/sshd_config
+        sudo echo 'PermitRootLogin no' >>/etc/ssh/sshd_config
 
         # disable password authentication
-        sudo echo 'PasswordAuthentication no' >> /etc/ssh/sshd_config
+        sudo echo 'PasswordAuthentication no' >>/etc/ssh/sshd_config
 
         # restrict users allowed to use SSH
         read -p "Enter usernames allowed to SSH (space separated list): " -r ssh_allowed_users
-        sudo echo 'AllowUsers $ssh_allowed_users' >> /etc/ssh/sshd_config
+        sudo echo 'AllowUsers $ssh_allowed_users' >>/etc/ssh/sshd_config
 
         # change the SSH port
         read -p "SSH listen port: " -r ssh_listen_port
-        sudo echo 'Port $ssh_listen_port' >> /etc/ssh/sshd_config
+        sudo echo 'Port $ssh_listen_port' >>/etc/ssh/sshd_config
         command -v ufw >/dev/null 2>&1 && sudo ufw allow $ssh_listen_port/tcp
 
         # change listen address of the server
         read -p "SSH listen address: " -r ssh_listen_address
-        sudo echo 'ListenAddress $ssh_listen_address' >> /etc/ssh/sshd_config
+        sudo echo 'ListenAddress $ssh_listen_address' >>/etc/ssh/sshd_config
 
         # restart the ssh service
         echo -e "\n\e[90;103;2m WARNING \e[m Restarting SSH service. Check that your SSH connection still works in another terminal.\n"
@@ -94,8 +94,8 @@ function setup_wireguard() {
     if [[ $install_wireguard =~ ^[Yy]$ ]]; then
         echo "=> installing Wireguard"
         sudo apt-get install -y wireguard wireguard-tools
-        wg genkey > /etc/wireguard/wg0.key
-        wg pubkey < /etc/wireguard/wg0.key > /etc/wireguard/wg0.key.pub
+        wg genkey >/etc/wireguard/wg0.key
+        wg pubkey </etc/wireguard/wg0.key >/etc/wireguard/wg0.key.pub
 
         read -p "VPN server host: " -r vpn_server_host
         read -p "VPN server port: " -r vpn_server_port
@@ -163,7 +163,7 @@ function setup_prometheus_node_exporter() {
 
         curl -fSLO "$download_url" --output-dir /tmp
         tar --extract -C /tmp -zvv -f "/tmp/${file_name}.tar.gz"
-        sudo mv /tmp/$file_name/node_exporter /usr/local/bin/node_exporter
+        sudo mv "/tmp/${file_name}/node_exporter" /usr/local/bin/node_exporter
         sudo chmod ug+x /usr/local/bin/node_exporter
         sudo chown node_exporter:monitoring /usr/local/bin/node_exporter
 
@@ -175,17 +175,17 @@ function setup_prometheus_node_exporter() {
         sudo mkdir -p /etc/prometheus/exporters/node-exporter
 
         sudo touch /etc/prometheus/exporters/node-exporter/web-config.yml
-        sudo tee -a /etc/prometheus/exporters/node-exporter/web-config.yml &>/dev/null << EOL
+        sudo tee -a /etc/prometheus/exporters/node-exporter/web-config.yml &>/dev/null <<EOL
 EOL
 
         local node_exporter_listen_address
-        read -p "Node Exporter listen address (:9100): " -r node_exporter_listen_address
+        read -p "Node Exporter listen address (127.0.0.1:9100): " -r node_exporter_listen_address
         if [[ -z "${node_exporter_listen_address}" ]]; then
-            node_exporter_listen_address=":9100"
+            node_exporter_listen_address="127.0.0.1:9100"
         fi
 
         sudo touch /etc/systemd/system/prometheus-node-exporter.service
-        sudo tee -a /etc/systemd/system/prometheus-node-exporter.service &>/dev/null << EOL
+        sudo tee -a /etc/systemd/system/prometheus-node-exporter.service &>/dev/null <<EOL
 [Unit]
 Description=Prometheus Node Exporter
 After=network-online.target
@@ -212,6 +212,12 @@ ExecStart=/usr/local/bin/node_exporter \
 [Install]
 WantedBy=multi-user.target
 EOL
+        local edit_prom_node_exporter_service_file
+        read -p "Would you like to edit the systemd service before running? (y/n): " -r edit_prom_node_exporter_service_file
+        if [[ $edit_prom_node_exporter_service_file =~ ^[Yy]$ ]]; then
+            sudoedit /etc/systemd/system/prometheus-node-exporter.service
+        fi
+
         # adjust ownership and permissions
         sudo chown --recursive node_exporter:monitoring /etc/prometheus
 
@@ -265,7 +271,7 @@ function setup_tmux() {
             cp ~/.tmux.conf ~/.tmux.conf-bak-"$(date +%s)"
             echo '=> old ~/.tmux.conf have been backed up'
         fi
-        curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/tmux/tmux-minimal.conf > ~/.tmux.conf
+        curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/tmux/tmux-minimal.conf >~/.tmux.conf
     else
         echo "Skipping setup of TMUX"
     fi
@@ -328,7 +334,7 @@ function setup_containerd() {
         tag_name="$(curl -fsSL https://api.github.com/repos/containerd/nerdctl/releases/latest | jq -r '.tag_name')"
 
         local nerdctl_version # 2.0.3
-        nerdctl_version="$(echo $tag_name | cut -d 'v' -f 2)"
+        nerdctl_version="$(echo "$tag_name" | cut -d 'v' -f 2)"
 
         local file_name
         file_name="nerdctl-full-${nerdctl_version}-linux-${cpu_arch}.tar.gz"
@@ -398,19 +404,19 @@ main() {
 
     check_system_reboot
 
-    # backup .bashrc file if it already exists
+    # backup .bash_aliases file if it already exists
     if [[ -f "$HOME/.bash_aliases" ]]; then
         cp ~/.bash_aliases ~/.bash_aliases-bak-"$(date +%s)"
         echo '=> old ~/.bash_aliases have been backed up'
     fi
-    curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/bash/bashrc > ~/.bash_aliases
+    curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/bash/bashrc >~/.bash_aliases
 
     # backup .vimrc file if it already exists
     if [[ -f "$HOME/.vimrc" ]]; then
         cp ~/.vimrc ~/.vimrc-bak-"$(date +%s)"
         echo '=> old ~/.vimrc have been backed up'
     fi
-    curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/vim/.vimrc > ~/.vimrc
+    curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/vim/.vimrc >~/.vimrc
 
     echo
 

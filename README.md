@@ -7,9 +7,9 @@ ssh-keygen -t rsa -b 2048 -C "your_email@domain.com"
 ```
 then add the public key to [Github](https://github.com/settings/keys)
 
-### Create projects folder
+### Create workspace folder
 ```
-mkdir -p ~/projects
+mkdir -p ~/workspace
 ```
 
 ### Clone this repo

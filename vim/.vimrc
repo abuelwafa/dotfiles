@@ -184,14 +184,14 @@ augroup QuickFix
 augroup END
 
 " faster movoment - multiple line jumping
-nmap <C-j> 10j
-vmap <C-j> 10j
-nmap <C-k> 10k
-vmap <C-k> 10k
+nmap <C-j> 10jzz
+vmap <C-j> 10jzz
+nmap <C-k> 10kzz
+vmap <C-k> 10kzz
 
 " single and double quotes in normal mode navigate forward and backwards 20 lines
-nnoremap ' 20j
-nnoremap " 20k
+nnoremap ' 20jzz
+nnoremap " 20kzz
 
 " split resizing
 " increase vertically

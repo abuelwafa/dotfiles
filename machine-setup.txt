@@ -46,7 +46,8 @@ derailed/k9s/k9s
 lnav goaccess
 yarn
 
-Desktop only: act minikube qemu lima
+Desktop only (and if needed): act minikube qemu lima
+kubectx and kubens
 
 # install GNU version of sed (for MACOS)
 # MacOS doesn't have the watch command
@@ -253,7 +254,7 @@ https://github.com/leits/MeetingBar
 =============================================================
 MACOS
 # create ssh config file with config to use ssh keys without password
-echo "Include ~/workspace/dotfiles/ssh-config-mac" >> ~/.ssh/config
+echo "Include ~/workspace/dotfiles/ssh-config-mac" | cat - ~/.ssh/config > ~/.ssh/temp && mv ~/.ssh/temp ~/.ssh/config
 =============================================================
 MACOS
 # optional: disable accented characters (key press and hold to view accents)

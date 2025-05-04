@@ -37,7 +37,7 @@ apk add zsh
 sudo vim /etc/passwd
 # change the shell path to `/bin/zsh`
 -------------------------
-mkdir ~/projects
+mkdir ~/workspace
 -------------------------
 # clone dotfiles and ohmyzsh repos
 -------------------------

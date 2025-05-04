@@ -15,6 +15,7 @@ function banner() {
 export PATH=/usr/sbin/:$PATH
 
 export EDITOR='vim'
+export SYSTEMD_EDITOR='vim'
 export PAGER='less'
 export LESS='-XRi -x4'
 export LANG=en_US.UTF-8
@@ -85,7 +86,7 @@ alias greset='git checkout --'
 alias gclean='git clean -ifdx'
 
 function gstash() {
-    if [ -z $1 ]; then
+    if [ -z "$1" ]; then
         git stash list
     else
         git stash show stash@{$1} -p
@@ -93,7 +94,7 @@ function gstash() {
 }
 
 function gdropstash() {
-    if [ -z $1 ]; then
+    if [ -z "$1" ]; then
         echo "Specify the id of the stash you want to drop."
     else
         git stash drop stash@{$1}
@@ -101,7 +102,7 @@ function gdropstash() {
 }
 
 function gpopstash() {
-    if [ -z $1 ]; then
+    if [ -z "$1" ]; then
         echo "Specify the id of the stash you want to apply."
     else
         git stash pop stash@{$1}
@@ -114,6 +115,7 @@ alias mv='mv -i'
 alias remove='rm -rf'
 
 alias kctl='kubectl'
+alias sctl='systemctl'
 alias docker='sudo nerdctl'
 
 alias python='python3'
@@ -138,9 +140,10 @@ alias lzd='docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock lazy
 function jwtparse() {
     echo -n "Enter JWT token: "
 
-    read token
+    read -r token
 
-    local payload="$(echo -n $token | cut -d "." -f 2)"
+    local payload
+    payload="$(echo -n "$token" | cut -d "." -f 2)"
     local result="$payload"
 
     # pad the end of string by appending = to make
@@ -152,12 +155,12 @@ function jwtparse() {
         result="$payload"'='
     fi
 
-    echo -n $result | base64 -d | jq '.' | $PAGER
+    echo -n "$result" | base64 -d | jq '.' | $PAGER
 }
 
 function pg_connect() {
     echo -n "Enter DB host: "
-    read db_host
+    read -r db_host
 
     echo -n "Enter DB name: "
     read db_name
