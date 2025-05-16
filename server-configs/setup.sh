@@ -94,8 +94,13 @@ function setup_wireguard() {
     if [[ $install_wireguard =~ ^[Yy]$ ]]; then
         echo "=> installing Wireguard"
         sudo apt-get install -y wireguard wireguard-tools
-        wg genkey >/etc/wireguard/wg0.key
-        wg pubkey </etc/wireguard/wg0.key >/etc/wireguard/wg0.key.pub
+
+        # generate wireguard private key only if it doesn't exist
+        if [[ ! -f "/etc/wireguard/wg0.key" ]]; then
+            wg genkey | sudo tee /etc/wireguard/wg0.key &>/dev/null
+        fi
+
+        sudo cat /etc/wireguard/wg0.key | wg pubkey | sudo tee /etc/wireguard/wg0.key.pub &>/dev/null
 
         read -p "VPN server host: " -r vpn_server_host
         read -p "VPN server port: " -r vpn_server_port
@@ -190,12 +195,13 @@ EOL
 Description=Prometheus Node Exporter
 After=network-online.target
 Requires=network-online.target
+Wants=network-online.target
 
 [Service]
 Type=simple
 User=node_exporter
 Group=monitoring
-Restart=always
+Restart=on-failure
 RestartSec=3
 StartLimitInterval=0 # disables rate limiting
 ProtecHome=read-only
@@ -219,6 +225,7 @@ EOL
         fi
 
         # adjust ownership and permissions
+        sudo chmod 664 /etc/systemd/system/prometheus-node-exporter.service
         sudo chown --recursive node_exporter:monitoring /etc/prometheus
 
         sudo systemctl daemon-reload

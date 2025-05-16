@@ -272,9 +272,6 @@ bldwhite='\[\e[1;37m\]'
 # Text Reset
 txtrst='\[\e[m\]'
 
-export GIT_PS1_SHOWCONFLICTSTATE=1
-export GIT_PS1_SHOWSTASHSTATE=1
-
 bgblack='\[\e[40m\]'
 bgred='\[\e[41m\]'
 bggreen='\[\e[42m\]'
@@ -296,5 +293,15 @@ function in_ssh_prompt() {
     fi
 }
 
+export GIT_PS1_SHOWCONFLICTSTATE=1
+export GIT_PS1_SHOWSTASHSTATE=1
+export PROMPT_DIRTRIM=0
 export PS1="${bldgreen}$(rule)${txtrst}\n${debian_chroot:+($debian_chroot)}${bldblue}\u@\H${txtrst}$(in_ssh_prompt)$(system_reboot_prompt)\n${bldyellow}\w${bldpurple}\$(__git_ps1)\n\$(virtualenv_info)${bldcyan}-> ${txtrst}"
+
+# run the ssh agent
+function start_ssh_agent() {
+    eval $(ssh-agent -s)
+    ssh-add ~/.ssh/id_ed25519
+}
+
 banner

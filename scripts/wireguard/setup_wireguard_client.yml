@@ -1,0 +1,63 @@
+---
+# https://docs.sweeting.me/s/wireguard
+- name: setup wireguard vpn client
+  hosts: all
+  gather_facts: yes
+  become: yes
+  tasks:
+  - name: update wireguard and wireguard-tools
+    ansible.builtin.apt:
+        name:
+        - wireguard
+        - wireguard-tools
+        state: latest
+        update_cache: true
+
+  - name: check key file existence
+    ansible.builtin.stat:
+        path: /etc/wireguard/wire.key
+    register: keyfile
+
+  - name: check public key file existence
+    ansible.builtin.stat:
+        path: /etc/wireguard/wire.key.pub
+    register: public_keyfile
+
+  - name: create public/private key files if doesn't exist
+    ansible.builtin.shell: |
+        wg genkey > /etc/wireguard/wire.key
+        wg pubkey < /etc/wireguard/wire.key > /etc/wireguard/wire.key.pub
+    when: keyfile.stat.exists == False
+
+  - name: create public key file if doesn't exist
+    ansible.builtin.shell: |
+        wg pubkey < /etc/wireguard/wire.key > /etc/wireguard/wire.key.pub
+    when: public_keyfile.stat.exists == False
+
+  - name: read the private key in memory
+    ansible.builtin.slurp:
+        src: /etc/wireguard/wire.key
+    register: private_key
+
+  - name: create wireguard config file
+    ansible.builtin.template:
+        src: wg0.conf.template
+        dest: /etc/wireguard/wg0.conf
+        owner: root
+        group: root
+        mode: '644'
+    vars:
+        PRIVATE_KEY: "{{ private_key['content'] | b64decode }}"
+        VPN_ADDRESS: "{{ vpn_address }}"
+
+  - name: start the wg-quick service
+    ansible.builtin.systemd_service:
+        name: wg-quick@wg0.service
+        enabled: true
+        force: true
+        state: started
+
+  - name: reload wireguard network interface
+    ansible.builtin.shell: |-
+        wg-quick down wg0
+        wg-quick up wg0

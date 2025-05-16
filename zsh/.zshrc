@@ -249,6 +249,15 @@ function pg_select() {
     fi
 }
 
+function ssh_connect() {
+    local selected_host
+    selected_host="$(grep -P "^Host ([^*]+)$" $HOME/.ssh/config | sed 's/Host //' | fzf)"
+
+    if [ ! -z "$selected_host" ]; then
+        eval "ssh $selected_host"
+    fi
+}
+
 # remember when copying directories, adding a slash to the directory name like directory/
 # makes the copying action to perform on the contents of the directory and not the directory itself
 alias cp='cp -iR'
