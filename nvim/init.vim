@@ -73,6 +73,7 @@ Plug 'nvim-tree/nvim-tree.lua'
 Plug 'nvim-neo-tree/neo-tree.nvim'
 Plug 'nvim-tree/nvim-web-devicons'
 Plug 'windwp/nvim-ts-autotag'
+Plug 'olimorris/codecompanion.nvim'
 
 Plug 'neovim/nvim-lspconfig'
 Plug 'williamboman/mason.nvim'
@@ -99,7 +100,7 @@ Plug 'mfussenegger/nvim-dap'
 Plug 'rcarriga/nvim-dap-ui'
 Plug 'nvim-telescope/telescope-dap.nvim'
 
-" Plug 'mfussenegger/nvim-lint'
+Plug 'mfussenegger/nvim-lint'
 
 " Plug 'pwntester/octo.nvim'
 
@@ -351,9 +352,6 @@ require("conform").setup({
         javascriptreact = { "prettierd" },
         typescript = { "prettierd" },
         typescriptreact = { "prettierd" },
-        sh = { "shfmt" },
-        bash = { "shfmt" },
-        zsh = { "shfmt" },
         css = { "stylelint" },
         sql = { "sql_fluff" },
         tf = { "terraform_fmt" },
@@ -412,6 +410,13 @@ require("rest-nvim").setup({
     env_file = '.env',
     custom_dynamic_variables = {},
     yank_dry_run = true,
+})
+
+require("codecompanion").setup({
+    strategies = {
+        chat = { adapter = "openai" }
+    },
+    inline = { adapter = "openai" }
 })
 
 ------------------------------------------------
@@ -484,7 +489,6 @@ local ensure_installed = {
     'pyright',
     'ruff',
     'rust-analyzer',
-    'shfmt',
     'shellcheck',
     'sqlfluff',
     'stylelint',
@@ -592,6 +596,17 @@ require("mason-lspconfig").setup({
     }
 })
 
+-- setup linting
+require('lint').linters_by_ft = {
+    markdown = {'vale'},
+}
+vim.api.nvim_create_autocmd({ "BufWritePost" }, {
+    callback = function()
+        require("lint").try_lint()
+    end,
+})
+
+-- setup completion
 local cmp = require 'cmp'
 cmp.setup({
     formatting = {
@@ -649,6 +664,7 @@ cmp.setup({
         { name = 'luasnip' },
         { name = 'buffer' },
         { name = 'dotenv', option = { load_shell = false, show_content_on_docs = false } },
+        { name = "codecompanion" }
     })
 })
 
