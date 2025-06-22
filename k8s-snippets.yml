@@ -3,103 +3,153 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ___
-  annotations:
-  labels:
-    ___: ___
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      ___: ___
-  minReadySeconds: 5
-  template:
-    metadata:
-      labels:
+    name: ___
+    annotations:
+    labels:
         ___: ___
-    spec:
-      containers:
-        - name: nginx
-          image: nginx:stable-alpine
-          ports:
-            - containerPort: 80
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            ___: ___
+    minReadySeconds: 5
+    template:
+        metadata:
+            labels:
+                ___: ___
+        spec:
+            # initContainers:
+            containers:
+                - name: nginx
+                  image: nginx:stable-alpine
+                  ports:
+                    - containerPort: 80
 
-----
+---
 # service
-api
+apiVersion: v1
 
+---
 # job
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: ___
+    name: ___
 spec:
-  backoffLimit: 3
-  template:
-    spec:
-      containers:
-        - name: ___
-          image: ___
-          command: ['python3', 'some-script.py']
-        restartPolicy: Never
+    backoffLimit: 3
+    template:
+        spec:
+            restartPolicy: Never
+            containers:
+                - name: ___
+                  image: busybox:1.28
+                  command: ['sh', '-c', 'echo "hello kubernets" && sleep 3600']
+                  # command: ['python3', 'some-script.py']
 
+---
 # cronjob
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: ___
+    name: ___
 spec:
-  schedule: "* * * * *"
-  jobTemplate:
-    # job template without name or api version
-    spec:
-      template:
+    schedule: "* * * * *"
+    jobTemplate:
+        # job template without name or api version
         spec:
-          containers:
-            restartPolicy: OnFailure
-            - name: ___
-              image: ___
-              imagePullPolicy: IfNotPresent
-              command: ['python3', 'some-script.py''']
+            template:
+                spec:
+                    containers:
+                        - name: ___
+                          restartPolicy: OnFailure
+                          image: ___
+                          imagePullPolicy: IfNotPresent
+                          command: ['python3', 'some-script.py''']
 
+---
 # configmap
 
+---
 # secret
 
+---
 # daemon-set
 
+---
 # namespace
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: ___
-  labels:
+    name: ___
+    labels:
 
+---
 # persistent-volume
 
+---
 # persistent-volume-claim
 
+---
 # cluster-role
 
+---
 # cluster-role-binding
 
-# kustomization-patch
-apiVersion: -
-kind: -
+---
+# flux kustomization
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+    name: ___
+    namespace: flux-system
+spec:
+    interval: 60m0s
+    wait: true
+    timeout: 3m0s
+    retryInterval: 2m0s
+    prune: true
+    force: false
+    targetNamespace: ___
+    sourceRef:
+        kind: GitRepository
+        name: webapp
+        namespace: apps
+    path: "./deploy/production"
 
+---
+# kustomization-patch
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+    - deployment.yaml
+
+---
 # helm-repository
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: HelmRepository
 metadata:
-  name: ___
-  namespace: ___
+    name: ___
+    namespace: ___
 spec:
-  interval: 5m
-  url: ___
+    interval: 5m
+    url: ___
 
+---
 # helm-release
-apiVersion:
+apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
+    name: ___
+    namespace: ___
 spec:
-
+    releaseName: ___
+    interval: 10m
+    timeout: 5m
+    chart:
+        spec:
+            chart: ___
+            # version: latest
+            sourceRef:
+                kind: HelmRepository
+                name: ___
+    values:

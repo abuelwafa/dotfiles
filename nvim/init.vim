@@ -225,8 +225,6 @@ set guicursor=i:block
 let g:EditorConfig_exclude_patterns = ['fugitive://.*', 'scp://.*']
 au FileType gitcommit let b:EditorConfig_disable = 1
 
-
-
 " git blame configuration
 let g:gitblame_date_format = '%d %b %y'
 let g:gitblame_message_when_not_committed = ''
@@ -481,13 +479,12 @@ local ensure_installed = {
     'tailwindcss',
     'taplo',
     'templ',
-    'terraformls',
+    'tofu-ls',
     'tflint',
     'typescript-language-server',
     'vale',
     'vimls',
     'vint',
-    'volar',
     'xmlformatter',
     'yamlfmt' ,
     'yamllint',
@@ -841,7 +838,7 @@ require("nvim-tree").setup({
     end,
     view = {
         centralize_selection = false,
-        width = { min = 32, max = -1, padding = 1 },
+        width = 32,
         side = "left",
     },
     renderer = {
@@ -1140,6 +1137,10 @@ vim.api.nvim_set_keymap("n", "qqq", "<esc>:NvimTreeClose<cr>:q<CR>", { noremap =
 vim.api.nvim_set_keymap("n", "<leader>fq", "<esc>:NvimTreeClose<CR>:q!<CR>", { noremap = true })
 EOF
 
+" override default ft plugin to update tab width for yaml files
+autocmd FileType yaml set tabstop=4
+autocmd FileType yaml set shiftwidth=4
+autocmd FileType yaml set softtabstop=4
 
 nmap <leader><leader>w :HopWord<cr>
 

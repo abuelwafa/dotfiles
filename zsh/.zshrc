@@ -59,7 +59,7 @@ unalias ll
 alias ll='eza -la --color=always --icons=always | less -XFR'
 alias md='mkdir -vp'
 alias p='popd'
-alias tree='tree -a -h -f --du'
+alias tree='tree --gitignore -I .git -a -h --du'
 alias vim='nvim'
 # alias vi='nvim'
 alias vimdiff='nvim -d'
@@ -282,6 +282,9 @@ alias pomodoro-start="tclock timer -d 45m -M"
 
 # add kubectl completion
 [[ $commands[kubectl] ]] && source <(kubectl completion zsh)
+
+# add kustomize completion
+[[ $commands[kubectl] ]] && source <(kustomize completion zsh)
 
 export BAT_THEME="base16"
 

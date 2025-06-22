@@ -31,29 +31,36 @@ function harden_ssh() {
     read -p "Harden SSH? (y/n): " -r harden_ssh
     echo
     if [[ $harden_ssh =~ ^[Yy]$ ]]; then
-        # TODO: change to sed instead of appending to the config file
-        # backing up current sshd_config file
-        sudo cp /etc/ssh/sshd_config /etc/ssh/sshd_config-bak-"$(date +%s)"
-
         echo "=> hardening SSH"
-        # disable root login
-        sudo echo 'PermitRootLogin no' >>/etc/ssh/sshd_config
 
-        # disable password authentication
-        sudo echo 'PasswordAuthentication no' >>/etc/ssh/sshd_config
-
-        # restrict users allowed to use SSH
+        local ssh_allowed_users
         read -p "Enter usernames allowed to SSH (space separated list): " -r ssh_allowed_users
-        sudo echo 'AllowUsers $ssh_allowed_users' >>/etc/ssh/sshd_config
 
-        # change the SSH port
-        read -p "SSH listen port: " -r ssh_listen_port
-        sudo echo 'Port $ssh_listen_port' >>/etc/ssh/sshd_config
-        command -v ufw >/dev/null 2>&1 && sudo ufw allow $ssh_listen_port/tcp
-
-        # change listen address of the server
+        local ssh_listen_address
         read -p "SSH listen address: " -r ssh_listen_address
-        sudo echo 'ListenAddress $ssh_listen_address' >>/etc/ssh/sshd_config
+
+        local ssh_listen_port
+        read -p "SSH listen port: " -r ssh_listen_port
+
+        cat <<EOF | sudo tee /etc/ssh/sshd_config.d/99-override.conf &>/dev/null
+# disable root login
+PermitRootLogin no
+
+# disable password authentication
+PasswordAuthentication no
+
+# restrict users allowed to use SSH
+AllowUsers $ssh_allowed_users
+
+# change the SSH port
+Port $ssh_listen_port
+
+# change listen address of the server
+ListenAddress $ssh_listen_address
+EOF
+
+        # enable the ssh port for ssh in firewall
+        command -v ufw >/dev/null 2>&1 && sudo ufw allow $ssh_listen_port/tcp
 
         # restart the ssh service
         echo -e "\n\e[90;103;2m WARNING \e[m Restarting SSH service. Check that your SSH connection still works in another terminal.\n"
@@ -107,7 +114,7 @@ function setup_wireguard() {
         read -p "VPN server public key: " -r vpn_server_public_key
         read -p "Client assigned IP: " -r vpn_client_ip
         read -p "Client allowed IPs: " -r vpn_client_allowed_ips
-        cat >/etc/wireguard/wg0.conf <<EOL
+        cat <<EOF | sudo tee /etc/wireguard/wg0.conf &>/dev/null
 [Interface]
 Address = $vpn_client_ip/32
 PrivateKey = $(cat /etc/wireguard/wg0.key)
@@ -117,7 +124,7 @@ Endpoint = $vpn_server_host:$vpn_server_port
 AllowedIPs = $vpn_client_allowed_ips
 PersistentKeepalive = 25
 PublicKey = $vpn_server_public_key
-EOL
+EOF
         sudo systemctl enable wg-quick@wg0
         sudo systemctl start wg-quick@wg0
         wg-quick down wg0
@@ -424,6 +431,7 @@ main() {
         echo '=> old ~/.vimrc have been backed up'
     fi
     curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/vim/.vimrc >~/.vimrc
+    sudo update-alternatives --set editor $(which vim.basic)
 
     echo
 

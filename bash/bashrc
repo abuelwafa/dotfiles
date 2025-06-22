@@ -26,7 +26,7 @@ alias cls='clear'
 alias l='ls -lahp'
 alias ll='ls -lahp | $PAGER'
 alias md='mkdir -vp'
-alias tree='tree -a -h -f --du'
+alias tree='tree --gitignore -I .git -a -h --du'
 
 alias ..='cd ..'
 alias ...='cd ../..'
@@ -156,6 +156,10 @@ function jwtparse() {
     fi
 
     echo -n "$result" | base64 -d | jq '.' | $PAGER
+}
+
+backup-file() {
+    cp "$1" "$1.bak-$(date +%s)"
 }
 
 function pg_connect() {
@@ -296,7 +300,7 @@ function in_ssh_prompt() {
 export GIT_PS1_SHOWCONFLICTSTATE=1
 export GIT_PS1_SHOWSTASHSTATE=1
 export PROMPT_DIRTRIM=0
-export PS1="${bldgreen}$(rule)${txtrst}\n${debian_chroot:+($debian_chroot)}${bldblue}\u@\H${txtrst}$(in_ssh_prompt)$(system_reboot_prompt)\n${bldyellow}\w${bldpurple}\$(__git_ps1)\n\$(virtualenv_info)${bldcyan}-> ${txtrst}"
+export PS1="${bldgreen}$(rule)${txtrst}\n${debian_chroot:+($debian_chroot)}${bldblue}\u@\H${txtrst}$(in_ssh_prompt)$(system_reboot_prompt)\n${bldyellow}\w${bldpurple}\$(which git && __git_ps1)\n\$(virtualenv_info)${bldcyan}-> ${txtrst}"
 
 # run the ssh agent
 function start_ssh_agent() {
