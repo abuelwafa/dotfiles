@@ -359,6 +359,8 @@ function setup_containerd() {
         curl -fSLO "$download_url"
         sudo tar --extract -C /usr/local -zvv -f "$file_name"
         sudo systemctl enable --now containerd
+
+        rm "$file_name"
     else
         echo "Skipping install of containerd/nerdctl"
     fi
