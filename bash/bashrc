@@ -287,20 +287,24 @@ bggray='\[\e[47m\]'
 
 function system_reboot_prompt() {
     if [ -f /var/run/reboot-required ]; then
-        echo -ne "${bldred} [ REBOOT REQUIRED ]${txtrst}"
+        echo -ne " \e[1;30;41m [ REBOOT REQUIRED ] \e[m "
     fi
 }
 
 function in_ssh_prompt() {
     if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
-        echo -ne "${bldred} (SSH)${txtrst}"
+        echo -ne " \e[1;30;41m (SSH) \e[m "
     fi
+}
+
+set_bash_prompt(){
+    PS1="${bldgreen}$(rule)${txtrst}\n${debian_chroot:+($debian_chroot)}${bldblue}\u@\H${txtrst} \$(in_ssh_prompt)\$(system_reboot_prompt)\n${bldyellow}\w${bldpurple}\$(which git && __git_ps1)\n\$(virtualenv_info)${bldcyan}-> ${txtrst}"
 }
 
 export GIT_PS1_SHOWCONFLICTSTATE=1
 export GIT_PS1_SHOWSTASHSTATE=1
 export PROMPT_DIRTRIM=0
-export PS1="${bldgreen}$(rule)${txtrst}\n${debian_chroot:+($debian_chroot)}${bldblue}\u@\H${txtrst}$(in_ssh_prompt)$(system_reboot_prompt)\n${bldyellow}\w${bldpurple}\$(which git && __git_ps1)\n\$(virtualenv_info)${bldcyan}-> ${txtrst}"
+PROMPT_COMMAND=set_bash_prompt
 
 # run the ssh agent
 function start_ssh_agent() {
