@@ -60,7 +60,7 @@ ListenAddress $ssh_listen_address
 EOF
 
         # enable the ssh port for ssh in firewall
-        command -v ufw >/dev/null 2>&1 && sudo ufw allow $ssh_listen_port/tcp
+        command -v ufw >/dev/null 2>&1 && sudo ufw allow "$ssh_listen_port"/tcp
 
         # restart the ssh service
         echo -e "\n\e[90;103;2m WARNING \e[m Restarting SSH service. Check that your SSH connection still works in another terminal.\n"
@@ -165,7 +165,7 @@ function setup_prometheus_node_exporter() {
         echo "=> found Prometheus Node Exporter version ${tag_name}"
 
         local node_exporter_version # 2.0.3
-        node_exporter_version="$(echo $tag_name | cut -d 'v' -f 2)"
+        node_exporter_version="$(echo "$tag_name" | cut -d 'v' -f 2)"
 
         local file_name
         file_name="node_exporter-${node_exporter_version}.linux-${cpu_arch}"
