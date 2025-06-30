@@ -446,6 +446,7 @@ inoremap ` ``<esc>i
 
 " commenting function
 let g:c_style_languages = [
+    \'alloy',
     \'c',
     \'cpp',
     \'cs',
