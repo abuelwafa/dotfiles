@@ -32,7 +32,7 @@ Plug 'phaazon/hop.nvim'
 Plug 'lbrayner/vim-rzip'
 Plug 'mg979/vim-visual-multi', {'branch': 'master'}
 Plug 'christoomey/vim-tmux-navigator'
-Plug 'rest-nvim/rest.nvim'
+" Plug 'rest-nvim/rest.nvim'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
@@ -98,6 +98,7 @@ Plug 'saadparwaiz1/cmp_luasnip'
 Plug 'mfussenegger/nvim-dap'
 Plug 'rcarriga/nvim-dap-ui'
 Plug 'nvim-telescope/telescope-dap.nvim'
+Plug 'grafana/vim-alloy'
 
 " Plug 'mfussenegger/nvim-lint'
 
@@ -380,29 +381,29 @@ function fxJSONFormat(content)
     return vim.fn.system({ "fx", "." }, content)
 end
 
-require("rest-nvim").setup({
-    result_split_horizontal = false,
-    result_split_in_place = true,
-    skip_ssl_verification = true,
-    encode_url = true,
-    highlight = { enabled = true, timeout = 1000 },
-    result = {
-        show_url = true,
-        show_http_info = true,
-        show_headers = true,
-        formatters = {
-            json = fxJSONFormat,
-            vnd = fxJSONFormat,
-            html = function(body)
-                return vim.fn.system({ "tidy", "-i", "-q", "-" }, body)
-            end,
-        }
-    },
-    jump_to_request = false,
-    env_file = '.env',
-    custom_dynamic_variables = {},
-    yank_dry_run = true,
-})
+-- require("rest-nvim").setup({
+--     result_split_horizontal = false,
+--     result_split_in_place = true,
+--     skip_ssl_verification = true,
+--     encode_url = true,
+--     highlight = { enabled = true, timeout = 1000 },
+--     result = {
+--         show_url = true,
+--         show_http_info = true,
+--         show_headers = true,
+--         formatters = {
+--             json = fxJSONFormat,
+--             vnd = fxJSONFormat,
+--             html = function(body)
+--                 return vim.fn.system({ "tidy", "-i", "-q", "-" }, body)
+--             end,
+--         }
+--     },
+--     jump_to_request = false,
+--     env_file = '.env',
+--     custom_dynamic_variables = {},
+--     yank_dry_run = true,
+-- })
 
 ------------------------------------------------
 -- lsp config
