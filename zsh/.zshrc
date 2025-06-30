@@ -156,7 +156,7 @@ function serve() {
     docker run --rm -p $1:80/tcp -v $(pwd):/usr/share/nginx/html:ro nginx:stable-alpine
 }
 
-alias lzd='docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock -v ~/workspace/dotfiles/lazydocker.config:/.config/jesseduffield/lazydocker lazyteam/lazydocker'
+alias lzd='docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock -v ~/workspace/dotfiles/lazydocker-config.yml:/.config/jesseduffield/lazydocker/config.yml lazyteam/lazydocker'
 
 # make an alias for compressing and extracting zip files
 # new alternative: just use zip and unzip
