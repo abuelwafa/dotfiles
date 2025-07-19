@@ -298,7 +298,7 @@ function in_ssh_prompt() {
 }
 
 set_bash_prompt(){
-    PS1="${bldgreen}$(rule)${txtrst}\n${debian_chroot:+($debian_chroot)}${bldblue}\u@\H${txtrst} \$(in_ssh_prompt)\$(system_reboot_prompt)\n${bldyellow}\w${bldpurple}\$(which git && __git_ps1)\n\$(virtualenv_info)${bldcyan}-> ${txtrst}"
+    PS1="${bldgreen}$(rule)${txtrst}\n${debian_chroot:+($debian_chroot)}${bldblue}\u@\H${txtrst} \$(in_ssh_prompt)\$(system_reboot_prompt)\n${bldyellow}\w${bldpurple}\$(which git &>/dev/null && __git_ps1)\n\$(virtualenv_info)${bldcyan}-> ${txtrst}"
 }
 
 export GIT_PS1_SHOWCONFLICTSTATE=1

@@ -7,11 +7,12 @@ echo 'export GIT_AUTHOR_EMAIL="mohamed.abuelwafa@gmail.com"' | tee -a ~/workspac
 echo 'export OPENAI_API_KEY="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"' | tee -a ~/workspace/.machine-config
 =============================================================
 /* generate ssh keys */
-ssh-keygen -t ed25519 -C "your_email@example.com"
+ssh-keygen -t ed25519 -C "mohamed.abuelwafa"
 =============================================================
 # debian install the following packages
-curl git xclip build-essential ufw
+curl git build-essential ufw unzip
 python3-venv python3-pip python3-dev
+xclip
 =============================================================
 cargo install tclock
 =============================================================
@@ -37,27 +38,19 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 # install nodejs lts from homebrew
 # install bat https://github.com/sharkdp/bat
 brew install the following:
-vim neovim git tmux gcc cmake tree htop git-delta node@22 gnupg sops
-doggo luarocks
-bat ripgrep fzf fd jq lazygit libpq gh dust eza hcloud
-cmatrix
+vim neovim git tmux gcc cmake tree htop git-delta node@24 gnupg sops doggo bat ripgrep fzf jq lazygit libpq hcloud
 kubernetes-cli helm fluxcd/tap/flux kind derailed/k9s/k9s kubectx kustomize
-python watchman go ansible
+python@3 watchman go ansible opentofu sst/tap/opencode
 lnav goaccess
-yarn
-
-Desktop only (and if needed): act qemu lima
-kubectx and kubens
+yarn fd gh dust eza
+cmatrix
 
 # install GNU version of sed (for MACOS)
 # MacOS doesn't have the watch command
 Mac only: gsed watch
 
-fx yh
+fx
 rbenv ruby-build
-=============================================================
-brew tap hashicorp/tap
-brew install hashicorp/tap/terraform
 =============================================================
 clone essential repos
 cd ~/workspace
@@ -271,7 +264,7 @@ MACOS
 # optional: install OSXfuse for dealing with NTFS and external hard disk drives
 https://github.com/osxfuse/osxfuse
 =============================================================
-increase ubuntu inotify watchers for dropbox sync and for projects file watching
+# increase ubuntu inotify watchers for dropbox sync and for projects file watching
 echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
 ==================================================================
 # for ubuntu cloud vms

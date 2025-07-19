@@ -1,0 +1,19 @@
+#!/bin/bash
+#
+#   ▄▄   █                    ▀▀█                    ▄▀▀
+#   ██   █▄▄▄   ▄   ▄   ▄▄▄     █   ▄     ▄  ▄▄▄   ▄▄█▄▄   ▄▄▄
+#  █  █  █▀ ▀█  █   █  █▀  █    █   ▀▄ ▄ ▄▀ ▀   █    █    ▀   █
+#  █▄▄█  █   █  █   █  █▀▀▀▀    █    █▄█▄█  ▄▀▀▀█    █    ▄▀▀▀█
+# █    █ ██▄█▀  ▀▄▄▀█  ▀█▄▄▀    ▀▄▄   █ █   ▀▄▄▀█    █    ▀▄▄▀█
+#
+
+source ~/workspace/dotfiles/bash/bashrc
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+
+unalias show
+alias show=bat
+
+if command -v nerdctl &>/dev/null 2>&1; then
+    alias docker="sudo nerdctl"
+fi
+

@@ -27,6 +27,24 @@ function setup_aws_cli() {
     echo
 }
 
+function setup_gcloud_cli() {
+    read -p "Setup and configure Google Cloud CLI? (y/n): " -r install_gcloud_cli
+    echo
+    if [[ $install_gcloud_cli =~ ^[Yy]$ ]]; then
+        echo "=> installing Google Cloud CLL"
+        curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg
+        echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+
+        sudo apt-get update && sudo apt-get install -y google-cloud-cli
+
+        echo "=> Google cloud cli has been installed successfully."
+        echo "=> run \`gcloud init\` to configure it"
+    else
+        echo "Skipping install of Google Cloud CLI"
+    fi
+    echo
+}
+
 function harden_ssh() {
     read -p "Harden SSH? (y/n): " -r harden_ssh
     echo
@@ -299,7 +317,7 @@ function setup_ufw() {
         echo "=> installing and configuring ufw"
         sudo apt-get install -y ufw
         sudo ufw default deny incoming
-        sudo ufw default deny outgoing
+        # sudo ufw default deny outgoing
         sudo ufw allow ssh
         sudo ufw enable
         echo
@@ -413,12 +431,15 @@ main() {
         locales \
         locales-all \
         bash-completion \
+        apt-transport-https \
+        ca-certificates \
+        gnupg \
         python3 \
         python3-venv
 
     echo
 
-    check_system_reboot
+    sudo apt-get autoremove -y
 
     # backup .bash_aliases file if it already exists
     if [[ -f "$HOME/.bash_aliases" ]]; then
@@ -449,7 +470,10 @@ main() {
     setup_containerd
     setup_docker
     setup_aws_cli
+    setup_gcloud_cli
     setup_prometheus_node_exporter
+
+    check_system_reboot
 }
 
 main "$@"
