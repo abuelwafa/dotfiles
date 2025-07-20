@@ -21,8 +21,26 @@ function setup_aws_cli() {
     echo
     if [[ $install_aws_cli =~ ^[Yy]$ ]]; then
         echo "=> installing AWS CLL"
+        curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" --output-dir /tmp -o "awscliv2.zip"
+        unzip -u awscliv2.zip
+        if command -v aws &>/dev/null; then
+            sudo ./aws/install --bin-dir /usr/local/bin --install-dir /usr/local/aws-cli --update
+        else
+            sudo ./aws/install
+        fi
     else
         echo "Skipping install of AWS CLI"
+    fi
+    echo
+}
+
+function setup_hetzner_cli() {
+    read -p "Setup and configure Hetzner cloud CLI? (y/n): " -r install_hcloud_cli
+    echo
+    if [[ $install_hcloud_cli =~ ^[Yy]$ ]]; then
+        echo "=> installing Hetzner cloud CLL"
+    else
+        echo "Skipping install of Hetzner cloud CLI"
     fi
     echo
 }
@@ -347,7 +365,91 @@ function setup_fail2ban() {
 }
 
 function setup_containerd() {
-    read -p "Setup and configure containerd and nerdctl? (y/n): " -r install_containerd
+    read -p "Setup and configure containerd? (y/n): " -r install_containerd
+    echo
+    if [[ $install_containerd =~ ^[Yy]$ ]]; then
+        echo '=> Installing Containerd'
+
+        local hardware_name
+        hardware_name="$(uname --machine)"
+
+        local cpu_arch
+        if [[ "$hardware_name" == "arm64" ]]; then
+            cpu_arch="arm64"
+        else
+            cpu_arch="amd64"
+        fi
+
+        local tag_name # v2.0.3
+        tag_name="$(curl -fsSL https://api.github.com/repos/containerd/containerd/releases/latest | jq -r '.tag_name')"
+
+        local cotnainerd_version # 2.0.3
+        containerd_version="$(echo "$tag_name" | cut -d 'v' -f 2)"
+
+        local file_name
+        file_name="containerd-${containerd_version}-linux-${cpu_arch}.tar.gz"
+
+        local download_url
+        download_url="https://github.com/containerd/containerd/releases/download/${tag_name}/${file_name}"
+
+        curl -fSLO "$download_url" --output-dir /tmp
+        sudo tar --extract -C /usr/local -zvv -f /tmp/"$file_name"
+
+
+        # download containerd systemd service file
+        curl -fsSL https://raw.githubusercontent.com/containerd/containerd/main/containerd.service \
+            -O --output-dir /usr/local/lib/systemd/system
+        sudo systemctl daemon-reload
+        sudo systemctl enable --now containerd
+
+        rm /tmp/"$file_name"
+    else
+        echo "Skipping install of containerd"
+    fi
+    echo
+}
+
+function setup_nerdctl_minimal() {
+    read -p "Setup and configure nerdctl (minimal)? (y/n): " -r install_nerdctl_minimal
+    echo
+    if [[ $install_nerdctl_minimal =~ ^[Yy]$ ]]; then
+        echo '=> Installing nerdctl (minimal version)'
+
+        local hardware_name
+        hardware_name="$(uname --machine)"
+
+        local cpu_arch
+        if [[ "$hardware_name" == "arm64" ]]; then
+            cpu_arch="arm64"
+        else
+            cpu_arch="amd64"
+        fi
+
+        local tag_name # v2.0.3
+        tag_name="$(curl -fsSL https://api.github.com/repos/containerd/nerdctl/releases/latest | jq -r '.tag_name')"
+
+        local nerdctl_version # 2.0.3
+        nerdctl_version="$(echo "$tag_name" | cut -d 'v' -f 2)"
+
+        local file_name
+        file_name="nerdctl-${nerdctl_version}-linux-${cpu_arch}.tar.gz"
+
+        local download_url
+        download_url="https://github.com/containerd/nerdctl/releases/download/${tag_name}/${file_name}"
+
+        # curl -fSLO "$download_url"
+        # sudo tar --extract -C /usr/local -zvv -f "$file_name"
+        # sudo systemctl enable --now containerd
+#
+        # rm "$file_name"
+    else
+        echo "Skipping install of nerdctl"
+    fi
+    echo
+}
+
+function setup_nerdctl_full() {
+    read -p "Setup and configure full nerdctl (nerdctl + containerd + CNI)? (y/n): " -r install_containerd
     echo
     if [[ $install_containerd =~ ^[Yy]$ ]]; then
         echo '=> Installing nerdctl (full version)'
@@ -467,11 +569,17 @@ main() {
     harden_ssh
     setup_nginx
     setup_fail2ban
+
     setup_containerd
     setup_docker
+    setup_nerdctl_minimal
+    setup_nerdctl_full
+
     setup_aws_cli
     setup_gcloud_cli
+    setup_hetzner_cli
     setup_prometheus_node_exporter
+    setup_grafana_alloy
 
     check_system_reboot
 }
