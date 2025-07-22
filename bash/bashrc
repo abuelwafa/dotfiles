@@ -116,7 +116,9 @@ alias remove='rm -rf'
 
 alias kctl='kubectl'
 alias sctl='systemctl'
-alias docker='sudo nerdctl'
+if command -v nerdctl &>/dev/null 2>&1; then
+    alias docker="sudo nerdctl"
+fi
 
 alias python='python3'
 alias venv='source venv/bin/activate'
