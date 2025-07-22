@@ -281,6 +281,17 @@ EOL
     echo
 }
 
+function setup_grafana_alloy() {
+    read -p "Setup and configure Grafana Alloy? (y/n): " -r install_alloy
+    echo
+    if [[ $install_alloy =~ ^[Yy]$ ]]; then
+        echo "=> setting up Grafana alloy"
+    else
+        echo "Skipping install of Grafana Alloy"
+    fi
+    echo
+}
+
 function setup_git() {
     local install_git
     read -p "Setup and configure git? (y/n): " -r install_git
@@ -383,7 +394,7 @@ function setup_containerd() {
         local tag_name # v2.0.3
         tag_name="$(curl -fsSL https://api.github.com/repos/containerd/containerd/releases/latest | jq -r '.tag_name')"
 
-        local cotnainerd_version # 2.0.3
+        local containerd_version # 2.0.3
         containerd_version="$(echo "$tag_name" | cut -d 'v' -f 2)"
 
         local file_name
@@ -394,7 +405,6 @@ function setup_containerd() {
 
         curl -fSLO "$download_url" --output-dir /tmp
         sudo tar --extract -C /usr/local -zvv -f /tmp/"$file_name"
-
 
         # download containerd systemd service file
         curl -fsSL https://raw.githubusercontent.com/containerd/containerd/main/containerd.service \
@@ -437,11 +447,11 @@ function setup_nerdctl_minimal() {
         local download_url
         download_url="https://github.com/containerd/nerdctl/releases/download/${tag_name}/${file_name}"
 
-        # curl -fSLO "$download_url"
+        curl -fSLO "$download_url" --output-dir /tmp
         # sudo tar --extract -C /usr/local -zvv -f "$file_name"
         # sudo systemctl enable --now containerd
-#
-        # rm "$file_name"
+
+        rm /tmp/"$file_name"
     else
         echo "Skipping install of nerdctl"
     fi
@@ -476,11 +486,11 @@ function setup_nerdctl_full() {
         local download_url
         download_url="https://github.com/containerd/nerdctl/releases/download/${tag_name}/${file_name}"
 
-        curl -fSLO "$download_url"
-        sudo tar --extract -C /usr/local -zvv -f "$file_name"
+        curl -fSLO "$download_url" --output-dir /tmp
+        sudo tar --extract -C /usr/local -zvv -f /tmp/"$file_name"
         sudo systemctl enable --now containerd
 
-        rm "$file_name"
+        rm /tmp/"$file_name"
     else
         echo "Skipping install of containerd/nerdctl"
     fi
