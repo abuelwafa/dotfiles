@@ -5,15 +5,16 @@ import = []
 [window]
 blur = true
 opacity = 0.97
-startup_mode = "Maximized"
+startup_mode = "Fullscreen"
 option_as_alt = "OnlyLeft"
+decorations_theme_variant = "Dark"
 
 [terminal.shell]
 program = "/bin/zsh"
 args = ["-l"]
 
 [font]
-size = 14
+size = 15
 normal.family = "MesloLGL Nerd font"
 offset.y = 2
 glyph_offset.y = 0
@@ -21,10 +22,13 @@ glyph_offset.y = 0
 italic.style = "Regular"
 bold_italic.style = "Bold"
 
+[selection]
+save_to_clipboard = true
+
 [cursor]
 style.shape = "Block"
 style.blinking = "Always"
-blink_interval = 200
+blink_interval = 300
 blink_timeout = 0
 
 [mouse]
