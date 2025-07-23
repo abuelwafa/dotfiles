@@ -83,7 +83,7 @@ enable_packet_forwarding() {
     if [[ ! "$value" == "net.ipv4.ip_forward = 1" ]]
         cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf
         net.ipv4.ip_forward = 1
-        EOF
+EOF
 
         # Apply sysctl params without reboot
         sudo sysctl --system

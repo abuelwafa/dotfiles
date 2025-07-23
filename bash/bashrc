@@ -136,7 +136,7 @@ function serve() {
     docker run --rm -p $1:80/tcp -v $(pwd):/usr/share/nginx/html:ro nginx:stable-alpine
 }
 
-alias lzd='docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock lazyteam/lazydocker'
+alias lzd='docker run --rm -it --pull always -v /var/run/docker.sock:/var/run/docker.sock lazyteam/lazydocker'
 
 # parses jwt token and passes the output to fx
 function jwtparse() {
@@ -299,7 +299,7 @@ function in_ssh_prompt() {
     fi
 }
 
-set_bash_prompt(){
+set_bash_prompt() {
     PS1="${bldgreen}$(rule)${txtrst}\n${debian_chroot:+($debian_chroot)}${bldblue}\u@\H${txtrst} \$(in_ssh_prompt)\$(system_reboot_prompt)\n${bldyellow}\w${bldpurple}\$(which git &>/dev/null && __git_ps1)\n\$(virtualenv_info)${bldcyan}-> ${txtrst}"
 }
 

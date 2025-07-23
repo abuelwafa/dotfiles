@@ -6,7 +6,8 @@
 #  █▄▄█  █   █  █   █  █▀▀▀▀    █    █▄█▄█  ▄▀▀▀█    █    ▄▀▀▀█
 # █    █ ██▄█▀  ▀▄▄▀█  ▀█▄▄▀    ▀▄▄   █ █   ▀▄▄▀█    █    ▀▄▄▀█
 #
-# description goes here
+# Interactive bash script for configuring Debian machine for development
+# /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/server-configs/dev-vm-setup.sh)"
 
 set -o errexit
 set -o nounset
@@ -33,10 +34,8 @@ function setup_sdkman() {
 }
 
 function setup_neovim() {
-    rm ~/.vimrc || true
     mkdir -p ~/.config/nvim
     ln -s ~/workspace/dotfiles/nvim/init.lua ~/.config/nvim/init.lua
-    ln -s ~/workspace/dotfiles/vim/.vimrc ~/.vimrc
     mkdir -p ~/.nvim/_temp
     mkdir -p ~/.nvim/_backup
     echo "=> Openning neovim to install plugins and language servers. Exit when finished."
@@ -54,6 +53,19 @@ function setup_neovim() {
     nvim
 }
 
+function setup_homebrew() {
+    if ! command -v brew &>/dev/null 2>&1; then
+        NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+        if ! grep -q -e "brew shellenv" ~/.machine-config; then
+            echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' | tee -a ~/.machine-config
+        fi
+    else
+        brew update
+        brew upgrade
+    fi
+}
+
 main() {
 
     rm ~/.vimrc || true
@@ -64,28 +76,34 @@ main() {
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/server-configs/setup.sh)"
 
     sudo apt install \
+        vim \
+        curl \
         git \
         tmux \
+        jq \
+        htop \
+        locales \
+        locales-all \
+        bash-completion \
+        apt-transport-https \
+        ca-certificates \
+        gnupg \
         build-essential \
         ufw \
         unzip \
+        python3 \
+        python3-venv \
         python3-pip \
         python3-dev
 
     mkdir -p ~/workspace
     touch ~/.machine-config
 
-    if [ ! grep -e "export GIT_COMMITTER_EMAIL" ~/.machine-config ]; then
-        echo 'export GIT_COMMITTER_EMAIL="mohamed.abuelwafa@gmail.com"' | tee -a ~/.machine-config
-        echo 'export GIT_AUTHOR_EMAIL="mohamed.abuelwafa@gmail.com"' | tee -a ~/.machine-config
+    # increase inotify watchers
+    if ! grep -q -e "fs.inotify.max_user_watches" /etc/sysctl.d/dev.conf; then
+        echo fs.inotify.max_user_watches=999999 | sudo tee -a /etc/sysctl.d/dev.conf &>/dev/null
+        sudo sysctl -p
     fi
-
-    if [ ! grep -e "brew shellenv" ~/.machine-config ]; then
-        echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' | tee -a ~/.machine-config
-    fi
-
-    # increase ubuntu inotify watchers for dropbox sync and for projects file watching
-    echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
 
     # clone essential repos
     if [ -d ~/workspace/dotfiles ]; then
@@ -105,70 +123,82 @@ main() {
     fi
 
     # install homebrew
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    setup_homebrew
 
     # install essential homebrew packages
     # DB CLIs
     brew tap dbcli/tap
 
-    brew install \
-        vim \
-        neovim \
-        git \
-        tmux \
-        gcc \
-        cmake \
-        tree \
-        htop \
-        git-delta \
-        node@24 \
-        gnupg \
-        sops \
-        doggo \
-        bat \
-        ripgrep \
-        fzf \
-        jq \
-        lazygit \
-        libpq \
-        kubernetes-cli \
-        helm \
-        fluxcd/tap/flux \
-        kind \
-        derailed/k9s/k9s \
-        kubectx \
-        kustomize \
-        go \
-        ansible \
-        python@3 \
-        sst/tap/opencode \
-        opentofu \
-        pgcli \
-        litecli \
-        mycli \
-        iredis \
-        lnav \
-        goaccess \
-        hcloud \
-        gh \
-        dust \
-        fx \
-        # yarn \
-        # watchman \
-        # fd \
-        # eza \
-        # rbenv \
-        # ruby-build \
+    local brew_packages_list
+    brew_packages_list=(
+        vim
+        neovim
+        git
+        tmux
+        gcc
+        cmake
+        tree
+        htop
+        git-delta
+        node@24
+        gnupg
+        sops
+        doggo
+        bat
+        ripgrep
+        fzf
+        jq
+        lazygit
+        libpq
+        kubernetes-cli
+        helm
+        fluxcd/tap/flux
+        kind
+        derailed/k9s/k9s
+        kubectx
+        kustomize
+        go
+        ansible
+        python@3
+        sst/tap/opencode
+        opentofu
+        pgcli
+        litecli
+        mycli
+        iredis
+        lnav
+        goaccess
+        hcloud
+        gh
+        dust
+        fx
         cmatrix
+        # yarn
+        # watchman
+        # fd
+        # eza
+        # rbenv
+        # ruby-build
+    )
+
+    for package in "${brew_packages_list[@]}"; do
+        brew install "$package"
+    done
 
     # linking config files
-    rm ~/.bash_aliases || true
-    rm ~/.tmux.conf || true
-    ln -s ~/workspace/dotfiles/bash/bashrc-full ~/.bash_aliases
-    ln -s ~/workspace/dotfiles/tmux/tmux.conf ~/.tmux.conf
-    ln -s ~/workspace/dotfiles/pgcli.config ~/.config/pgcli/config
-    ln -s ~/workspace/dotfiles/yamlfmt.yml ~/yamlfmt.yml
-    ln -s ~/workspace/dotfiles/.gitconfig ~/.gitconfig
+    ln --force -s ~/workspace/dotfiles/bash/bashrc-full ~/.bash_aliases
+    ln --force -s ~/workspace/dotfiles/tmux/tmux.conf ~/.tmux.conf
+    ln --force -s ~/workspace/dotfiles/vim/.vimrc ~/.vimrc
+    ln --force -s ~/workspace/dotfiles/.gitconfig ~/.gitconfig
+
+    if ! grep -q -e "export GIT_COMMITTER_EMAIL" ~/.machine-config; then
+        echo 'export GIT_COMMITTER_EMAIL="mohamed.abuelwafa@gmail.com"' | tee -a ~/.machine-config &>/dev/null
+        echo 'export GIT_AUTHOR_EMAIL="mohamed.abuelwafa@gmail.com"' | tee -a ~/.machine-config &>/dev/null
+    fi
+
+    mkdir -p ~/.config/pgcli
+    ln --force -s ~/workspace/dotfiles/pgcli.config ~/.config/pgcli/config
+    ln --force -s ~/workspace/dotfiles/yamlfmt.yml ~/yamlfmt.yml
 
     # install sdkman
     install_sdkman
@@ -179,10 +209,16 @@ main() {
     # install tclock
     cargo install tclock
 
+    # configure opencode
+    opencode auth login
+
     # setup neovim
     setup_neovim
 
     check_system_reboot
+
+    echo -e "\n\e[90;102;2m INFO \e[m Review the values in ~/.machine-config."
+    echo -e "\n\e[90;102;2m INFO \e[m Logout and login again for all configuration changes to take effect."
 }
 
 main "$@"

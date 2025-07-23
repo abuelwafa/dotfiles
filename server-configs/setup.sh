@@ -566,7 +566,7 @@ main() {
         echo '=> old ~/.vimrc have been backed up'
     fi
     curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/vim/.vimrc >~/.vimrc
-    sudo update-alternatives --set editor $(which vim.basic)
+    sudo update-alternatives --set editor "$(which vim.basic)"
 
     echo
 

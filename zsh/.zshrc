@@ -156,7 +156,7 @@ function serve() {
     docker run --rm -p $1:80/tcp -v $(pwd):/usr/share/nginx/html:ro nginx:stable-alpine
 }
 
-alias lzd='docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock -v ~/workspace/dotfiles/lazydocker-config.yml:/.config/jesseduffield/lazydocker/config.yml lazyteam/lazydocker'
+alias lzd='docker run --rm -it --pull always -v /var/run/docker.sock:/var/run/docker.sock -v ~/workspace/dotfiles/lazydocker-config.yml:/.config/jesseduffield/lazydocker/config.yml lazyteam/lazydocker'
 
 # make an alias for compressing and extracting zip files
 # new alternative: just use zip and unzip
@@ -266,8 +266,7 @@ alias remove='rm -rf'
 
 alias kctl='kubectl'
 alias lima='limactl'
-alias lima-create-debian='limactl create template://debian-12 --arch=x86_64 --plain --vm-type qemu --cpus=2 --memory 2 --disk 20 --network lima:user-v2 --name '
-alias lima-create-ubuntu='limactl create template://ubuntu-lts --arch=x86_64 --plain --vm-type qemu --cpus=2 --memory 2 --disk 20 --network lima:user-v2 --name '
+alias lima-create-debian='limactl create template://debian-12 --arch=x86_64 --plain --vm-type qemu --cpus=2 --memory 2 --disk 20 --network lima:shared --name '
 alias dog='doggo --any'
 alias start-db='docker run -p 5432:5432 --env POSTGRES_PASSWORD=postgres --env PGDATA=/var/lib/postgresql/data/pgdata postgres'
 
