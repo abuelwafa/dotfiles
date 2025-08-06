@@ -19,7 +19,7 @@ fi
 function setup_aws_cli() {
     read -p "Setup and configure AWS CLI? (y/n): " -r install_aws_cli
     echo
-    if [[ $install_aws_cli =~ ^[Yy]$ ]]; then
+    if [[ ${install_aws_cli} =~ ^[Yy]$ ]]; then
         echo "=> installing AWS CLL"
         curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" --output-dir /tmp -o "awscliv2.zip"
         unzip -u awscliv2.zip
@@ -37,7 +37,7 @@ function setup_aws_cli() {
 function setup_hetzner_cli() {
     read -p "Setup and configure Hetzner cloud CLI? (y/n): " -r install_hcloud_cli
     echo
-    if [[ $install_hcloud_cli =~ ^[Yy]$ ]]; then
+    if [[ ${install_hcloud_cli} =~ ^[Yy]$ ]]; then
         echo "=> installing Hetzner cloud CLL"
     else
         echo "Skipping install of Hetzner cloud CLI"
@@ -48,7 +48,7 @@ function setup_hetzner_cli() {
 function setup_gcloud_cli() {
     read -p "Setup and configure Google Cloud CLI? (y/n): " -r install_gcloud_cli
     echo
-    if [[ $install_gcloud_cli =~ ^[Yy]$ ]]; then
+    if [[ ${install_gcloud_cli} =~ ^[Yy]$ ]]; then
         echo "=> installing Google Cloud CLL"
         curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg
         echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
@@ -66,7 +66,7 @@ function setup_gcloud_cli() {
 function harden_ssh() {
     read -p "Harden SSH? (y/n): " -r harden_ssh
     echo
-    if [[ $harden_ssh =~ ^[Yy]$ ]]; then
+    if [[ ${harden_ssh} =~ ^[Yy]$ ]]; then
         echo "=> hardening SSH"
 
         local ssh_allowed_users
@@ -86,17 +86,17 @@ PermitRootLogin no
 PasswordAuthentication no
 
 # restrict users allowed to use SSH
-AllowUsers $ssh_allowed_users
+AllowUsers ${ssh_allowed_users}
 
 # change the SSH port
-Port $ssh_listen_port
+Port ${ssh_listen_port}
 
 # change listen address of the server
-ListenAddress $ssh_listen_address
+ListenAddress ${ssh_listen_address}
 EOF
 
         # enable the ssh port for ssh in firewall
-        command -v ufw >/dev/null 2>&1 && sudo ufw allow "$ssh_listen_port"/tcp
+        command -v ufw >/dev/null 2>&1 && sudo ufw allow "${ssh_listen_port}"/tcp
 
         # restart the ssh service
         echo -e "\n\e[90;103;2m WARNING \e[m Restarting SSH service. Check that your SSH connection still works in another terminal.\n"
@@ -110,7 +110,7 @@ EOF
 function setup_nginx() {
     read -p "Setup and configure Nginx? (y/n): " -r install_nginx
     echo
-    if [[ $install_nginx =~ ^[Yy]$ ]]; then
+    if [[ ${install_nginx} =~ ^[Yy]$ ]]; then
         echo "=> installing Nginx"
         sudo apt-get install -y nginx nginx-extras
         command -v ufw >/dev/null 2>&1 && sudo ufw allow www
@@ -123,7 +123,7 @@ function setup_nginx() {
 function setup_docker() {
     read -p "Setup and configure Docker? (y/n): " -r install_docker
     echo
-    if [[ $install_docker =~ ^[Yy]$ ]]; then
+    if [[ ${install_docker} =~ ^[Yy]$ ]]; then
         echo "=> installing Docker"
     else
         echo "Skipping install of Docker"
@@ -134,7 +134,7 @@ function setup_docker() {
 function setup_wireguard() {
     read -p "Setup and configure Wireguard? (y/n): " -r install_wireguard
     echo
-    if [[ $install_wireguard =~ ^[Yy]$ ]]; then
+    if [[ ${install_wireguard} =~ ^[Yy]$ ]]; then
         echo "=> installing Wireguard"
         sudo apt-get install -y wireguard wireguard-tools
 
@@ -152,14 +152,14 @@ function setup_wireguard() {
         read -p "Client allowed IPs: " -r vpn_client_allowed_ips
         cat <<EOF | sudo tee /etc/wireguard/wg0.conf &>/dev/null
 [Interface]
-Address = $vpn_client_ip/32
+Address = ${vpn_client_ip}/32
 PrivateKey = $(cat /etc/wireguard/wg0.key)
 
 [Peer]
-Endpoint = $vpn_server_host:$vpn_server_port
-AllowedIPs = $vpn_client_allowed_ips
+Endpoint = ${vpn_server_host}:${vpn_server_port}
+AllowedIPs = ${vpn_client_allowed_ips}
 PersistentKeepalive = 25
-PublicKey = $vpn_server_public_key
+PublicKey = ${vpn_server_public_key}
 EOF
         sudo systemctl enable wg-quick@wg0
         sudo systemctl start wg-quick@wg0
@@ -174,7 +174,7 @@ EOF
 function setup_prometheus_node_exporter() {
     read -p "Setup and configure Prometheus Node Exporter? (y/n): " -r install_node_exporter
     echo
-    if [[ $install_node_exporter =~ ^[Yy]$ ]]; then
+    if [[ ${install_node_exporter} =~ ^[Yy]$ ]]; then
         echo "=> setting up user account/group for monitoring"
         # create group and user account if they doesn't exist
         getent group monitoring &>/dev/null || sudo groupadd monitoring
@@ -190,7 +190,7 @@ function setup_prometheus_node_exporter() {
         hardware_name="$(uname --machine)"
 
         local cpu_arch
-        if [[ "$hardware_name" == "arm64" ]]; then
+        if [[ "${hardware_name}" == "arm64" ]]; then
             cpu_arch="arm64"
         else
             cpu_arch="amd64"
@@ -201,7 +201,7 @@ function setup_prometheus_node_exporter() {
         echo "=> found Prometheus Node Exporter version ${tag_name}"
 
         local node_exporter_version # 2.0.3
-        node_exporter_version="$(echo "$tag_name" | cut -d 'v' -f 2)"
+        node_exporter_version="$(echo "${tag_name}" | cut -d 'v' -f 2)"
 
         local file_name
         file_name="node_exporter-${node_exporter_version}.linux-${cpu_arch}"
@@ -209,7 +209,7 @@ function setup_prometheus_node_exporter() {
         local download_url
         download_url="https://github.com/prometheus/node_exporter/releases/download/${tag_name}/${file_name}.tar.gz"
 
-        curl -fSLO "$download_url" --output-dir /tmp
+        curl -fSLO "${download_url}" --output-dir /tmp
         tar --extract -C /tmp -zvv -f "/tmp/${file_name}.tar.gz"
         sudo mv "/tmp/${file_name}/node_exporter" /usr/local/bin/node_exporter
         sudo chmod ug+x /usr/local/bin/node_exporter
@@ -255,7 +255,7 @@ ProtectKernelModules=true
 ProtectKernelTunables=yes
 SyslogIdentifier=node_exporter
 ExecStart=/usr/local/bin/node_exporter \
-    --web.listen-address=$node_exporter_listen_address \
+    --web.listen-address=${node_exporter_listen_address} \
     # --web.config.file=/etc/prometheus/web.config.yml \
 
 [Install]
@@ -263,7 +263,7 @@ WantedBy=multi-user.target
 EOL
         local edit_prom_node_exporter_service_file
         read -p "Would you like to edit the systemd service before running? (y/n): " -r edit_prom_node_exporter_service_file
-        if [[ $edit_prom_node_exporter_service_file =~ ^[Yy]$ ]]; then
+        if [[ ${edit_prom_node_exporter_service_file} =~ ^[Yy]$ ]]; then
             sudoedit /etc/systemd/system/prometheus-node-exporter.service
         fi
 
@@ -284,7 +284,7 @@ EOL
 function setup_grafana_alloy() {
     read -p "Setup and configure Grafana Alloy? (y/n): " -r install_alloy
     echo
-    if [[ $install_alloy =~ ^[Yy]$ ]]; then
+    if [[ ${install_alloy} =~ ^[Yy]$ ]]; then
         echo "=> setting up Grafana alloy"
     else
         echo "Skipping install of Grafana Alloy"
@@ -296,7 +296,7 @@ function setup_git() {
     local install_git
     read -p "Setup and configure git? (y/n): " -r install_git
     echo
-    if [[ $install_git =~ ^[Yy]$ ]]; then
+    if [[ ${install_git} =~ ^[Yy]$ ]]; then
         echo "=> installing git"
         sudo apt-get install -y git
         echo "=> configuring git"
@@ -323,12 +323,12 @@ function setup_git() {
 function setup_tmux() {
     read -p "Setup and configure tmux? (y/n): " -r install_tmux
     echo
-    if [[ $install_tmux =~ ^[Yy]$ ]]; then
+    if [[ ${install_tmux} =~ ^[Yy]$ ]]; then
         echo "=> installing tmux"
         sudo apt-get install -y tmux
         echo "=> configuring tmux"
         # backup .tmux.conf file if it already exists
-        if [[ -f "$HOME/.tmux.conf" ]]; then
+        if [[ -f "${HOME}/.tmux.conf" ]]; then
             cp ~/.tmux.conf ~/.tmux.conf-bak-"$(date +%s)"
             echo '=> old ~/.tmux.conf have been backed up'
         fi
@@ -342,7 +342,7 @@ function setup_tmux() {
 function setup_ufw() {
     read -p "Setup and configure ufw? (y/n): " -r install_ufw
     echo
-    if [[ $install_ufw =~ ^[Yy]$ ]]; then
+    if [[ ${install_ufw} =~ ^[Yy]$ ]]; then
         echo "=> installing and configuring ufw"
         sudo apt-get install -y ufw
         sudo ufw default deny incoming
@@ -360,7 +360,7 @@ function setup_ufw() {
 function setup_fail2ban() {
     read -p "Setup and configure fail2ban? (y/n): " -r install_fail2ban
     echo
-    if [[ $install_fail2ban =~ ^[Yy]$ ]]; then
+    if [[ ${install_fail2ban} =~ ^[Yy]$ ]]; then
         echo "=> installing fail2ban"
         sudo apt-get install -y fail2ban
 
@@ -378,14 +378,14 @@ function setup_fail2ban() {
 function setup_containerd() {
     read -p "Setup and configure containerd? (y/n): " -r install_containerd
     echo
-    if [[ $install_containerd =~ ^[Yy]$ ]]; then
+    if [[ ${install_containerd} =~ ^[Yy]$ ]]; then
         echo '=> Installing Containerd'
 
         local hardware_name
         hardware_name="$(uname --machine)"
 
         local cpu_arch
-        if [[ "$hardware_name" == "arm64" ]]; then
+        if [[ "${hardware_name}" == "arm64" ]]; then
             cpu_arch="arm64"
         else
             cpu_arch="amd64"
@@ -395,7 +395,7 @@ function setup_containerd() {
         tag_name="$(curl -fsSL https://api.github.com/repos/containerd/containerd/releases/latest | jq -r '.tag_name')"
 
         local containerd_version # 2.0.3
-        containerd_version="$(echo "$tag_name" | cut -d 'v' -f 2)"
+        containerd_version="$(echo "${tag_name}" | cut -d 'v' -f 2)"
 
         local file_name
         file_name="containerd-${containerd_version}-linux-${cpu_arch}.tar.gz"
@@ -403,8 +403,8 @@ function setup_containerd() {
         local download_url
         download_url="https://github.com/containerd/containerd/releases/download/${tag_name}/${file_name}"
 
-        curl -fSLO "$download_url" --output-dir /tmp
-        sudo tar --extract -C /usr/local -zvv -f /tmp/"$file_name"
+        curl -fSLO "${download_url}" --output-dir /tmp
+        sudo tar --extract -C /usr/local -zvv -f /tmp/"${file_name}"
 
         # download containerd systemd service file
         curl -fsSL https://raw.githubusercontent.com/containerd/containerd/main/containerd.service \
@@ -412,7 +412,7 @@ function setup_containerd() {
         sudo systemctl daemon-reload
         sudo systemctl enable --now containerd
 
-        rm /tmp/"$file_name"
+        rm /tmp/"${file_name}"
     else
         echo "Skipping install of containerd"
     fi
@@ -422,14 +422,14 @@ function setup_containerd() {
 function setup_nerdctl_minimal() {
     read -p "Setup and configure nerdctl (minimal)? (y/n): " -r install_nerdctl_minimal
     echo
-    if [[ $install_nerdctl_minimal =~ ^[Yy]$ ]]; then
+    if [[ ${install_nerdctl_minimal} =~ ^[Yy]$ ]]; then
         echo '=> Installing nerdctl (minimal version)'
 
         local hardware_name
         hardware_name="$(uname --machine)"
 
         local cpu_arch
-        if [[ "$hardware_name" == "arm64" ]]; then
+        if [[ "${hardware_name}" == "arm64" ]]; then
             cpu_arch="arm64"
         else
             cpu_arch="amd64"
@@ -439,7 +439,7 @@ function setup_nerdctl_minimal() {
         tag_name="$(curl -fsSL https://api.github.com/repos/containerd/nerdctl/releases/latest | jq -r '.tag_name')"
 
         local nerdctl_version # 2.0.3
-        nerdctl_version="$(echo "$tag_name" | cut -d 'v' -f 2)"
+        nerdctl_version="$(echo "${tag_name}" | cut -d 'v' -f 2)"
 
         local file_name
         file_name="nerdctl-${nerdctl_version}-linux-${cpu_arch}.tar.gz"
@@ -447,11 +447,11 @@ function setup_nerdctl_minimal() {
         local download_url
         download_url="https://github.com/containerd/nerdctl/releases/download/${tag_name}/${file_name}"
 
-        curl -fSLO "$download_url" --output-dir /tmp
+        curl -fSLO "${download_url}" --output-dir /tmp
         # sudo tar --extract -C /usr/local -zvv -f "$file_name"
         # sudo systemctl enable --now containerd
 
-        rm /tmp/"$file_name"
+        rm /tmp/"${file_name}"
     else
         echo "Skipping install of nerdctl"
     fi
@@ -461,14 +461,14 @@ function setup_nerdctl_minimal() {
 function setup_nerdctl_full() {
     read -p "Setup and configure full nerdctl (nerdctl + containerd + CNI)? (y/n): " -r install_containerd
     echo
-    if [[ $install_containerd =~ ^[Yy]$ ]]; then
+    if [[ ${install_containerd} =~ ^[Yy]$ ]]; then
         echo '=> Installing nerdctl (full version)'
 
         local hardware_name
         hardware_name="$(uname --machine)"
 
         local cpu_arch
-        if [[ "$hardware_name" == "arm64" ]]; then
+        if [[ "${hardware_name}" == "arm64" ]]; then
             cpu_arch="arm64"
         else
             cpu_arch="amd64"
@@ -478,7 +478,7 @@ function setup_nerdctl_full() {
         tag_name="$(curl -fsSL https://api.github.com/repos/containerd/nerdctl/releases/latest | jq -r '.tag_name')"
 
         local nerdctl_version # 2.0.3
-        nerdctl_version="$(echo "$tag_name" | cut -d 'v' -f 2)"
+        nerdctl_version="$(echo "${tag_name}" | cut -d 'v' -f 2)"
 
         local file_name
         file_name="nerdctl-full-${nerdctl_version}-linux-${cpu_arch}.tar.gz"
@@ -486,11 +486,11 @@ function setup_nerdctl_full() {
         local download_url
         download_url="https://github.com/containerd/nerdctl/releases/download/${tag_name}/${file_name}"
 
-        curl -fSLO "$download_url" --output-dir /tmp
-        sudo tar --extract -C /usr/local -zvv -f /tmp/"$file_name"
+        curl -fSLO "${download_url}" --output-dir /tmp
+        sudo tar --extract -C /usr/local -zvv -f /tmp/"${file_name}"
         sudo systemctl enable --now containerd
 
-        rm /tmp/"$file_name"
+        rm /tmp/"${file_name}"
     else
         echo "Skipping install of containerd/nerdctl"
     fi
@@ -501,7 +501,7 @@ function install_build_essential() {
     echo -ne "Install build essential?\n[no] for a production webserver. [yes] for a development machine. (y/n)\nInstall build-essential?: "
     read -r install_build_essential
     echo
-    if [[ $install_build_essential =~ ^[Yy]$ ]]; then
+    if [[ ${install_build_essential} =~ ^[Yy]$ ]]; then
         echo "=> Installing build-essential"
         echo
         sudo apt-get install -y build-essential
@@ -513,7 +513,7 @@ function install_build_essential() {
 
 function check_system_reboot() {
     echo "=> Checking if system reboot is required..."
-    if [ -f /var/run/reboot-required ]; then
+    if [[ -f /var/run/reboot-required ]]; then
         echo -e "\n\e[90;103;2m WARNING \e[m System restart required. Consider rebooting by running:\n\e[90;43;2m \e[m         sudo shutdown -r now\n"
     fi
     echo
@@ -522,7 +522,7 @@ function check_system_reboot() {
 function setup_hostname() {
     read -p "Update machine hostname? (y/n): " -r update_hostname
     echo
-    if [[ $update_hostname =~ ^[Yy]$ ]]; then
+    if [[ ${update_hostname} =~ ^[Yy]$ ]]; then
         echo "=> changing hostname "
 
         echo -e "\n\e[90;103;2m WARNING \e[m System restart is required after chaning hostname. Consider rebooting by running:\n\e[90;43;2m \e[m         sudo shutdown -r now\n"
@@ -554,19 +554,19 @@ main() {
     sudo apt-get autoremove -y
 
     # backup .bash_aliases file if it already exists
-    if [[ -f "$HOME/.bash_aliases" ]]; then
+    if [[ -f "${HOME}/.bash_aliases" ]]; then
         cp ~/.bash_aliases ~/.bash_aliases-bak-"$(date +%s)"
         echo '=> old ~/.bash_aliases have been backed up'
     fi
     curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/bash/bashrc >~/.bash_aliases
 
     # backup .vimrc file if it already exists
-    if [[ -f "$HOME/.vimrc" ]]; then
+    if [[ -f "${HOME}/.vimrc" ]]; then
         cp ~/.vimrc ~/.vimrc-bak-"$(date +%s)"
         echo '=> old ~/.vimrc have been backed up'
     fi
     curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/vim/.vimrc >~/.vimrc
-    sudo update-alternatives --set editor "$(which vim.basic)"
+    sudo update-alternatives --set editor "$(command -v vim.basic)"
 
     echo
 
