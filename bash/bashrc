@@ -12,7 +12,7 @@ function banner() {
     echo
 }
 
-export PATH=/usr/sbin/:$PATH
+export PATH=/usr/sbin/:${PATH}
 
 export EDITOR='vim'
 export SYSTEMD_EDITOR='vim'
@@ -44,16 +44,16 @@ function setup_tmux_popup() {
     local session
     session="_popup_$(tmux display -p '#S')"
 
-    if ! tmux has -t "$session" 2>/dev/null; then
+    if ! tmux has -t "${session}" 2>/dev/null; then
         local session_id
-        session_id="$(tmux new-session -dP -s "$session" -F '#{session_id}')"
-        tmux set-option -s -t "$session_id" key-table popup
+        session_id="$(tmux new-session -dP -s "${session}" -F '#{session_id}')"
+        tmux set-option -s -t "${session_id}" key-table popup
         # tmux set-option -s -t "$session_id" status off
         # tmux set-option -s -t "$session_id" prefix None
-        session="$session_id"
+        session="${session_id}"
     fi
 
-    tmux attach -t "$session" >/dev/null
+    tmux attach -t "${session}" >/dev/null
 }
 
 # to make sudo work with aliases
@@ -86,26 +86,26 @@ alias greset='git checkout --'
 alias gclean='git clean -ifdx'
 
 function gstash() {
-    if [ -z "$1" ]; then
+    if [[ -z "$1" ]]; then
         git stash list
     else
-        git stash show stash@{$1} -p
+        git stash show stash@{"$1"} -p
     fi
 }
 
 function gdropstash() {
-    if [ -z "$1" ]; then
+    if [[ -z "$1" ]]; then
         echo "Specify the id of the stash you want to drop."
     else
-        git stash drop stash@{$1}
+        git stash drop stash@{"$1"}
     fi
 }
 
 function gpopstash() {
-    if [ -z "$1" ]; then
+    if [[ -z "$1" ]]; then
         echo "Specify the id of the stash you want to apply."
     else
-        git stash pop stash@{$1}
+        git stash pop stash@{"$1"}
     fi
 }
 alias gsavestash='git stash push'
@@ -125,7 +125,8 @@ alias venv='source venv/bin/activate'
 alias venvinit='python3 -m venv venv'
 alias generate-ansible-config='ansible-config init --disabled > ansible.cfg'
 
-alias highlight="grep --color=always -e \"^\" -e"
+alias grep='grep --color=always --ignore-case'
+alias highlight="grep --color=always --ignore-case -e \"^\" -e"
 
 alias start-db='docker run -p 5432:5432 --env POSTGRES_PASSWORD=postgres --env PGDATA=/var/lib/postgresql/data/pgdata postgres'
 
@@ -133,7 +134,7 @@ alias start-db='docker run -p 5432:5432 --env POSTGRES_PASSWORD=postgres --env P
 alias show=less
 
 function serve() {
-    docker run --rm -p $1:80/tcp -v $(pwd):/usr/share/nginx/html:ro nginx:stable-alpine
+    docker run --rm -p "$1":80/tcp -v "$(pwd)":/usr/share/nginx/html:ro nginx:stable-alpine
 }
 
 alias lzd='docker run --rm -it --pull always -v /var/run/docker.sock:/var/run/docker.sock lazyteam/lazydocker'
@@ -145,19 +146,19 @@ function jwtparse() {
     read -r token
 
     local payload
-    payload="$(echo -n "$token" | cut -d "." -f 2)"
-    local result="$payload"
+    payload="$(echo -n "${token}" | cut -d "." -f 2)"
+    local result="${payload}"
 
     # pad the end of string by appending = to make
     # the encoded string length equals to multiples of 4
     local padlen=$((${#payload} % 4))
-    if [ $padlen -eq 2 ]; then
-        result="$payload"'=='
-    elif [ $padlen -eq 3 ]; then
-        result="$payload"'='
+    if [[ ${padlen} -eq 2 ]]; then
+        result="${payload}"'=='
+    elif [[ ${padlen} -eq 3 ]]; then
+        result="${payload}"'='
     fi
 
-    echo -n "$result" | base64 -d | jq '.' | $PAGER
+    echo -n "${result}" | base64 -d | jq '.' | ${PAGER}
 }
 
 backup-file() {
@@ -169,32 +170,32 @@ function pg_connect() {
     read -r db_host
 
     echo -n "Enter DB name: "
-    read db_name
+    read -r db_name
 
     echo -n "Enter DB user: "
-    read db_user
+    read -r db_user
 
     echo -n "Enter DB password: "
-    read -s db_password
+    read -r -s db_password
     echo
 
     echo -n "Enter DB port(5432): "
-    read db_port
+    read -r db_port
 
-    local cmd="psql postgresql://$db_user:$db_password@$db_host:$db_port/$db_name"
+    local cmd="psql postgresql://${db_user}:${db_password}@${db_host}:${db_port}/${db_name}"
 
-    eval $cmd
+    eval "${cmd}"
 }
 
 # compressing and extracting zip files
 function extract() {
     echo "Extracting $1"
-    tar -xzf $1
+    tar -xzf "$1"
     echo "Done extracting $1..."
 }
 function compress() {
     echo "Compressing $1"
-    tar -cvzf $1
+    tar -cvzf "$1"
     echo "Done compressing..."
 }
 
@@ -215,21 +216,21 @@ if command -v helm 2>&1 >/dev/null; then
 fi
 
 # machine specific config/overrides
-[[ -s "$HOME/.machine-config" ]] && source "$HOME/.machine-config"
+[[ -s "${HOME}/.machine-config" ]] && source "${HOME}/.machine-config"
 
 # disable the default virtualenv prompt change
 export VIRTUAL_ENV_DISABLE_PROMPT=1
 
 function virtualenv_info() {
     # Get Virtual Env
-    if [[ -n "$VIRTUAL_ENV" ]]; then
+    if [[ -n "${VIRTUAL_ENV}" ]]; then
         # Strip out the path and just leave the env name
         venv="${VIRTUAL_ENV##*/}"
     else
         # In case you don't have one activated
         venv=''
     fi
-    [[ -n "$venv" ]] && echo "(venv:$venv) "
+    [[ -n "${venv}" ]] && echo "(venv:${venv}) "
 }
 
 # ------------------------------------
@@ -288,13 +289,13 @@ bgcyan='\[\e[46m\]'
 bggray='\[\e[47m\]'
 
 function system_reboot_prompt() {
-    if [ -f /var/run/reboot-required ]; then
+    if [[ -f /var/run/reboot-required ]]; then
         echo -ne " \e[1;30;41m [ REBOOT REQUIRED ] \e[m "
     fi
 }
 
 function in_ssh_prompt() {
-    if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
+    if [[ -n "${SSH_CLIENT}" ]] || [[ -n "${SSH_TTY}" ]]; then
         echo -ne " \e[1;30;41m (SSH) \e[m "
     fi
 }
@@ -310,7 +311,7 @@ PROMPT_COMMAND=set_bash_prompt
 
 # run the ssh agent
 function start_ssh_agent() {
-    eval $(ssh-agent -s)
+    eval "$(ssh-agent -s)"
     ssh-add ~/.ssh/id_ed25519
 }
 
@@ -324,7 +325,7 @@ function update_setup() {
     curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/bash/bashrc >~/.bash_aliases
 
     curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/vim/.vimrc >~/.vimrc
-    sudo update-alternatives --set editor $(which vim.basic)
+    sudo update-alternatives --set editor "$(command -v vim.basic)"
 
     curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/tmux/tmux-minimal.conf >~/.tmux.conf
 
