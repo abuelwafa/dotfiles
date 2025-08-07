@@ -4,7 +4,7 @@ import = []
 
 [window]
 blur = true
-opacity = 0.97
+opacity = 0.9
 startup_mode = "Fullscreen"
 option_as_alt = "OnlyLeft"
 decorations_theme_variant = "Dark"
@@ -14,7 +14,7 @@ program = "/bin/zsh"
 args = ["-l"]
 
 [font]
-size = 15
+size = 16
 normal.family = "MesloLGL Nerd font"
 offset.y = 2
 glyph_offset.y = 0
@@ -32,7 +32,7 @@ blink_interval = 300
 blink_timeout = 0
 
 [mouse]
-hide_when_typing = true
+hide_when_typing = false
 
 [scrolling]
 history = 100000
