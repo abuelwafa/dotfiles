@@ -100,25 +100,30 @@ main() {
     touch ~/.machine-config
 
     # increase inotify watchers
-    if ! grep -q -e "fs.inotify.max_user_watches" /etc/sysctl.d/dev.conf; then
-        echo fs.inotify.max_user_watches=999999 | sudo tee -a /etc/sysctl.d/dev.conf &>/dev/null
+    if ! grep -q -e "fs.inotify.max_user_watches" /etc/sysctl.d/00-max-user-watches.conf; then
+        echo fs.inotify.max_user_watches=999999 | sudo tee -a /etc/sysctl.d/00-max-user-watches.conf &>/dev/null
         sudo sysctl -p
     fi
 
+    # increase open files soft limit
+    if ! grep -q -e "softnofile" /etc/security/limits.d/00-open-files.conf; then
+        echo "*    soft    nofile    4096" | sudo tee /etc/security/limits.d/00-open-files.conf &>/dev/null
+    fi
+
     # clone essential repos
-    if [ -d ~/workspace/dotfiles ]; then
+    if [[ -d ~/workspace/dotfiles ]]; then
         (cd ~/workspace/dotfiles && git fetch --all --prune && git pull --rebase)
     else
         git clone https://github.com/abuelwafa/dotfiles.git ~/workspace/dotfiles
     fi
-    if [ -d ~/workspace/tpm ]; then
+    if [[ -d ~/workspace/tpm ]]; then
         (cd ~/workspace/tpm && git pull --rebase)
     else
         git clone https://github.com/tmux-plugins/tpm ~/workspace/tpm
     fi
 
     # generate ssh key
-    if [ ! -f ~/.ssh/id_ed25519 ]; then
+    if [[ ! -f ~/.ssh/id_ed25519 ]]; then
         ssh-keygen -t ed25519 -C "mohamed.abuelwafa"
     fi
 
@@ -182,7 +187,7 @@ main() {
     )
 
     for package in "${brew_packages_list[@]}"; do
-        brew install "$package"
+        brew install "${package}"
     done
 
     # linking config files
