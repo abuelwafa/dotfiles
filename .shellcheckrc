@@ -1,4 +1,4 @@
-shell = bash
+shell=bash
 
 enable=quote-safe-variables
 enable=check-unassigned-uppercase
