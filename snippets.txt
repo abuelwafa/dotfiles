@@ -26,6 +26,6 @@ Host host-name
     LocalForward localhost:5432 localhost:5432
 ====================================================================================================
 # start redis server
-docker run --name some-redis-instance --rm -p 6379:6379 redis
+docker run --name some-redis-instance --rm -p 6379:6379 valkey/valkey
 ====================================================================================================
 
