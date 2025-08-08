@@ -73,8 +73,6 @@ main() {
     rm ~/.tmux.conf || true
     rm ~/.gitconfig.conf || true
 
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/server-configs/setup.sh)"
-
     sudo apt install \
         vim \
         curl \
@@ -109,6 +107,8 @@ main() {
     if ! grep -q -e "softnofile" /etc/security/limits.d/00-open-files.conf; then
         echo "*    soft    nofile    4096" | sudo tee /etc/security/limits.d/00-open-files.conf &>/dev/null
     fi
+
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/server-configs/setup.sh)"
 
     # clone essential repos
     if [[ -d ~/workspace/dotfiles ]]; then
