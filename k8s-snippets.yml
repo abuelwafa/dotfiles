@@ -68,12 +68,34 @@ spec:
 
 ---
 # configmap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+data:
 
 ---
 # secret
+apiVersion: v1
+kind: Secret
+metadata:
+data:
 
 ---
 # daemon-set
+apiVersion: v1
+kind: DaemonSet
+metadata:
+spec:
+    selector:
+        matchLabels:
+            name: ___
+    template:
+        metadata:
+            labels:
+                name: ___
+        spec:
+            tolerations:
+            containers:
 
 ---
 # namespace

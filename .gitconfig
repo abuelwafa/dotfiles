@@ -25,7 +25,7 @@
     tool = nvim -d
     guitool = meld
     colorMoved = default
-    context = 12
+    context = 8
 [difftool]
     prompt = false
     trustExitCode = true

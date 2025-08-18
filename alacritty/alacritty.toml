@@ -14,7 +14,7 @@ program = "/bin/zsh"
 args = ["-l"]
 
 [font]
-size = 16
+size = 15
 normal.family = "MesloLGL Nerd font"
 offset.y = 2
 glyph_offset.y = 0

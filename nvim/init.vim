@@ -55,7 +55,6 @@ Plug 'MunifTanjim/nui.nvim'
 Plug 'szw/vim-maximizer'
 Plug 'akinsho/bufferline.nvim', { 'tag': '*' }
 Plug 'jparise/vim-graphql'
-Plug 'norcalli/nvim-colorizer.lua'
 Plug 'f-person/git-blame.nvim'
 Plug 'eandrju/cellular-automaton.nvim'
 Plug 'rcarriga/nvim-notify'
@@ -315,16 +314,6 @@ require('gitsigns').setup({
 })
 require('numb').setup()
 require("chatgpt").setup()
-require('colorizer').setup({ '*' }, {
-    RGB = true;
-    RRGGBB = true;
-    RRGGBBAA = true;
-    names = true;
-    rgb_fn = true;
-    hsl_fn = true;
-    css = true;
-    css_fn = true;
-})
 require('dressing').setup()
 require('trouble').setup()
 require('fidget').setup()
@@ -422,13 +411,23 @@ vim.api.nvim_create_autocmd({ "CursorHold" }, {
   end
 })
 
+-- close all floating windows upon buffer leave
+vim.api.nvim_create_autocmd({ "BufLeave"}, {
+    callback = function ()
+        for _, win in ipairs(vim.api.nvim_list_wins()) do
+            if vim.api.nvim_win_get_config(win).relative ~= "" then
+                vim.api.nvim_win_close(win, false)
+            end
+        end
+    end
+})
+
 local ensure_installed = {
     'actionlint',
     'ansiblels',
     'astro',
     'bash-debug-adapter',
     'bashls',
-    'chrome-debug-adapter',
     'clangd',
     'cmake',
     'cssls',
