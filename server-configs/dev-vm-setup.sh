@@ -207,7 +207,7 @@ main() {
     ln --force -s ~/workspace/dotfiles/yamlfmt.yml ~/yamlfmt.yml
 
     # install sdkman
-    install_sdkman
+    setup_sdkman
 
     # install rust tools
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
