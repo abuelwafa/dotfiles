@@ -407,8 +407,8 @@ function setup_containerd() {
         sudo tar --extract -C /usr/local -zvv -f /tmp/"${file_name}"
 
         # download containerd systemd service file
-        curl -fsSL https://raw.githubusercontent.com/containerd/containerd/main/containerd.service \
-            -O --output-dir /usr/local/lib/systemd/system
+        sudo mkdir -p /usr/local/lib/systemd/system
+        curl -fsSL https://raw.githubusercontent.com/containerd/containerd/main/containerd.service | sudo tee /usr/local/lib/systemd/system/containerd.service &>/dev/null
         sudo systemctl daemon-reload
         sudo systemctl enable --now containerd
 
