@@ -19,7 +19,7 @@ fi
 function setup_sdkman() {
     read -p "Setup and configure SDKMAN with java, kotlin and gradle? (y/n): " -r install_sdkman
     echo
-    if [[ $install_sdkman =~ ^[Yy]$ ]]; then
+    if [[ ${install_sdkman} =~ ^[Yy]$ ]]; then
         echo "=> Installing SDKMAN"
         curl -s "https://get.sdkman.io" | bash
         sdk install java
@@ -73,7 +73,8 @@ main() {
     rm ~/.tmux.conf || true
     rm ~/.gitconfig.conf || true
 
-    sudo apt install \
+    sudo apt-get update
+    sudo apt-get install -y \
         vim \
         curl \
         git \
