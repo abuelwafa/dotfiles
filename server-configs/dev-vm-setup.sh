@@ -16,10 +16,12 @@ if [[ "${TRACE-0}" == "1" ]]; then
     set -o xtrace
 fi
 
+shopt -s globstar nullglob
+
 function setup_sdkman() {
     read -p "Setup and configure SDKMAN with java, kotlin and gradle? (y/n): " -r install_sdkman
     echo
-    if [[ ${install_sdkman} =~ ^[Yy]$ ]]; then
+    if [[ $install_sdkman =~ ^[Yy]$ ]]; then
         echo "=> Installing SDKMAN"
         curl -s "https://get.sdkman.io" | bash
         sdk install java
@@ -73,8 +75,7 @@ main() {
     rm ~/.tmux.conf || true
     rm ~/.gitconfig.conf || true
 
-    sudo apt-get update
-    sudo apt-get install -y \
+    sudo apt install \
         vim \
         curl \
         git \
@@ -187,8 +188,10 @@ main() {
         # ruby-build
     )
 
-    for package in "${brew_packages_list[@]}"; do
-        brew install "${package}"
+    local batchsize=8
+    local len_packages=${#brew_packages_list[@]}
+    for ((i = 0; i < len_packages; i += 8)); do
+        brew install "${brew_packages_list[@]:i:batchsize}"
     done
 
     # linking config files
@@ -207,16 +210,17 @@ main() {
     ln --force -s ~/workspace/dotfiles/yamlfmt.yml ~/yamlfmt.yml
 
     # install sdkman
-    setup_sdkman
+    install_sdkman
 
     # install rust tools
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+    source "$HOME/.cargo/env"
 
     # install tclock
     cargo install tclock
 
     # configure opencode
-    opencode auth login
+    opencode auth login || true
 
     # setup neovim
     setup_neovim
