@@ -26,7 +26,7 @@ Plug 'ANGkeith/telescope-terraform-doc.nvim'
 Plug 'lpoto/telescope-docker.nvim'
 Plug 'nvim-telescope/telescope-file-browser.nvim'
 Plug 'nvim-telescope/telescope-ui-select.nvim'
-Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build' }
+Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release' }
 Plug 'lukas-reineke/indent-blankline.nvim'
 Plug 'phaazon/hop.nvim'
 Plug 'lbrayner/vim-rzip'
@@ -69,7 +69,7 @@ Plug 'folke/trouble.nvim'
 Plug 'j-hui/fidget.nvim'
 Plug 'windwp/nvim-autopairs'
 Plug 'nvim-tree/nvim-tree.lua'
-Plug 'nvim-neo-tree/neo-tree.nvim'
+" Plug 'nvim-neo-tree/neo-tree.nvim'
 Plug 'nvim-tree/nvim-web-devicons'
 Plug 'windwp/nvim-ts-autotag'
 
@@ -294,14 +294,6 @@ vim.opt.hlsearch = true
 vim.keymap.set('n', '<esc>', '<cmd>nohlsearch<CR>')
 vim.keymap.set('t', '<esc><esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 
-require("notify").setup({
-    timeout = 3000,
-    render = "compact",
-    stages = "static"
-})
-vim.notify = require("notify")
-require('telescope').load_extension('notify')
-
 -- plugins
 require('hop').setup()
 require('Comment').setup()
@@ -357,7 +349,7 @@ require('nvim-treesitter.configs').setup({
     ensure_installed = "all",
     auto_install = true,
     sync_install = false,
-    ignore_install = {},
+    ignore_install = { "ipkg" },
     highlight = {
         enable = true,
         disable = {},
@@ -403,21 +395,21 @@ for type, icon in pairs(signs) do
   vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
 end
 
+local float_winid = nil
+
 vim.diagnostic.config({ virtual_text = false, float = { source = true } })
 vim.api.nvim_create_autocmd({ "CursorHold" }, {
   group = vim.api.nvim_create_augroup("float_diagnostic", { clear = true }),
   callback = function ()
-    vim.diagnostic.open_float(nil, { focus = false, border = 'single' })
+    _, float_winid = vim.diagnostic.open_float(nil, { focus = false, border = 'single' })
   end
 })
 
 -- close all floating windows upon buffer leave
-vim.api.nvim_create_autocmd({ "BufLeave"}, {
+vim.api.nvim_create_autocmd({ "BufLeave" }, {
     callback = function ()
-        for _, win in ipairs(vim.api.nvim_list_wins()) do
-            if vim.api.nvim_win_get_config(win).relative ~= "" then
-                vim.api.nvim_win_close(win, false)
-            end
+        if float_winid ~= nil then
+            vim.api.nvim_win_close(float_winid, true)
         end
     end
 })
@@ -777,7 +769,15 @@ require('telescope').load_extension('terraform_doc')
 require("telescope").load_extension("docker")
 require("telescope").load_extension("file_browser")
 require("telescope").load_extension("ui-select")
-require('telescope').load_extension('fzf')
+-- require('telescope').load_extension('fzf')
+
+require("notify").setup({
+    timeout = 3000,
+    render = "compact",
+    stages = "static"
+})
+vim.notify = require("notify")
+require('telescope').load_extension('notify')
 
 -- nvim-tree setup
 require("nvim-tree").setup({
