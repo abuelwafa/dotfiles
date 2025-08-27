@@ -266,7 +266,8 @@ alias remove='rm -rf'
 
 alias kctl='kubectl'
 alias lima='limactl'
-alias lima-create-debian='limactl create template://debian-12 --arch=x86_64 --plain --vm-type qemu --cpus=2 --memory 2 --disk 20 --network lima:shared --name '
+alias lima-create-debian='limactl create template://debian-12 --arch=x86_64 --plain --vm-type qemu --cpus=2 --memory 2 --disk 20 --network lima:user-v2 --name '
+alias lima-create-dev-vm='limactl create template://debian-12 --arch=x86_64 --plain --vm-type qemu --cpus=2 --memory 6 --disk 20 --network lima:user-v2 --name '
 alias dog='doggo --any'
 alias start-db='docker run -p 5432:5432 --env POSTGRES_PASSWORD=postgres --env PGDATA=/var/lib/postgresql/data/pgdata postgres'
 
