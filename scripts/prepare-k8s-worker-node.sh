@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
 #   ▄▄   █                    ▀▀█                    ▄▀▀
 #   ██   █▄▄▄   ▄   ▄   ▄▄▄     █   ▄     ▄  ▄▄▄   ▄▄█▄▄   ▄▄▄
@@ -12,38 +12,10 @@
 set -o errexit
 set -o nounset
 set -o pipefail
+shopt -s globstar nullglob
 if [[ "${TRACE-0}" == "1" ]]; then
     set -o xtrace
 fi
-
-setup_rootles_containerd() {
-    local container_user="wafa"
-
-    sudo useradd --create-home --shell $(which bash) --user-group --groups sudo $container_user
-
-    cat <<EOF | sudo tee -a /etc/subuid
-    $container_user:100000:65536
-    EOF
-    cat <<EOF | sudo tee -a /etc/subgid
-    $container_user:100000:65536
-    EOF
-
-    sudo apt-get install -y uidmap dbus-user-session
-
-    sudo loginctl enable-linger $container_user
-
-    cat <<EOF | sudo tee /etc/sysctl.d/98-rootless.conf
-    # Allowing listening on TCP & UDP ports below 1024
-    net.ipv4.ip_unprivileged_port_start=0
-    # allow ping
-    net.ipv4.ping_group_range = 0 2147483647
-    EOF
-
-    # generate containerd default config file
-    sudo mkdir -p /etc/containerd
-    containerd config default | sudo tee /etc/containerd/config.toml &>/dev/null
-}
-
 
 create_kubeadm_config() {
     cat <<EOF | sudo tee /etc/kubernetes/kubeadm-config.yaml
@@ -84,46 +56,51 @@ enable_packet_forwarding() {
         cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf
         net.ipv4.ip_forward = 1
 EOF
-
         # Apply sysctl params without reboot
         sudo sysctl --system
     fi
 }
 
-setup_containerd() {
-    echo '=> Installing nerdctl (full version)'
+function setup_containerd() {
+    echo '=> Installing Containerd'
 
     local hardware_name
     hardware_name="$(uname --machine)"
 
     local cpu_arch
-    if [[ "$hardware_name" == "arm64" ]]; then
+    if [[ "${hardware_name}" == "arm64" ]]; then
         cpu_arch="arm64"
     else
         cpu_arch="amd64"
     fi
 
     local tag_name # v2.0.3
-    tag_name="$(curl -fsSL https://api.github.com/repos/containerd/nerdctl/releases/latest | jq -r '.tag_name')"
+    tag_name="$(curl -fsSL https://api.github.com/repos/containerd/containerd/releases/latest | jq -r '.tag_name')"
+    echo "=> found containerd version ${tag_name}"
 
-    local nerdctl_version # 2.0.3
-    nerdctl_version="$(echo "$tag_name" | cut -d 'v' -f 2)"
+    local containerd_version # 2.0.3
+    containerd_version="$(echo "${tag_name}" | cut -d 'v' -f 2)"
 
     local file_name
-    file_name="nerdctl-full-${nerdctl_version}-linux-${cpu_arch}.tar.gz"
+    file_name="containerd-${containerd_version}-linux-${cpu_arch}.tar.gz"
 
     local download_url
-    download_url="https://github.com/containerd/nerdctl/releases/download/${tag_name}/${file_name}"
+    download_url="https://github.com/containerd/containerd/releases/download/${tag_name}/${file_name}"
 
-    curl -fSLO "$download_url"
-    sudo tar --extract -C /usr/local -zvv -f "$file_name"
+    curl -fSLO "${download_url}" --output-dir /tmp
+    sudo tar --extract -C /usr/local -zvv -f /tmp/"${file_name}"
+
+    echo "=> setting up containerd systemd service"
+    # download containerd systemd service file
+    sudo mkdir -p /usr/local/lib/systemd/system
+    curl -fsSL https://raw.githubusercontent.com/containerd/containerd/main/containerd.service | sudo tee /usr/local/lib/systemd/system/containerd.service &>/dev/null
+    sudo systemctl daemon-reload
     sudo systemctl enable --now containerd
 
-    # nerdctl bash completion
-    sudo mkdir /etc/bash_completion.d
-    /usr/local/bin/nerdctl completion bash | sudo tee /etc/bash_completion.d/nerdctl &>/dev/null
+    echo "=> cleaning up"
+    rm /tmp/"${file_name}"
 
-    echo
+    echo "=> containerd has been successfully installed"
 }
 
 disable_swap() {
@@ -133,19 +110,63 @@ disable_swap() {
 }
 
 install_kubelet() {
-    # download the public signing key for the Kubernetes package repositories
-    curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.33/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+    if ! command -v kubadm &>/dev/null; then
+        # download the public signing key for the Kubernetes package repositories
+        curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.33/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
 
-    # add the Kubernetes apt repository
-    echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.33/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
+        # add the Kubernetes apt repository
+        echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.33/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
 
-    sudo apt-get update
-    sudo apt-get install -y kubelet kubeadm
-    sudo apt-mark hold kubelet kubeadm
+        sudo apt-get update
+        sudo apt-get install -y kubelet kubeadm
+        sudo apt-mark hold kubelet kubeadm
 
-    # enable the kubelet
-    # the kubelet will restart every few seconds. waiting for instructions from kubeadm
-    sudo systemctl enable --now kubelet
+        # enable the kubelet
+        # the kubelet will restart every few seconds. waiting for instructions from kubeadm
+        sudo systemctl enable --now kubelet
+    fi
+}
+
+function setup_nerdctl_minimal() {
+    read -p "Setup and configure nerdctl (minimal)? (y/n): " -r install_nerdctl_minimal
+    echo
+    if [[ ${install_nerdctl_minimal} =~ ^[Yy]$ ]]; then
+        echo '=> Installing nerdctl (minimal version)'
+
+        local hardware_name
+        hardware_name="$(uname --machine)"
+
+        local cpu_arch
+        if [[ "${hardware_name}" == "arm64" ]]; then
+            cpu_arch="arm64"
+        else
+            cpu_arch="amd64"
+        fi
+
+        local tag_name # v2.0.3
+        tag_name="$(curl -fsSL https://api.github.com/repos/containerd/nerdctl/releases/latest | jq -r '.tag_name')"
+        echo "=> found nerdctl version ${tag_name}"
+
+        local nerdctl_version # 2.0.3
+        nerdctl_version="$(echo "${tag_name}" | cut -d 'v' -f 2)"
+
+        local file_name
+        file_name="nerdctl-${nerdctl_version}-linux-${cpu_arch}.tar.gz"
+
+        local download_url
+        download_url="https://github.com/containerd/nerdctl/releases/download/${tag_name}/${file_name}"
+
+        curl -fSLO "${download_url}" --output-dir /tmp
+        # sudo tar --extract -C /usr/local -zvv -f "$file_name"
+        # sudo systemctl enable --now containerd
+
+        echo "=> cleaning up"
+        rm /tmp/"${file_name}"
+        echo "=> nerdctl has been successfully installed"
+    else
+        echo "Skipping install of nerdctl"
+    fi
+    echo
 }
 
 validate_node_setup() {
@@ -198,11 +219,14 @@ main() {
     setup_ufw                       # pending
     setup_fail2ban                  # pending
     enable_packet_forwarding
-    setup_containerd                # pending
+    setup_containerd
+    setup_nerdctl_minimal
     disable_swap                    # pending
     install_kubelet
+
     echo "=> pulling required images"
     sudo kubeadm images pull
+
     validate_node_setup             # pending
     check_system_reboot             # pending
 

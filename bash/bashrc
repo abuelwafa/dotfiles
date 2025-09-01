@@ -215,6 +215,10 @@ if command -v helm 2>&1 >/dev/null; then
     source <(helm completion bash)
 fi
 
+if command -v hcloud 2>&1 >/dev/null; then
+    source <(hcloud completion bash)
+fi
+
 # machine specific config/overrides
 [[ -s "${HOME}/.machine-config" ]] && source "${HOME}/.machine-config"
 

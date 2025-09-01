@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
 #   ▄▄   █                    ▀▀█                    ▄▀▀
 #   ██   █▄▄▄   ▄   ▄   ▄▄▄     █   ▄     ▄  ▄▄▄   ▄▄█▄▄   ▄▄▄
@@ -12,6 +12,7 @@
 set -o errexit
 set -o nounset
 set -o pipefail
+shopt -s globstar nullglob
 if [[ "${TRACE-0}" == "1" ]]; then
     set -o xtrace
 fi
@@ -21,7 +22,7 @@ shopt -s globstar nullglob
 function setup_sdkman() {
     read -p "Setup and configure SDKMAN with java, kotlin and gradle? (y/n): " -r install_sdkman
     echo
-    if [[ $install_sdkman =~ ^[Yy]$ ]]; then
+    if [[ ${install_sdkman} =~ ^[Yy]$ ]]; then
         echo "=> Installing SDKMAN"
         curl -s "https://get.sdkman.io" | bash
         sdk install java
@@ -42,17 +43,18 @@ function setup_neovim() {
     mkdir -p ~/.nvim/_backup
     echo "=> Openning neovim to install plugins and language servers. Exit when finished."
     sleep 2
-    echo "=> Openning in 5 seconds."
+    echo -n "=> Openning in 5 seconds."
     sleep 1
-    echo "=> Openning in 4 seconds."
+    echo -ne "\r=> Openning in 4 seconds."
     sleep 1
-    echo "=> Openning in 3 seconds."
+    echo -ne "\r=> Openning in 3 seconds."
     sleep 1
-    echo "=> Openning in 2 seconds."
+    echo -ne "\r=> Openning in 2 seconds."
     sleep 1
-    echo "=> Openning in 1 seconds."
+    echo -ne "\r=> Openning in 1 seconds."
     sleep 1
     nvim
+    echo
 }
 
 function setup_homebrew() {
@@ -69,7 +71,6 @@ function setup_homebrew() {
 }
 
 main() {
-
     rm ~/.vimrc || true
     rm ~/.bash_aliases || true
     rm ~/.tmux.conf || true
@@ -138,6 +139,7 @@ main() {
 
     local brew_packages_list
     brew_packages_list=(
+        bash
         vim
         neovim
         git
@@ -164,6 +166,7 @@ main() {
         derailed/k9s/k9s
         kubectx
         kustomize
+        trivy
         go
         ansible
         python@3
@@ -179,13 +182,8 @@ main() {
         gh
         dust
         fx
+        superfile
         cmatrix
-        # yarn
-        # watchman
-        # fd
-        # eza
-        # rbenv
-        # ruby-build
     )
 
     local batchsize=8
@@ -218,6 +216,9 @@ main() {
 
     # install tclock
     cargo install tclock
+
+    # install lazytrivy
+    go install github.com/owenrumney/lazytrivy@latest
 
     # configure opencode
     opencode auth login || true

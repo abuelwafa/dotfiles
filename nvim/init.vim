@@ -1102,6 +1102,7 @@ vim.api.nvim_command([[
 ]])
 vim.api.nvim_set_keymap('i', 'xx', '$', {noremap = true})
 vim.api.nvim_set_keymap('i', 'vv', '``<esc>i', {noremap = true})
+vim.api.nvim_set_keymap('i', 'VV', '~', {noremap = true})
 
 -- mappings for speed buffer switching
 vim.api.nvim_set_keymap('n', '<leader>b', ':bprevious<CR>', {noremap = true})

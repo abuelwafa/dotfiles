@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
 #   ▄▄   █                    ▀▀█                    ▄▀▀
 #   ██   █▄▄▄   ▄   ▄   ▄▄▄     █   ▄     ▄  ▄▄▄   ▄▄█▄▄   ▄▄▄
@@ -35,10 +35,13 @@ function setup_aws_cli() {
 }
 
 function setup_hetzner_cli() {
-    read -p "Setup and configure Hetzner cloud CLI? (y/n): " -r install_hcloud_cli
+    read -p "Setup and configure Hetzner cloud CLI (release binary)? (y/n): " -r install_hcloud_cli
     echo
     if [[ ${install_hcloud_cli} =~ ^[Yy]$ ]]; then
         echo "=> installing Hetzner cloud CLL"
+        curl -sSL https://github.com/hetznercloud/cli/releases/latest/download/hcloud-linux-amd64.tar.gz --output-dir /tmp
+        sudo tar -C /usr/local/bin --no-same-owner -xzf /tmp/hcloud-linux-amd64.tar.gz hcloud
+        rm /tmp/hcloud-linux-amd64.tar.gz
     else
         echo "Skipping install of Hetzner cloud CLI"
     fi
@@ -49,14 +52,18 @@ function setup_gcloud_cli() {
     read -p "Setup and configure Google Cloud CLI? (y/n): " -r install_gcloud_cli
     echo
     if [[ ${install_gcloud_cli} =~ ^[Yy]$ ]]; then
-        echo "=> installing Google Cloud CLL"
-        curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg
-        echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+        if command -v gcloud &>/dev/null; then
+            echo "=> Google Cloud CLI is already installed. update"
+        else
+            echo "=> installing Google Cloud CLI"
+            curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg
+            echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
 
-        sudo apt-get update && sudo apt-get install -y google-cloud-cli
+            sudo apt-get update && sudo apt-get install -y google-cloud-cli
 
-        echo "=> Google cloud cli has been installed successfully."
-        echo "=> run \`gcloud init\` to configure it"
+            echo "=> Google cloud cli has been installed successfully."
+            echo "=> run \`gcloud init\` to configure it"
+        fi
     else
         echo "Skipping install of Google Cloud CLI"
     fi
@@ -131,7 +138,7 @@ function setup_docker() {
     echo
 }
 
-function setup_wireguard() {
+function setup_wireguard_client() {
     read -p "Setup and configure Wireguard? (y/n): " -r install_wireguard
     echo
     if [[ ${install_wireguard} =~ ^[Yy]$ ]]; then
@@ -153,7 +160,7 @@ function setup_wireguard() {
         cat <<EOF | sudo tee /etc/wireguard/wg0.conf &>/dev/null
 [Interface]
 Address = ${vpn_client_ip}/32
-PrivateKey = $(cat /etc/wireguard/wg0.key)
+PrivateKey = $(sudo cat /etc/wireguard/wg0.key)
 
 [Peer]
 Endpoint = ${vpn_server_host}:${vpn_server_port}
@@ -227,9 +234,12 @@ function setup_prometheus_node_exporter() {
 EOL
 
         local node_exporter_listen_address
-        read -p "Node Exporter listen address (127.0.0.1:9100): " -r node_exporter_listen_address
-        if [[ -z "${node_exporter_listen_address}" ]]; then
-            node_exporter_listen_address="127.0.0.1:9100"
+        local node_exporter_params=""
+        echo "By default, Node Exporter will listen on 127.0.0.1:9100"
+        echo "you can enter additional listen address. leave blank for the default"
+        read -p "Additional Node Exporter listen address: " -r node_exporter_listen_address
+        if [[ ! -z "${node_exporter_listen_address}" ]]; then
+            node_exporter_params="${node_exporter_params} --web.listen-address=${node_exporter_listen_address}"
         fi
 
         sudo touch /etc/systemd/system/prometheus-node-exporter.service
@@ -254,9 +264,10 @@ ProtectControlGroups=true
 ProtectKernelModules=true
 ProtectKernelTunables=yes
 SyslogIdentifier=node_exporter
-ExecStart=/usr/local/bin/node_exporter \
-    --web.listen-address=${node_exporter_listen_address} \
-    # --web.config.file=/etc/prometheus/web.config.yml \
+ExecStart=/usr/local/bin/node_exporter --web.listen-address=127.0.0.1:9100 ${node_exporter_params}
+# we can also add a web.config.yml file param --web.config.file=/etc/prometheus/web.config.yml
+# to configure basic auth users and TLS. but it's better to handle these through a reverse proxy
+# and an auth server. e.g. nginx and keycloak
 
 [Install]
 WantedBy=multi-user.target
@@ -393,6 +404,7 @@ function setup_containerd() {
 
         local tag_name # v2.0.3
         tag_name="$(curl -fsSL https://api.github.com/repos/containerd/containerd/releases/latest | jq -r '.tag_name')"
+        echo "=> found containerd version ${tag_name}"
 
         local containerd_version # 2.0.3
         containerd_version="$(echo "${tag_name}" | cut -d 'v' -f 2)"
@@ -406,13 +418,17 @@ function setup_containerd() {
         curl -fSLO "${download_url}" --output-dir /tmp
         sudo tar --extract -C /usr/local -zvv -f /tmp/"${file_name}"
 
+        echo "=> setting up containerd systemd service"
         # download containerd systemd service file
         sudo mkdir -p /usr/local/lib/systemd/system
         curl -fsSL https://raw.githubusercontent.com/containerd/containerd/main/containerd.service | sudo tee /usr/local/lib/systemd/system/containerd.service &>/dev/null
         sudo systemctl daemon-reload
         sudo systemctl enable --now containerd
 
+        echo "=> cleaning up"
         rm /tmp/"${file_name}"
+
+        echo "=> containerd has been successfully installed"
     else
         echo "Skipping install of containerd"
     fi
@@ -437,6 +453,7 @@ function setup_nerdctl_minimal() {
 
         local tag_name # v2.0.3
         tag_name="$(curl -fsSL https://api.github.com/repos/containerd/nerdctl/releases/latest | jq -r '.tag_name')"
+        echo "=> found nerdctl version ${tag_name}"
 
         local nerdctl_version # 2.0.3
         nerdctl_version="$(echo "${tag_name}" | cut -d 'v' -f 2)"
@@ -451,7 +468,9 @@ function setup_nerdctl_minimal() {
         # sudo tar --extract -C /usr/local -zvv -f "$file_name"
         # sudo systemctl enable --now containerd
 
+        echo "=> cleaning up"
         rm /tmp/"${file_name}"
+        echo "=> nerdctl has been successfully installed"
     else
         echo "Skipping install of nerdctl"
     fi
@@ -476,6 +495,7 @@ function setup_nerdctl_full() {
 
         local tag_name # v2.0.3
         tag_name="$(curl -fsSL https://api.github.com/repos/containerd/nerdctl/releases/latest | jq -r '.tag_name')"
+        echo "=> found nerdctl version ${tag_name}"
 
         local nerdctl_version # 2.0.3
         nerdctl_version="$(echo "${tag_name}" | cut -d 'v' -f 2)"
@@ -490,7 +510,9 @@ function setup_nerdctl_full() {
         sudo tar --extract -C /usr/local -zvv -f /tmp/"${file_name}"
         sudo systemctl enable --now containerd
 
+        echo "=> cleaning up"
         rm /tmp/"${file_name}"
+        echo "=> nerdctl has been successfully installed"
     else
         echo "Skipping install of containerd/nerdctl"
     fi
@@ -574,7 +596,8 @@ main() {
     setup_git
     setup_tmux
     setup_hostname
-    setup_wireguard
+    # setup_wireguard_server
+    setup_wireguard_client
     setup_ufw
     harden_ssh
     setup_nginx
@@ -590,6 +613,8 @@ main() {
     setup_hetzner_cli
     setup_prometheus_node_exporter
     setup_grafana_alloy
+    # setup_harbor
+    # setup_nfs
 
     check_system_reboot
 }
