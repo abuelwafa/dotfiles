@@ -219,7 +219,7 @@ main() {
     fi
 
     # install tclock
-    cargo install tclock
+    cargo install clock-tui
 
     # install lazytrivy
     go install github.com/owenrumney/lazytrivy@latest
