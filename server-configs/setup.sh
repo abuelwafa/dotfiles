@@ -80,7 +80,7 @@ function harden_ssh() {
         read -p "Enter usernames allowed to SSH (space separated list): " -r ssh_allowed_users
 
         local ssh_listen_address
-        read -p "SSH listen address: " -r ssh_listen_address
+        read -p "SSH listen address(hostname only): " -r ssh_listen_address
 
         local ssh_listen_port
         read -p "SSH listen port: " -r ssh_listen_port
@@ -103,7 +103,7 @@ ListenAddress ${ssh_listen_address}
 EOF
 
         # enable the ssh port for ssh in firewall
-        command -v ufw >/dev/null 2>&1 && sudo ufw allow "${ssh_listen_port}"/tcp
+        command -v ufw >/dev/null 2>&1 && sudo ufw limit in proto tcp to "${ssh_listen_address}" port "${ssh_listen_port}" from 0.0.0.0/24 comment "allow ssh over vpn"
 
         # restart the ssh service
         echo -e "\n\e[90;103;2m WARNING \e[m Restarting SSH service. Check that your SSH connection still works in another terminal.\n"
@@ -128,10 +128,36 @@ function setup_nginx() {
 }
 
 function setup_docker() {
-    read -p "Setup and configure Docker? (y/n): " -r install_docker
+    read -p "Setup and configure Docker engine? (y/n): " -r install_docker
     echo
     if [[ ${install_docker} =~ ^[Yy]$ ]]; then
-        echo "=> installing Docker"
+        echo "=> installing Docker engine"
+        for pkg in docker.io docker-doc docker-compose podman-docker containerd runc; do
+            sudo apt-get remove $pkg
+        done
+
+        sudo install -m 0755 -d /etc/apt/keyrings
+        sudo curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc
+        sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+        local arch=$(dpkg --print-architecture)
+        local codename
+        codename=$(. /etc/os-release && echo "${VERSION_CODENAME}")
+
+        local repo
+        repo="deb [arch=${arch} signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian ${codename} stable"
+
+        echo "${repo}" | sudo tee /etc/apt/sources.list.d/docker.list >/dev/null
+
+        sudo apt-get update
+
+        sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+        sudo groupadd docker
+        sudo usermod -aG docker "${USER}"
+        newgrp docker
+
+        echo "Docker engine has been successfully installed."
     else
         echo "Skipping install of Docker"
     fi
@@ -139,7 +165,8 @@ function setup_docker() {
 }
 
 function setup_wireguard_client() {
-    read -p "Setup and configure Wireguard? (y/n): " -r install_wireguard
+    local install_wireguard
+    read -p "Setup and configure Wireguard as a client? (y/n): " -r install_wireguard
     echo
     if [[ ${install_wireguard} =~ ^[Yy]$ ]]; then
         echo "=> installing Wireguard"
@@ -152,7 +179,14 @@ function setup_wireguard_client() {
 
         sudo cat /etc/wireguard/wg0.key | wg pubkey | sudo tee /etc/wireguard/wg0.key.pub &>/dev/null
 
-        read -p "VPN server host: " -r vpn_server_host
+        echo
+        echo "==> The public key for wireguard is:"
+        sudo cat /etc/wireguard/wg0.key.pub
+        echo
+        read -p "Press Enter to continue..." -r
+
+        echo
+        read -p "VPN server host(hostname only): " -r vpn_server_host
         read -p "VPN server port: " -r vpn_server_port
         read -p "VPN server public key: " -r vpn_server_public_key
         read -p "Client assigned IP: " -r vpn_client_ip
@@ -173,7 +207,52 @@ EOF
         wg-quick down wg0
         wg-quick up wg0
     else
-        echo "Skipping Wireguard setup"
+        echo "Skipping Wireguard client setup"
+    fi
+    echo
+}
+
+function setup_wireguard_server() {
+    local install_wireguard
+    read -p "Setup and configure Wireguard as a server (exit node)? (y/n): " -r install_wireguard
+    echo
+    if [[ ${install_wireguard} =~ ^[Yy]$ ]]; then
+        echo "=> installing Wireguard"
+        sudo apt-get install -y wireguard wireguard-tools
+
+        # generate wireguard private key only if it doesn't exist
+        if [[ ! -f "/etc/wireguard/wg0.key" ]]; then
+            wg genkey | sudo tee /etc/wireguard/wg0.key &>/dev/null
+        fi
+
+        sudo cat /etc/wireguard/wg0.key | wg pubkey | sudo tee /etc/wireguard/wg0.key.pub &>/dev/null
+
+        echo
+        echo "==> The public key for wireguard is:"
+        sudo cat /etc/wireguard/wg0.key.pub
+        echo
+        read -p "Press Enter to continue..." -r
+
+        echo
+        read -p "VPN listen port: " -r vpn_listen_port
+        read -p "Wireguard subnets(example 10.0.0.0/8) [use commas for multiple subnets]: " -r vpn_network_subnet
+        cat <<EOF | sudo tee /etc/wireguard/wg0.conf &>/dev/null
+[Interface]
+Address = ${vpn_network_subnet}
+ListenPort = ${vpn_listen_port}
+PrivateKey = $(sudo cat /etc/wireguard/wg0.key)
+
+# [Peer]
+# # client name/identifier here
+# AllowedIPs = 10.0.0.0/8
+# PublicKey = xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+EOF
+        sudo systemctl enable wg-quick@wg0
+        sudo systemctl start wg-quick@wg0
+        wg-quick down wg0
+        wg-quick up wg0
+    else
+        echo "Skipping Wireguard server setup"
     fi
     echo
 }
@@ -264,7 +343,7 @@ ProtectControlGroups=true
 ProtectKernelModules=true
 ProtectKernelTunables=yes
 SyslogIdentifier=node_exporter
-ExecStart=/usr/local/bin/node_exporter --web.listen-address=127.0.0.1:9100 ${node_exporter_params}
+ExecStart=/usr/local/bin/node_exporter --web.listen-address=127.0.0.1:9100${node_exporter_params}
 # we can also add a web.config.yml file param --web.config.file=/etc/prometheus/web.config.yml
 # to configure basic auth users and TLS. but it's better to handle these through a reverse proxy
 # and an auth server. e.g. nginx and keycloak
@@ -537,6 +616,9 @@ function check_system_reboot() {
     echo "=> Checking if system reboot is required..."
     if [[ -f /var/run/reboot-required ]]; then
         echo -e "\n\e[90;103;2m WARNING \e[m System restart required. Consider rebooting by running:\n\e[90;43;2m \e[m         sudo shutdown -r now\n"
+    else
+        echo "System reboot is not required."
+        echo
     fi
     echo
 }
@@ -546,10 +628,30 @@ function setup_hostname() {
     echo
     if [[ ${update_hostname} =~ ^[Yy]$ ]]; then
         echo "=> changing hostname "
-
-        echo -e "\n\e[90;103;2m WARNING \e[m System restart is required after chaning hostname. Consider rebooting by running:\n\e[90;43;2m \e[m         sudo shutdown -r now\n"
     else
         echo "Skipping setting hostname"
+    fi
+    echo
+}
+
+function setup_harbor() {
+    read -p "Setup and configure Harbor registry? (y/n): " -r install_harbor
+    echo
+    if [[ ${install_harbor} =~ ^[Yy]$ ]]; then
+        echo "=> installing Harbor"
+    else
+        echo "Skipping install of Harbor"
+    fi
+    echo
+}
+
+function setup_nfs() {
+    read -p "Setup and configure NFS? (y/n): " -r install_nfs
+    echo
+    if [[ ${install_nfs} =~ ^[Yy]$ ]]; then
+        echo "=> Setting up NFS"
+    else
+        echo "Skipping setup of NFS"
     fi
     echo
 }
@@ -596,7 +698,7 @@ main() {
     setup_git
     setup_tmux
     setup_hostname
-    # setup_wireguard_server
+    setup_wireguard_server
     setup_wireguard_client
     setup_ufw
     harden_ssh
@@ -613,10 +715,12 @@ main() {
     setup_hetzner_cli
     setup_prometheus_node_exporter
     setup_grafana_alloy
-    # setup_harbor
-    # setup_nfs
+    setup_harbor
+    setup_nfs
 
     check_system_reboot
+
+    echo "Done. Enjoy your newly configured server."
 }
 
 main "$@"
