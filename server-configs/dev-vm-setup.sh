@@ -211,7 +211,7 @@ main() {
     setup_sdkman
 
     # install/update rust tools
-    if [[ command -v rustup ]]; then
+    if command -v rustup; then
         rustup update
     else
         curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
