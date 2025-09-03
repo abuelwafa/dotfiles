@@ -210,9 +210,13 @@ main() {
     # install sdkman
     setup_sdkman
 
-    # install rust tools
-    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-    source "$HOME/.cargo/env"
+    # install/update rust tools
+    if [[ command -v rustup ]]; then
+        rustup update
+    else
+        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+        source "$HOME/.cargo/env"
+    fi
 
     # install tclock
     cargo install tclock
