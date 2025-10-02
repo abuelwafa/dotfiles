@@ -912,7 +912,7 @@ local function getWinBarDiagnostics()
     local info = ""
 
     if count["errors"] ~= 0 then
-        errors = "%#DiagnosticError#  " .. count["errors"]
+        errors = "%#DiagnosticError#  " .. count["errors"]
     end
     if count["warnings"] ~= 0 then
         warnings = "%#DiagnosticWarn#  " .. count["warnings"]
@@ -924,7 +924,7 @@ local function getWinBarDiagnostics()
         info = "%#DiagnosticInfo#  " .. count["info"]
     end
 
-    return errors .. warnings .. hints .. info
+    return "             󰪠 ⛔️ ✅       " .. errors .. warnings .. hints .. info
 end
 
 function build_winbar()

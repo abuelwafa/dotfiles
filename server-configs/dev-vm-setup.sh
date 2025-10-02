@@ -77,6 +77,11 @@ main() {
     rm ~/.gitconfig.conf || true
 
     sudo apt install \
+        sudo \
+        openssl \
+        openssh-server \
+        openssh-client \
+        unattended-upgrades \
         vim \
         curl \
         git \
@@ -85,6 +90,7 @@ main() {
         htop \
         locales \
         locales-all \
+        tzdata \
         bash-completion \
         apt-transport-https \
         ca-certificates \
@@ -140,6 +146,7 @@ main() {
     local brew_packages_list
     brew_packages_list=(
         bash
+        bash-completion@2
         vim
         neovim
         git
@@ -215,7 +222,7 @@ main() {
         rustup update
     else
         curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-        source "$HOME/.cargo/env"
+        source "${HOME}/.cargo/env"
     fi
 
     # install tclock

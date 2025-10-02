@@ -57,10 +57,10 @@ function setup_gcloud_cli() {
         else
             echo "=> installing Google Cloud CLI"
             curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg
-            echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
-
+            local repo
+            repo="deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main"
+            echo "$repo" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
             sudo apt-get update && sudo apt-get install -y google-cloud-cli
-
             echo "=> Google cloud cli has been installed successfully."
             echo "=> run \`gcloud init\` to configure it"
         fi
@@ -68,6 +68,23 @@ function setup_gcloud_cli() {
         echo "Skipping install of Google Cloud CLI"
     fi
     echo
+}
+
+function _in_array() {
+    # example:
+    # echo $(_in_array "target" "${arr[@]}")
+    local target=$1
+    # disabling variable quoting as we are passing an array here
+    # shellcheck disable=SC2206
+    local arr=($2)
+    local found=0
+    for item in "${arr[@]}"; do
+        if [[ "${target}" == "${item}" ]]; then
+            found=1
+            break
+        fi
+    done
+    echo "${found}"
 }
 
 function harden_ssh() {
@@ -79,31 +96,52 @@ function harden_ssh() {
         local ssh_allowed_users
         read -p "Enter usernames allowed to SSH (space separated list): " -r ssh_allowed_users
 
+        local ssh_listen_address_rule
+        ssh_listen_address_rule=""
         local ssh_listen_address
-        read -p "SSH listen address(hostname only): " -r ssh_listen_address
+        PS3="Select listen address (choose Ignore to keep the default behaviour which is listening on any address): "
+        local hostnames
+        hostnames=$(hostname -I)
+        local options=(${hostnames[@]} "Ignore")
+
+        select opt in "${options[@]}"; do
+            if [[ "$(_in_array "${opt}" "${hostnames[@]}")" == "1" ]]; then
+                ssh_listen_address_rule="ListenAddress ${opt}"
+                ssh_listen_address=$opt
+                break
+            elif [[ "${opt}" == "Ignore" ]]; then
+                break
+            else
+                echo "Invalid option! Please select properly."
+            fi
+        done
 
         local ssh_listen_port
         read -p "SSH listen port: " -r ssh_listen_port
 
-        cat <<EOF | sudo tee /etc/ssh/sshd_config.d/99-override.conf &>/dev/null
-# disable root login
-PermitRootLogin no
+        cat <<-EOF | sudo tee /etc/ssh/sshd_config.d/99-override.conf &>/dev/null
+			# disable root login
+			PermitRootLogin no
 
-# disable password authentication
-PasswordAuthentication no
+			# disable password authentication
+			PasswordAuthentication no
 
-# restrict users allowed to use SSH
-AllowUsers ${ssh_allowed_users}
+			# restrict users allowed to use SSH
+			AllowUsers ${ssh_allowed_users}
 
-# change the SSH port
-Port ${ssh_listen_port}
+			# change the SSH port
+			Port ${ssh_listen_port}
 
-# change listen address of the server
-ListenAddress ${ssh_listen_address}
-EOF
+			# change listen address of the server
+			${ssh_listen_address_rule}
+		EOF
 
         # enable the ssh port for ssh in firewall
-        command -v ufw >/dev/null 2>&1 && sudo ufw limit in proto tcp to "${ssh_listen_address}" port "${ssh_listen_port}" from 0.0.0.0/24 comment "allow ssh over vpn"
+        if [[ -z "${ssh_listen_address}" ]]; then
+            command -v ufw >/dev/null 2>&1 && sudo ufw allow "${ssh_listen_port}"/tcp
+        else
+            command -v ufw >/dev/null 2>&1 && sudo ufw limit in proto tcp to "${ssh_listen_address}" port "${ssh_listen_port}" from 0.0.0.0/24 comment "allow ssh over vpn"
+        fi
 
         # restart the ssh service
         echo -e "\n\e[90;103;2m WARNING \e[m Restarting SSH service. Check that your SSH connection still works in another terminal.\n"
@@ -120,7 +158,7 @@ function setup_nginx() {
     if [[ ${install_nginx} =~ ^[Yy]$ ]]; then
         echo "=> installing Nginx"
         sudo apt-get install -y nginx nginx-extras
-        command -v ufw >/dev/null 2>&1 && sudo ufw allow www
+        command -v ufw >/dev/null 2>&1 && sudo ufw allow http && sudo ufw reload
     else
         echo "Skipping install of Nginx"
     fi
@@ -140,8 +178,10 @@ function setup_docker() {
         sudo curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc
         sudo chmod a+r /etc/apt/keyrings/docker.asc
 
-        local arch=$(dpkg --print-architecture)
+        local arch
+        arch=$(dpkg --print-architecture)
         local codename
+        # shellcheck disable=SC1091
         codename=$(. /etc/os-release && echo "${VERSION_CODENAME}")
 
         local repo
@@ -191,21 +231,34 @@ function setup_wireguard_client() {
         read -p "VPN server public key: " -r vpn_server_public_key
         read -p "Client assigned IP: " -r vpn_client_ip
         read -p "Client allowed IPs: " -r vpn_client_allowed_ips
-        cat <<EOF | sudo tee /etc/wireguard/wg0.conf &>/dev/null
-[Interface]
-Address = ${vpn_client_ip}/32
-PrivateKey = $(sudo cat /etc/wireguard/wg0.key)
+        cat <<-EOF | sudo tee /etc/wireguard/wg0.conf &>/dev/null
+			[Interface]
+			Address = ${vpn_client_ip}/32
+			PrivateKey = $(sudo cat /etc/wireguard/wg0.key)
 
-[Peer]
-Endpoint = ${vpn_server_host}:${vpn_server_port}
-AllowedIPs = ${vpn_client_allowed_ips}
-PersistentKeepalive = 25
-PublicKey = ${vpn_server_public_key}
-EOF
+			[Peer]
+			Endpoint = ${vpn_server_host}:${vpn_server_port}
+			AllowedIPs = ${vpn_client_allowed_ips}
+			PersistentKeepalive = 25
+			PublicKey = ${vpn_server_public_key}
+		EOF
         sudo systemctl enable wg-quick@wg0
         sudo systemctl start wg-quick@wg0
         wg-quick down wg0
         wg-quick up wg0
+
+        # override the ssh service to start after the wireguard one
+        # to fix ssh service error after restarts
+        sudo mkdir -p /etc/systemd/system/ssh.service.d
+        sudo touch /etc/systemd/system/ssh.service.d/override.conf
+        cat <<-EOF | sudo tee /etc/systemd/system/ssh.service.d/override.conf &>/dev/null
+			[Unit]
+			After=network.target auditd.service wg-quick@wg0.service
+			Requires=wg-quick@wg0.service
+		EOF
+        sudo systemctl daemon-reload
+        sudo systemctl restart ssh
+
     else
         echo "Skipping Wireguard client setup"
     fi
@@ -236,17 +289,17 @@ function setup_wireguard_server() {
         echo
         read -p "VPN listen port: " -r vpn_listen_port
         read -p "Wireguard subnets(example 10.0.0.0/8) [use commas for multiple subnets]: " -r vpn_network_subnet
-        cat <<EOF | sudo tee /etc/wireguard/wg0.conf &>/dev/null
-[Interface]
-Address = ${vpn_network_subnet}
-ListenPort = ${vpn_listen_port}
-PrivateKey = $(sudo cat /etc/wireguard/wg0.key)
+        cat <<-EOF | sudo tee /etc/wireguard/wg0.conf &>/dev/null
+			[Interface]
+			Address = ${vpn_network_subnet}
+			ListenPort = ${vpn_listen_port}
+			PrivateKey = $(sudo cat /etc/wireguard/wg0.key)
 
-# [Peer]
-# # client name/identifier here
-# AllowedIPs = 10.0.0.0/8
-# PublicKey = xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-EOF
+			# [Peer]
+			# # client name/identifier here
+			# AllowedIPs = 10.0.0.0/8
+			# PublicKey = xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+		EOF
         sudo systemctl enable wg-quick@wg0
         sudo systemctl start wg-quick@wg0
         wg-quick down wg0
@@ -271,7 +324,7 @@ function setup_prometheus_node_exporter() {
             --groups monitoring \
             node_exporter
 
-        echo "=> installing Prometheus Node Exporter"
+        echo "=> Downloading Prometheus Node Exporter"
         local hardware_name
         hardware_name="$(uname --machine)"
 
@@ -308,49 +361,49 @@ function setup_prometheus_node_exporter() {
         echo "=> Setting up systemd service"
         sudo mkdir -p /etc/prometheus/exporters/node-exporter
 
-        sudo touch /etc/prometheus/exporters/node-exporter/web-config.yml
-        sudo tee -a /etc/prometheus/exporters/node-exporter/web-config.yml &>/dev/null <<EOL
-EOL
+        # sudo touch /etc/prometheus/exporters/node-exporter/web-config.yml
+        # sudo tee -a /etc/prometheus/exporters/node-exporter/web-config.yml &>/dev/null <<-EOF
+        # EOF
 
         local node_exporter_listen_address
         local node_exporter_params=""
         echo "By default, Node Exporter will listen on 127.0.0.1:9100"
-        echo "you can enter additional listen address. leave blank for the default"
-        read -p "Additional Node Exporter listen address: " -r node_exporter_listen_address
+        echo "you can enter additional listen address. leave blank use the localhost only"
+        read -p "Additional Node Exporter listen address and port (host:port): " -r node_exporter_listen_address
         if [[ ! -z "${node_exporter_listen_address}" ]]; then
             node_exporter_params="${node_exporter_params} --web.listen-address=${node_exporter_listen_address}"
         fi
 
         sudo touch /etc/systemd/system/prometheus-node-exporter.service
-        sudo tee -a /etc/systemd/system/prometheus-node-exporter.service &>/dev/null <<EOL
-[Unit]
-Description=Prometheus Node Exporter
-After=network-online.target
-Requires=network-online.target
-Wants=network-online.target
+        sudo tee -a /etc/systemd/system/prometheus-node-exporter.service &>/dev/null <<-EOF
+			[Unit]
+			Description=Prometheus Node Exporter
+			After=network-online.target
+			Requires=network-online.target
+			Wants=network-online.target
 
-[Service]
-Type=simple
-User=node_exporter
-Group=monitoring
-Restart=on-failure
-RestartSec=3
-StartLimitInterval=0 # disables rate limiting
-ProtecHome=read-only
-NoNewPriviliges=yes
-ProtectSystem=strict
-ProtectControlGroups=true
-ProtectKernelModules=true
-ProtectKernelTunables=yes
-SyslogIdentifier=node_exporter
-ExecStart=/usr/local/bin/node_exporter --web.listen-address=127.0.0.1:9100${node_exporter_params}
-# we can also add a web.config.yml file param --web.config.file=/etc/prometheus/web.config.yml
-# to configure basic auth users and TLS. but it's better to handle these through a reverse proxy
-# and an auth server. e.g. nginx and keycloak
+			[Service]
+			Type=simple
+			User=node_exporter
+			Group=monitoring
+			Restart=on-failure
+			RestartSec=3
+			StartLimitInterval=0 # disables rate limiting
+			ProtecHome=read-only
+			NoNewPriviliges=yes
+			ProtectSystem=strict
+			ProtectControlGroups=true
+			ProtectKernelModules=true
+			ProtectKernelTunables=yes
+			SyslogIdentifier=node_exporter
+			ExecStart=/usr/local/bin/node_exporter --web.listen-address=127.0.0.1:9100${node_exporter_params}
+			# we can also add a web.config.yml file param --web.config.file=/etc/prometheus/web.config.yml
+			# to configure basic auth users and TLS. but it's better to handle these through a reverse proxy
+			# and an auth server. e.g. nginx and keycloak
 
-[Install]
-WantedBy=multi-user.target
-EOL
+			[Install]
+			WantedBy=multi-user.target
+		EOF
         local edit_prom_node_exporter_service_file
         read -p "Would you like to edit the systemd service before running? (y/n): " -r edit_prom_node_exporter_service_file
         if [[ ${edit_prom_node_exporter_service_file} =~ ^[Yy]$ ]]; then
@@ -376,6 +429,17 @@ function setup_grafana_alloy() {
     echo
     if [[ ${install_alloy} =~ ^[Yy]$ ]]; then
         echo "=> setting up Grafana alloy"
+
+        if command -v alloy &>/dev/null; then
+            echo "=> Grafana alloy is already installed. update through apt."
+        else
+            sudo mkdir -p /etc/apt/keyrings/
+            curl -fsSL https://apt.grafana.com/gpg.key | gpg --dearmor | sudo tee /etc/apt/keyrings/grafana.gpg >/dev/null
+            local grafana_repo="deb [signed-by=/etc/apt/keyrings/grafana.gpg] https://apt.grafana.com stable main"
+            echo "${grafana_repo}" | sudo tee /etc/apt/sources.list.d/grafana.list
+
+            sudo apt-get update && sudo apt-get install -y alloy
+        fi
     else
         echo "Skipping install of Grafana Alloy"
     fi
@@ -452,6 +516,7 @@ function setup_fail2ban() {
     echo
     if [[ ${install_fail2ban} =~ ^[Yy]$ ]]; then
         echo "=> installing fail2ban"
+        echo "TODO"
         sudo apt-get install -y fail2ban
 
         echo "=> configuring fail2ban"
@@ -624,10 +689,31 @@ function check_system_reboot() {
 }
 
 function setup_hostname() {
+    echo "Checking machine hostname..."
+    local current_hostname
+    current_hostname=$(hostname)
+    echo "Current hostname is set to: ${current_hostname}"
     read -p "Update machine hostname? (y/n): " -r update_hostname
     echo
     if [[ ${update_hostname} =~ ^[Yy]$ ]]; then
-        echo "=> changing hostname "
+        local new_hostname
+        read -p "Enter new hostname: " -r new_hostname
+        if [[ "${current_hostname}" != "${new_hostname}" ]]; then
+            echo "=> changing hostname to ${new_hostname}"
+            # on a plain debian install, we get an error failed to connect to system scope bus via
+            # local transoport.
+            # the fix to start the dbus socket
+            # systemctl start dbus
+            sudo hostnamectl set-hostname "${new_hostname}"
+
+            echo "Updating the hosts file..."
+            cp /etc/hosts /etc/hosts.bak-"$(date +%s)"
+            sed -i -e "s/^127.0.1.1\(.*\)/# 127.0.1.1\1/" /etc/hosts
+            echo "" | sudo tee -a /etc/hosts &>/dev/null
+            echo "127.0.1.1    ${new_hostname}" | sudo tee -a /etc/hosts &>/dev/null
+            echo "Done."
+            echo
+        fi
     else
         echo "Skipping setting hostname"
     fi
@@ -639,8 +725,44 @@ function setup_harbor() {
     echo
     if [[ ${install_harbor} =~ ^[Yy]$ ]]; then
         echo "=> installing Harbor"
+        echo "TODO"
+        # install docker dependency if not already installed
+        if ! command -v docker &>/dev/null; then
+            setup_docker
+        fi
+        # download the install script
+        local tag_name # v2.0.3
+        tag_name="$(curl -fsSL https://api.github.com/repos/goharbor/harbor/releases/latest | jq -r '.tag_name')"
+        echo "=> found Harbor version ${tag_name}"
+
+        local file_name
+        file_name="harbor-online-installer-${tag_name}.tgz"
+
+        local download_url
+        download_url="https://github.com/goharbor/harbor/releases/download/${tag_name}/${file_name}"
+
+        curl -fSLO "${download_url}" --output-dir /tmp
+
+        # tar xzvf harbor-online-installer-version.tgz
+
+        # configure
+
+        # run the install script
+
     else
         echo "Skipping install of Harbor"
+    fi
+    echo
+}
+
+function setup_keycloak() {
+    read -p "Setup and configure Keycloak? (y/n): " -r install_keycloak
+    echo
+    if [[ ${install_keycloak} =~ ^[Yy]$ ]]; then
+        echo "=> installing Keycloak"
+        echo "TODO"
+    else
+        echo "Skipping install of Keycloak"
     fi
     echo
 }
@@ -650,6 +772,7 @@ function setup_nfs() {
     echo
     if [[ ${install_nfs} =~ ^[Yy]$ ]]; then
         echo "=> Setting up NFS"
+        echo "TODO"
     else
         echo "Skipping setup of NFS"
     fi
@@ -660,12 +783,17 @@ main() {
     sudo apt-get update
     sudo apt-get upgrade -y
     sudo apt-get install -y \
+        sudo \
+        openssh-server \
+        unattended-upgrades \
+        openssl \
         vim \
         curl \
         jq \
         htop \
         locales \
         locales-all \
+        tzdata \
         bash-completion \
         apt-transport-https \
         ca-certificates \
@@ -717,6 +845,7 @@ main() {
     setup_grafana_alloy
     setup_harbor
     setup_nfs
+    setup_keycloak
 
     check_system_reboot
 
