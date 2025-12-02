@@ -19,6 +19,17 @@ fi
 
 shopt -s globstar nullglob
 
+function check_system_reboot() {
+    echo "=> Checking if system reboot is required..."
+    if [[ -f /var/run/reboot-required ]]; then
+        echo -e "\n\e[90;103;2m WARNING \e[m System restart required. Consider rebooting by running:\n\e[90;43;2m \e[m         sudo shutdown -r now\n"
+    else
+        echo "System reboot is not required."
+        echo
+    fi
+    echo
+}
+
 function setup_sdkman() {
     read -p "Setup and configure SDKMAN with java, kotlin and gradle? (y/n): " -r install_sdkman
     echo
@@ -38,7 +49,7 @@ function setup_sdkman() {
 
 function setup_neovim() {
     mkdir -p ~/.config/nvim
-    ln -s ~/workspace/dotfiles/nvim/init.lua ~/.config/nvim/init.lua
+    ln --force -s ~/workspace/dotfiles/nvim/init.lua ~/.config/nvim/init.lua
     mkdir -p ~/.nvim/_temp
     mkdir -p ~/.nvim/_backup
     echo "=> Openning neovim to install plugins and language servers. Exit when finished."
@@ -58,6 +69,7 @@ function setup_neovim() {
 }
 
 function setup_homebrew() {
+    echo "=> Setting up Homebrew"
     if ! command -v brew &>/dev/null 2>&1; then
         NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
         eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
@@ -65,6 +77,7 @@ function setup_homebrew() {
             echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' | tee -a ~/.machine-config
         fi
     else
+        echo "   brew is already installed. Updating..."
         brew update
         brew upgrade
     fi
@@ -97,6 +110,7 @@ main() {
         gnupg \
         build-essential \
         ufw \
+        zip \
         unzip \
         python3 \
         python3-venv \
@@ -107,21 +121,27 @@ main() {
     touch ~/.machine-config
 
     # increase inotify watchers
+    echo "=> Configuring inotify watchers"
     if ! grep -q -e "fs.inotify.max_user_watches" /etc/sysctl.d/00-max-user-watches.conf; then
         echo fs.inotify.max_user_watches=999999 | sudo tee -a /etc/sysctl.d/00-max-user-watches.conf &>/dev/null
         sudo sysctl -p
     fi
 
     # increase open files soft limit
+    echo "=> Increasing open files limit"
     if ! grep -q -e "softnofile" /etc/security/limits.d/00-open-files.conf; then
         echo "*    soft    nofile    4096" | sudo tee /etc/security/limits.d/00-open-files.conf &>/dev/null
     fi
 
+    echo "=> running base server config"
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/server-configs/setup.sh)"
 
     # clone essential repos
+    echo "=> Cloning dotfiles repository"
     if [[ -d ~/workspace/dotfiles ]]; then
-        (cd ~/workspace/dotfiles && git fetch --all --prune && git pull --rebase)
+        echo "=> Dotfiles repository already exists. updating..."
+
+        (cd ~/workspace/dotfiles && git fetch --all --prune && git pull --rebase || true)
     else
         git clone https://github.com/abuelwafa/dotfiles.git ~/workspace/dotfiles
     fi
@@ -132,7 +152,9 @@ main() {
     fi
 
     # generate ssh key
+    echo "=> generating an SSH key"
     if [[ ! -f ~/.ssh/id_ed25519 ]]; then
+        echo "   SSH key already exists. skiping..."
         ssh-keygen -t ed25519 -C "mohamed.abuelwafa"
     fi
 
@@ -142,6 +164,7 @@ main() {
     # install essential homebrew packages
     # DB CLIs
     brew tap dbcli/tap
+    brew tap hashicorp/tap
 
     local brew_packages_list
     brew_packages_list=(
@@ -149,6 +172,8 @@ main() {
         bash-completion@2
         vim
         neovim
+        lua
+        luarocks
         git
         tmux
         gcc
@@ -179,6 +204,7 @@ main() {
         python@3
         sst/tap/opencode
         opentofu
+        hashicorp/tap/terraform
         pgcli
         litecli
         mycli
@@ -191,6 +217,12 @@ main() {
         fx
         superfile
         cmatrix
+        pre-commit
+        yarn
+        # watchman
+        # fd
+        # rbenv
+        # ruby-build
     )
 
     local batchsize=8
@@ -218,7 +250,9 @@ main() {
     setup_sdkman
 
     # install/update rust tools
+    echo "=> Setting up Rust tools"
     if command -v rustup; then
+        echo "   Rust tools already exist. Updating..."
         rustup update
     else
         curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
@@ -226,15 +260,20 @@ main() {
     fi
 
     # install tclock
+    echo "=> Installing tclock"
     cargo install clock-tui
 
     # install lazytrivy
-    go install github.com/owenrumney/lazytrivy@latest
+    echo "=> Installing lazytrivy"
+    # go install github.com/owenrumney/lazytrivy@latest
 
     # configure opencode
+    echo "=> Configuring Opencode."
+    echo "   ESC to cancel. to do it later, run opencode auth login"
     opencode auth login || true
 
     # setup neovim
+    echo "=> Configuring Neovim"
     setup_neovim
 
     check_system_reboot

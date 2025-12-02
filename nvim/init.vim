@@ -32,8 +32,8 @@ Plug 'phaazon/hop.nvim'
 Plug 'lbrayner/vim-rzip'
 Plug 'mg979/vim-visual-multi', {'branch': 'master'}
 Plug 'christoomey/vim-tmux-navigator'
-" Plug 'rest-nvim/rest.nvim'
-Plug 'editorconfig/editorconfig-vim'
+Plug 'nvim-neotest/nvim-nio'
+Plug 'rest-nvim/rest.nvim'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-fugitive'
@@ -385,6 +385,12 @@ end
 --     custom_dynamic_variables = {},
 --     yank_dry_run = true,
 -- })
+
+vim.g.rest_nvim = {
+    ui = {
+        winbar = true
+    }
+}
 
 ------------------------------------------------
 -- lsp config
@@ -769,6 +775,7 @@ require('telescope').load_extension('terraform_doc')
 require("telescope").load_extension("docker")
 require("telescope").load_extension("file_browser")
 require("telescope").load_extension("ui-select")
+require("telescope").load_extension("rest")
 -- require('telescope').load_extension('fzf')
 
 require("notify").setup({
@@ -1007,6 +1014,14 @@ vim.api.nvim_set_keymap('n', '<leader>ga', ':lua require"gitsigns".stage_hunk()<
 vim.api.nvim_set_keymap('n', '<leader>gs', ':lua require"gitsigns".preview_hunk()<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<leader>gd', ':lua require"gitsigns".reset_hunk()<CR>', { noremap = true, silent = true })
 
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = "json",
+    callback = function(ev)
+        vim.bo.formatexpr = ""
+        vim.bo.formatprg = "jq"
+    end,
+})
+
 EOF
 
 " Quickly go to normal mode
@@ -1048,7 +1063,7 @@ inoremap <leader><Tab> <C-V><Tab>
 
 nnoremap <Tab> za
 
-nnoremap <leader>sr <Plug>RestNvim
+nnoremap <leader>sr :Rest run<cr>
 
 " w moves to the end of word not the beginning of it
 noremap w e
@@ -1097,6 +1112,7 @@ vim.api.nvim_command([[
   autocmd FileType js,javascript,blade,typescript,javascriptreact,typescriptreact,rust,php,go inoremap >> =>
   autocmd FileType js,javascript,typescript,javascriptreact,typescriptreact imap afkj () => {
   autocmd FileType js,javascript,typescript,javascriptreact,typescriptreact imap logkj console.log(
+  autocmd FileType go imap logkj fmt.Println(
   autocmd FileType js,javascript,typescript,javascriptreact,typescriptreact imap imkj import  from '
   autocmd FileType js,javascript,typescript,javascriptreact,typescriptreact imap ifkj if () {<cr><esc>k$2hi
 ]])

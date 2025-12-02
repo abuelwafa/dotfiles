@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
 #   ▄▄   █                    ▀▀█                    ▄▀▀
 #   ██   █▄▄▄   ▄   ▄   ▄▄▄     █   ▄     ▄  ▄▄▄   ▄▄█▄▄   ▄▄▄
@@ -8,7 +8,123 @@
 #
 
 source ~/workspace/dotfiles/bash/bashrc
+source ~/applications/tinted-shell/base16-shell.plugin.bash
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+
+# Android SDK path installed by Android Studio
+export ANDROID_HOME="$HOME/Android/Sdk"
+export ANDROID_SDK_ROOT="$ANDROID_HOME"
+export PATH="$PATH:$ANDROID_HOME/emulator"
+export PATH="$PATH:$ANDROID_HOME/platform-tools"
+
+export BASE16_THEME_DEFAULT="ayu-dark"
+export BASE16_THEME="ayu-dark"
+
+export FX_THEME=6
+export EDITOR='nvim'
+
+export BAT_THEME="base16"
+
+export PATH="$(brew --prefix libpq)/bin:$PATH"
+
+node_path="$(brew --prefix node@24)"
+export LDFLAGS="-L$node_path/lib"
+export CPPFLAGS="-I$node_path/include"
+export NODE_BINARY="$(which node)"
 
 unalias show
 alias show=bat
+
+alias vim='nvim'
+alias vimdiff='nvim -d'
+
+alias y='yarn'
+alias yarn-clean='yarn cache clean'
+alias yarn-upgrade='yarn upgrade-interactive --latest'
+alias npm-upgrade='npx npm-upgrade check && npm update --save'
+alias npm-clean='npm cache clean --force'
+alias rnstart="watchman-clean && yarn start --reset-cache"
+alias gradle-clean="cd android && ./gradlew clean && .."
+alias blowup="rm -rf node_modules ios/Pods && yarn cache clean && watchman watch-del-all && pod cache clean --all && npm cache clean --force"
+
+alias lima='limactl'
+alias lima-create-debian='limactl create template://debian-12 --arch=x86_64 --plain --vm-type qemu --cpus=2 --memory 2 --disk 20 --network lima:user-v2 --name '
+alias lima-create-dev-vm='limactl create template://debian-12 --arch=x86_64 --plain --vm-type qemu --cpus=2 --memory 6 --disk 20 --network lima:user-v2 --name '
+alias dog='doggo --any'
+
+# backup_window,included_traffic,ingoing_traffic,outgoing_traffic,placement_group,primary_disk_size
+alias hetzner_list_servers="hcloud server list --output columns=id,name,status,ipv4,ipv6,private_net,datacenter,type,volumes,created,age,location,locked,protection,rescue_enabled,labels | show --wrap=never"
+
+alias pomodoro-start="tclock timer -d 45m -M"
+
+alias podinstall="npx pod-install"
+alias watchman-clean='watchman watch-del-all'
+alias pod-clean='pod cache clean --all'
+
+function ssh_connect() {
+    local selected_host
+    selected_host="$(grep -P "^Host ([^*]+)$" $HOME/.ssh/config | sed 's/Host //' | fzf)"
+
+    if [ ! -z "$selected_host" ]; then
+        eval "ssh $selected_host"
+    fi
+}
+
+function pg_select() {
+    local db_name
+    db_name="$(cat $HOME/workspace/db-connections/connections.json | jq -r '.[] | .name' | fzf)"
+
+    local connection_string
+    connection_string="$(cat $HOME/workspace/db-connections/connections.json | jq -r "map(select(.name == \"$db_name\")) | .[0].url")"
+
+    if [[ $connection_string =~ ^postgres ]]; then
+        local cmd="pgcli $connection_string"
+        eval $cmd
+    elif [[ $connection_string =~ ^mysql ]]; then
+        local cmd="mycli $connection_string"
+        eval $cmd
+    elif [[ $connection_string =~ ^sqlite ]]; then
+        local cmd="litecli $connection_string"
+        eval $cmd
+    else
+        >&2 echo "Connection string does not point to a postgresql database"
+    fi
+}
+
+unalias lzd
+alias lzd='docker run --rm -it --pull always -v /var/run/docker.sock:/var/run/docker.sock -v ~/workspace/dotfiles/lazydocker-config.yml:/.config/jesseduffield/lazydocker/config.yml lazyteam/lazydocker'
+
+# TODO: enhacne the prompt by adding back the following info:
+#  - kubectx_prompt_info
+#  - aws_prompt_info
+#  - node version: "node: $(node -v)"
+#  - gcp auth/project info
+
+if command -v rbenv &>/dev/null; then
+    eval "$(rbenv init - zsh)"
+fi
+
+if [[ "$(uname -s)" == "Darwin" ]]; then
+    # re-export android sdk location according
+    export ANDROID_HOME="$HOME/Library/Android/sdk"
+    export ANDROID_SDK_ROOT="$ANDROID_HOME"
+    export PATH="$PATH:$ANDROID_HOME/emulator"
+    export PATH="$PATH:$ANDROID_HOME/platform-tools"
+
+    export PATH="$(brew --prefix gsed)/libexec/gnubin:$PATH"
+    alias ql='qlmanage -p'
+    alias copy='pbcopy'
+    alias sed='gsed'
+fi
+
+if [[ "$(uname -s)" == "Linux" ]]; then
+    alias open='xdg-open'
+    alias copy='xclip -i -selection clipboard'
+    if [[ "${TERM}" = "xterm" ]]; then
+        export TERM=xterm-256color
+    fi
+fi
+
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="$HOME/.sdkman"
+[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"

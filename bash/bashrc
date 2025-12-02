@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # simple bashrc for use on servers (debian/ubuntu)
 # curl -fL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/bash/bashrc > ~/.bashrc
 
@@ -71,7 +71,6 @@ alias glog1pp='git log --graph --decorate --format=medium --stat --summary --pat
 alias gst='git status'
 alias gs='git status -sb'
 alias gdif='git diff --minimal --color --patch --stat'
-alias gdiftool='git difftool'
 alias gpush='git push'
 alias ga='git add'
 alias gremote='git remote -v'
@@ -139,6 +138,15 @@ function serve() {
 
 alias lzd='docker run --rm -it --pull always -v /var/run/docker.sock:/var/run/docker.sock lazyteam/lazydocker'
 
+# function for downloading files from urls
+function download() {
+    if [ -n "$2" ]; then
+        curl -# $1 -o $2
+    else
+        curl -O -# $1
+    fi
+}
+
 # parses jwt token and passes the output to fx
 function jwtparse() {
     echo -n "Enter JWT token: "
@@ -188,6 +196,7 @@ function pg_connect() {
 }
 
 # compressing and extracting zip files
+# new alternative: just use zip and unzip
 function extract() {
     echo "Extracting $1"
     tar -xzf "$1"
@@ -199,10 +208,14 @@ function compress() {
     echo "Done compressing..."
 }
 
-# enable kubectl completions
+# enable bash completions
 if command -v kubectl 2>&1 >/dev/null; then
     source <(kubectl completion bash)
     complete -o default -F __start_kubectl kctl
+fi
+
+if command -v kustomize 2>&1 >/dev/null; then
+    source <(kustomize completion bash)
 fi
 
 # enable fluxcd completions

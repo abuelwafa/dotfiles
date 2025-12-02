@@ -14,51 +14,51 @@ set -o nounset
 set -o pipefail
 shopt -s globstar nullglob
 if [[ "${TRACE-0}" == "1" ]]; then
-    set -o xtrace
+	set -o xtrace
 fi
 
-create_kubeadm_config() {
-    cat <<EOF | sudo tee /etc/kubernetes/kubeadm-config.yaml
-    apiVersion: kubeadm.k8s.io/v1beta4
-    kind: ClusterConfiguration
-    kubernetesVersion: v1.33.1
-    ---
-    apiVersion: kubelet.config.k8s.io/v1beta1
-    kind: KubeletConfiguration
-    cgroupDriver: systemd
+function create_kubeadm_config() {
+    cat <<-EOF | sudo tee /etc/kubernetes/kubeadm-config.yaml &>/dev/null
+		apiVersion: kubeadm.k8s.io/v1beta4
+		kind: ClusterConfiguration
+		esVersion: v1.33.1
+		---
+		apiVersion: kubelet.config.k8s.io/v1beta1
+		kind: KubeletConfiguration
+		cgroupDriver: systemd
     EOF
 }
 
-setup_hostname() {
-    echo
+function setup_hostname() {
+	echo
 }
 
-harden_ssh() {
-    echo
+function harden_ssh() {
+	echo
 }
 
-setup_ufw() {
-    sudo apt-get install -y ufw
-    sudo ufw default deny incoming
-    sudo ufw default deny outgouing
-    sudo ufw allow ssh
-    sudo ufw allow 6443
-    sudo ufw enable
+function setup_ufw() {
+	sudo apt-get install -y ufw
+	sudo ufw default deny incoming
+	sudo ufw default deny outgouing
+	sudo ufw allow ssh
+	sudo ufw allow 6443
+	sudo ufw enable
 }
 
-setup_fail2ban() {
-    echo
+function setup_fail2ban() {
+	echo
 }
 
-enable_packet_forwarding() {
-    local value="$(sysctl net.ipv4.ip_forward)"
-    if [[ ! "$value" == "net.ipv4.ip_forward = 1" ]]
-        cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf
-        net.ipv4.ip_forward = 1
-EOF
-        # Apply sysctl params without reboot
-        sudo sysctl --system
-    fi
+function enable_packet_forwarding() {
+	local value="$(sysctl net.ipv4.ip_forward)"
+	if [[ ! "$value" == "net.ipv4.ip_forward = 1" ]]; then
+		cat <<-EOF | sudo tee /etc/sysctl.d/k8s.conf
+			net.ipv4.ip_forward = 1
+		EOF
+		# Apply sysctl params without reboot
+		sudo sysctl --system
+	fi
 }
 
 function setup_containerd() {
@@ -103,13 +103,13 @@ function setup_containerd() {
     echo "=> containerd has been successfully installed"
 }
 
-disable_swap() {
+function disable_swap() {
     if [[ ! "$(cat /etc/fstab | grep -i swap | wc -l)" == "0" ]]; then
         sudo swapoff -a
     fi
 }
 
-install_kubelet() {
+function install_kubelet() {
     if ! command -v kubadm &>/dev/null; then
         # download the public signing key for the Kubernetes package repositories
         curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.33/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
@@ -169,7 +169,7 @@ function setup_nerdctl_minimal() {
     echo
 }
 
-validate_node_setup() {
+function validate_node_setup() {
     sudo nerdctl run -it --rm --privileged --net=host \
         -v /:/rootfs -v $CONFIG_DIR:$CONFIG_DIR -v $LOG_DIR:/var/result \
         registry.k8s.io/node-test:0.2
@@ -177,7 +177,7 @@ validate_node_setup() {
     # TODO: clean the images
 }
 
-check_system_reboot() {
+function check_system_reboot() {
     echo "=> Checking if system reboot is required..."
     if [ -f /var/run/reboot-required ]; then
         echo "=> WARNING: System restart required. Consider rebooting by running: sudo shutdown -r now"
@@ -185,7 +185,7 @@ check_system_reboot() {
     echo
 }
 
-main() {
+function main() {
     sudo apt-get update
     sudo apt-get upgrade -y
     sudo apt-get install -y \
@@ -214,21 +214,21 @@ main() {
     # setup_rootles_containerd
     # create_kubeadm_config
 
-    setup_hostname                  # pending
-    harden_ssh                      # pending
-    setup_ufw                       # pending
-    setup_fail2ban                  # pending
+    setup_hostname # pending
+    harden_ssh     # pending
+    setup_ufw      # pending
+    setup_fail2ban # pending
     enable_packet_forwarding
     setup_containerd
     setup_nerdctl_minimal
-    disable_swap                    # pending
+    disable_swap # pending
     install_kubelet
 
     echo "=> pulling required images"
     sudo kubeadm images pull
 
-    validate_node_setup             # pending
-    check_system_reboot             # pending
+    validate_node_setup # pending
+    check_system_reboot # pending
 
     echo
     echo "=> Node is ready to join a cluster."
