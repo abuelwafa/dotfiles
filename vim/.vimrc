@@ -267,10 +267,10 @@ inoremap <leader>v <esc>:set<space>paste<cr>
 " arrow mappings
 :autocmd FileType js,javascript,blade,typescript,javascriptreact,typescriptreact,rust,php,go inoremap >> =>
 :autocmd FileType js,javascript,blade,typescript,javascriptreact,typescriptreact,rust,php,go inoremap ,, ->
-:autocmd FileType js,javascript,typescript,javascriptreact,typescriptreact imap afkj () => {
-:autocmd FileType js,javascript,typescript,javascriptreact,typescriptreact imap logkj console.log(
+:autocmd FileType js,javascript,typescript,javascriptreact,typescriptreact inoremap afkj () => {}<esc>i<cr><esc>O
+:autocmd FileType js,javascript,typescript,javascriptreact,typescriptreact inoremap logkj console.log()<esc>i
 :autocmd FileType js,javascript,typescript,javascriptreact,typescriptreact imap imkj import  from '
-:autocmd FileType js,javascript,typescript,javascriptreact,typescriptreact imap ifkj if () {<cr><esc>k$2hi
+:autocmd FileType js,javascript,typescript,javascriptreact,typescriptreact inoremap ifkj if () {<cr>}<esc>k$2hi
 inoremap xx $
 inoremap vv ``<esc>i
 inoremap VV ~

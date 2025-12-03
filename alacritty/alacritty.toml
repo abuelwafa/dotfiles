@@ -5,7 +5,7 @@ import = []
 [window]
 decorations = "None"
 blur = true
-opacity = 0.99
+opacity = 0.97
 startup_mode = "Maximized"
 option_as_alt = "OnlyLeft"
 decorations_theme_variant = "Dark"

@@ -1134,18 +1134,7 @@ vim.api.nvim_set_keymap('v', 'L', [[:m ''<-2<cr>gv=gv]], {expr = true, noremap =
 vim.api.nvim_set_keymap('n', '<space>', ':', {noremap = true})
 vim.api.nvim_set_keymap('v', '<space>', ':', {noremap = true})
 
--- arrow mappings
-vim.api.nvim_command([[
-  autocmd FileType js,javascript,blade,typescript,javascriptreact,typescriptreact,rust,php,go inoremap >> =>
-  autocmd FileType js,javascript,typescript,javascriptreact,typescriptreact imap afkj () => {
-  autocmd FileType js,javascript,typescript,javascriptreact,typescriptreact imap logkj console.log(
-  autocmd FileType go imap logkj fmt.Println(
-  autocmd FileType js,javascript,typescript,javascriptreact,typescriptreact imap imkj import  from '
-  autocmd FileType js,javascript,typescript,javascriptreact,typescriptreact imap ifkj if () {<cr><esc>k$2hi
-]])
 vim.api.nvim_set_keymap('i', 'xx', '$', {noremap = true})
-vim.api.nvim_set_keymap('i', 'vv', '``<esc>i', {noremap = true})
-vim.api.nvim_set_keymap('i', 'VV', '~', {noremap = true})
 
 -- mappings for speed buffer switching
 vim.api.nvim_set_keymap('n', '<leader>b', ':bprevious<CR>', {noremap = true})
@@ -1180,6 +1169,14 @@ vim.api.nvim_set_keymap("n", "qqq", "<esc>:NvimTreeClose<cr>:q<CR>", { noremap =
 -- force quit vim
 vim.api.nvim_set_keymap("n", "<leader>fq", "<esc>:NvimTreeClose<CR>:q!<CR>", { noremap = true })
 EOF
+
+autocmd FileType js,javascript,blade,typescript,javascriptreact,typescriptreact,rust,php,go inoremap >> =>
+autocmd FileType js,javascript,blade,typescript,javascriptreact,typescriptreact,rust,php,go inoremap ,, ->
+autocmd FileType js,javascript,typescript,javascriptreact,typescriptreact inoremap afkj () => {}<esc>i<cr><esc>O
+autocmd FileType js,javascript,typescript,javascriptreact,typescriptreact inoremap logkj console.log()<esc>i
+autocmd FileType go imap logkj fmt.Println(
+autocmd FileType js,javascript,typescript,javascriptreact,typescriptreact imap imkj import  from '
+autocmd FileType js,javascript,typescript,javascriptreact,typescriptreact inoremap ifkj if () {<cr>}<esc>k$2hi
 
 " override default ft plugin to update tab width for yaml files
 autocmd FileType yaml set tabstop=4
