@@ -395,11 +395,28 @@ vim.g.rest_nvim = {
 ------------------------------------------------
 -- lsp config
 
-local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
-for type, icon in pairs(signs) do
-  local hl = "DiagnosticSign" .. type
-  vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
-end
+vim.diagnostic.config({
+    signs = {
+        text = {
+            [vim.diagnostic.severity.ERROR] = '󱎘',
+            [vim.diagnostic.severity.WARN] = '',
+            [vim.diagnostic.severity.HINT] = '󰌵',
+            [vim.diagnostic.severity.INFO] = '',
+        },
+        linehl = {
+            [vim.diagnostic.severity.ERROR] = 'DiagnosticSignError',
+            [vim.diagnostic.severity.WARN] = 'DiagnosticSignWarn',
+            [vim.diagnostic.severity.HINT] = 'DiagnosticSignHint',
+            [vim.diagnostic.severity.INFO] = 'DiagnosticSignInfo',
+        },
+        numhl = {
+            [vim.diagnostic.severity.ERROR] = 'DiagnosticSignError',
+            [vim.diagnostic.severity.WARN] = 'DiagnosticSignWarn',
+            [vim.diagnostic.severity.HINT] = 'DiagnosticSignHint',
+            [vim.diagnostic.severity.INFO] = 'DiagnosticSignInfo',
+        },
+    }
+})
 
 local float_winid = nil
 
@@ -477,6 +494,8 @@ local ensure_installed = {
     'tailwindcss',
     'taplo',
     'templ',
+    'terraform',
+    'terraform-ls',
     'tofu-ls',
     'tflint',
     'typescript-language-server',
@@ -919,19 +938,19 @@ local function getWinBarDiagnostics()
     local info = ""
 
     if count["errors"] ~= 0 then
-        errors = "%#DiagnosticError#  " .. count["errors"]
+        errors = "%#DiagnosticSignError# 󱎘 " .. count["errors"]
     end
     if count["warnings"] ~= 0 then
-        warnings = "%#DiagnosticWarn#  " .. count["warnings"]
+        warnings = "%#DiagnosticSignWarn#  " .. count["warnings"]
     end
     if count["hints"] ~= 0 then
-        hints = "%#DiagnosticHint#  " .. count["hints"]
+        hints = "%#DiagnosticSignHint# 󰌵 " .. count["hints"]
     end
     if count["info"] ~= 0 then
-        info = "%#DiagnosticInfo#  " .. count["info"]
+        info = "%#DiagnosticSignInfo#  " .. count["info"]
     end
 
-    return "             󰪠 ⛔️ ✅       " .. errors .. warnings .. hints .. info
+    return errors .. warnings .. hints .. info
 end
 
 function build_winbar()
