@@ -331,9 +331,6 @@ require("conform").setup({
         javascriptreact = { "prettierd" },
         typescript = { "prettierd" },
         typescriptreact = { "prettierd" },
-        sh = { "shfmt" },
-        bash = { "shfmt" },
-        zsh = { "shfmt" },
         css = { "stylelint" },
         sql = { "sql_fluff" },
         tf = { "terraform_fmt" },
@@ -444,7 +441,7 @@ local ensure_installed = {
     'bash-debug-adapter',
     'bashls',
     'clangd',
-    'cmake',
+    'checkmake',
     'cssls',
     'cssmodules_ls',
     'debugpy',
@@ -486,7 +483,6 @@ local ensure_installed = {
     'pyright',
     'ruff',
     'rust-analyzer',
-    'shfmt',
     'shellcheck',
     'sqlfluff',
     'stylelint',
@@ -950,7 +946,7 @@ local function getWinBarDiagnostics()
         info = "%#DiagnosticSignInfo#  " .. count["info"]
     end
 
-    return errors .. warnings .. hints .. info
+    return errors .. warnings .. info .. hints
 end
 
 function build_winbar()
@@ -962,10 +958,22 @@ vim.opt.winbar = "%!v:lua.build_winbar()"
 require('lualine').setup {
     options = {
         theme = 'powerline_dark', -- other values: powerline, powerline_dark, gruvbox_dark, everforest
-        icons_enabled = false,
+        icons_enabled = true,
         section_separators = { left = '', right = '' },
         component_separators = { left = '', right = '' },
     },
+    sections = {
+        lualine_b = {
+            'branch', 'diff', {
+                'diagnostics',
+                sources = { 'nvim_diagnostic' },
+                symbols = {error = '󱎘 ', warn = ' ', info = ' ', hint = '󰌵 '},
+            }
+        },
+        lualine_c = {
+            { 'filename', path = 1 }
+        },
+    }
 }
 
 require('bufferline').setup({
