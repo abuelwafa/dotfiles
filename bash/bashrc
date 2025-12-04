@@ -96,7 +96,7 @@ function gdropstash() {
     if [[ -z "$1" ]]; then
         echo "Specify the id of the stash you want to drop."
     else
-        git stash drop stash@{"$1"}
+        git stash drop stash@"{""$1""}"
     fi
 }
 
@@ -104,7 +104,7 @@ function gpopstash() {
     if [[ -z "$1" ]]; then
         echo "Specify the id of the stash you want to apply."
     else
-        git stash pop stash@{"$1"}
+        git stash pop stash@"{""$1""}"
     fi
 }
 alias gsavestash='git stash push'
@@ -140,7 +140,7 @@ alias lzd='docker run --rm -it --pull always -v /var/run/docker.sock:/var/run/do
 
 # function for downloading files from urls
 function download() {
-    if [ -n "$2" ]; then
+    if [[ -n "$2" ]]; then
         curl -# $1 -o $2
     else
         curl -O -# $1
@@ -351,4 +351,4 @@ function update_setup() {
     # check if system reboot is required
 }
 
-banner
+# banner

@@ -95,15 +95,12 @@ sed -i -e 's/↑//' ~/.tmux/plugins/tmux-network-speed/network_speed.sh
 # you can look at available interfaces in /proc/net/dev for linux.
 echo 'export TMUX_STATUS_NETWORK_SPEED_INTERFACE="wlan0"' | tee -a ~/workspace/.machine-config
 =============================================================
-# change the default shell to be zsh (ubuntu only - mac already comes with zsh as the default shell)
-# you should have zsh install from homebrew from the previous step
-# add zsh first to the list of shells
-command -v zsh | sudo tee -a /etc/shells
-chsh -s $(which zsh)
-# then logout and log back in
+# change the default shell to be bash installed from homebrew
+# MACOS only: add bash path to standard shells in /etc/shells
+echo "/opt/homebrew/bin/bash" | sudo tee -a /etc/shells
 
-# to change back to bash
-chsh -s /usr/bin/bash
+sudo chsh -s /opt/homebrew/bin/bash abuelwafa
+# then logout and log back in
 =============================================================
 # switching node versions using Homebrew when installing more than one version
 brew unlink node

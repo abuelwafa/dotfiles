@@ -3,20 +3,21 @@ working_directory = "./workspace"
 import = []
 
 [window]
-decorations = "None"
+decorations = "Full"
 blur = true
 opacity = 0.97
 startup_mode = "Maximized"
 option_as_alt = "OnlyLeft"
 decorations_theme_variant = "Dark"
+resize_increments = true
 
 [terminal.shell]
-program = "/bin/bash"
+program = "/home/linuxbrew/.linuxbrew/bin/bash"
 args = ["-l"]
 
 [font]
 size = 14
-normal.family = "MesloLGM Nerd Font"
+normal.family = "MesloLGL Nerd Font"
 offset.y = 2
 glyph_offset.y = 1
 # force italics to be displayed as regular font
@@ -29,7 +30,7 @@ save_to_clipboard = true
 [cursor]
 style.shape = "Block"
 style.blinking = "Always"
-blink_interval = 300
+blink_interval = 400
 blink_timeout = 0
 
 [mouse]

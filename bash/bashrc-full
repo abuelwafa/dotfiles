@@ -9,7 +9,8 @@
 
 source ~/workspace/dotfiles/bash/bashrc
 source ~/applications/tinted-shell/base16-shell.plugin.bash
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+[[ "$(uname -s)" == "Linux" ]] && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+[[ "$(uname -s)" == "Darwin" ]] && eval $(/opt/homebrew/bin/brew shellenv)
 
 # Android SDK path installed by Android Studio
 export ANDROID_HOME="$HOME/Android/Sdk"
@@ -17,8 +18,8 @@ export ANDROID_SDK_ROOT="$ANDROID_HOME"
 export PATH="$PATH:$ANDROID_HOME/emulator"
 export PATH="$PATH:$ANDROID_HOME/platform-tools"
 
-export BASE16_THEME_DEFAULT="ayu-dark"
-export BASE16_THEME="ayu-dark"
+export BASE16_THEME_DEFAULT="monokai"
+export BASE16_THEME="monokai"
 
 export FX_THEME=6
 export EDITOR='nvim'
@@ -28,6 +29,7 @@ export BAT_THEME="base16"
 export PATH="$(brew --prefix libpq)/bin:$PATH"
 
 node_path="$(brew --prefix node@24)"
+export PATH="$node_path/bin:$PATH"
 export LDFLAGS="-L$node_path/lib"
 export CPPFLAGS="-I$node_path/include"
 export NODE_BINARY="$(which node)"
@@ -35,22 +37,22 @@ export NODE_BINARY="$(which node)"
 unalias show
 alias show=bat
 
-alias vim='nvim'
-alias vimdiff='nvim -d'
+alias vim="nvim"
+alias vimdiff="nvim -d"
 
-alias y='yarn'
-alias yarn-clean='yarn cache clean'
-alias yarn-upgrade='yarn upgrade-interactive --latest'
-alias npm-upgrade='npx npm-upgrade check && npm update --save'
-alias npm-clean='npm cache clean --force'
+alias y="yarn"
+alias yarn-clean="yarn cache clean"
+alias yarn-upgrade="yarn upgrade-interactive --latest"
+alias npm-upgrade="npx npm-upgrade check && npm update --save"
+alias npm-clean="npm cache clean --force"
 alias rnstart="watchman-clean && yarn start --reset-cache"
 alias gradle-clean="cd android && ./gradlew clean && .."
 alias blowup="rm -rf node_modules ios/Pods && yarn cache clean && watchman watch-del-all && pod cache clean --all && npm cache clean --force"
 
-alias lima='limactl'
-alias lima-create-debian='limactl create template://debian-12 --arch=x86_64 --plain --vm-type qemu --cpus=2 --memory 2 --disk 20 --network lima:user-v2 --name '
-alias lima-create-dev-vm='limactl create template://debian-12 --arch=x86_64 --plain --vm-type qemu --cpus=2 --memory 6 --disk 20 --network lima:user-v2 --name '
-alias dog='doggo --any'
+alias lima="limactl"
+alias lima-create-debian="limactl create template://debian-12 --arch=x86_64 --plain --vm-type qemu --cpus=2 --memory 2 --disk 20 --network lima:user-v2 --name "
+alias lima-create-dev-vm="limactl create template://debian-12 --arch=x86_64 --plain --vm-type qemu --cpus=2 --memory 6 --disk 20 --network lima:user-v2 --name "
+alias dog="doggo --any"
 
 # backup_window,included_traffic,ingoing_traffic,outgoing_traffic,placement_group,primary_disk_size
 alias hetzner_list_servers="hcloud server list --output columns=id,name,status,ipv4,ipv6,private_net,datacenter,type,volumes,created,age,location,locked,protection,rescue_enabled,labels | show --wrap=never"
@@ -115,6 +117,9 @@ if [[ "$(uname -s)" == "Darwin" ]]; then
     alias ql='qlmanage -p'
     alias copy='pbcopy'
     alias sed='gsed'
+
+    # git-prompt.sh script is automatically sourced in linux
+    source $(brew --prefix git)/etc/bash_completion.d/git-prompt.sh
 fi
 
 if [[ "$(uname -s)" == "Linux" ]]; then

@@ -226,6 +226,7 @@ let g:EditorConfig_exclude_patterns = ['fugitive://.*', 'scp://.*']
 au FileType gitcommit let b:EditorConfig_disable = 1
 
 " git blame configuration
+let g:gitblame_enabled = 0
 let g:gitblame_date_format = '%d %b %y'
 let g:gitblame_message_when_not_committed = ''
 
@@ -492,7 +493,7 @@ local ensure_installed = {
     'templ',
     'terraform',
     'terraform-ls',
-    'tofu-ls',
+    -- 'tofu-ls',
     'tflint',
     'typescript-language-server',
     'vale',
