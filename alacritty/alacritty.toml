@@ -16,7 +16,7 @@ program = "/home/linuxbrew/.linuxbrew/bin/bash"
 args = ["-l"]
 
 [font]
-size = 14
+size = 15
 normal.family = "MesloLGL Nerd Font"
 offset.y = 2
 glyph_offset.y = 1
