@@ -11,10 +11,6 @@ option_as_alt = "OnlyLeft"
 decorations_theme_variant = "Dark"
 resize_increments = true
 
-[terminal.shell]
-program = "/home/linuxbrew/.linuxbrew/bin/bash"
-args = ["-l"]
-
 [font]
 size = 15
 normal.family = "MesloLGL Nerd Font"
