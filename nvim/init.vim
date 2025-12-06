@@ -934,6 +934,7 @@ local function getWinBarDiagnostics()
     local hints = ""
     local info = ""
 
+    --    󰌵    󱎘 ⛔️   
     if count["errors"] ~= 0 then
         errors = "%#DiagnosticSignError# 󱎘 " .. count["errors"]
     end

@@ -23,8 +23,8 @@ export LC_ALL=en_US.UTF-8
 export LC_CTYPE=en_US.UTF-8
 
 alias cls='clear'
-alias l='ls -lahp'
-alias ll='ls -lahp | $PAGER'
+alias l='ls -lahp --color=always'
+alias ll='ls -lah --color=alwaysp | $PAGER'
 alias md='mkdir -vp'
 alias tree='tree --gitignore -I .git -a -h --du'
 

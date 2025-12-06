@@ -3,7 +3,7 @@ working_directory = "./workspace"
 import = []
 
 [window]
-decorations = "Full"
+decorations = "None"
 blur = true
 opacity = 0.97
 startup_mode = "Maximized"
@@ -12,7 +12,7 @@ decorations_theme_variant = "Dark"
 resize_increments = true
 
 [font]
-size = 15
+size = 14
 normal.family = "MesloLGL Nerd Font"
 offset.y = 2
 glyph_offset.y = 1
