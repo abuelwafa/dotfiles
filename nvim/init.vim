@@ -42,6 +42,7 @@ Plug 'moll/vim-bbye'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'prisma/vim-prisma'
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install' }
+Plug 'MeanderingProgrammer/render-markdown.nvim'
 Plug 'christoomey/vim-system-copy'
 Plug 'numToStr/Comment.nvim'
 Plug 'lewis6991/gitsigns.nvim'
@@ -360,35 +361,22 @@ function fxJSONFormat(content)
     return vim.fn.system({ "fx", "." }, content)
 end
 
--- require("rest-nvim").setup({
---     result_split_horizontal = false,
---     result_split_in_place = true,
---     skip_ssl_verification = true,
---     encode_url = true,
---     highlight = { enabled = true, timeout = 1000 },
---     result = {
---         show_url = true,
---         show_http_info = true,
---         show_headers = true,
---         formatters = {
---             json = fxJSONFormat,
---             vnd = fxJSONFormat,
---             html = function(body)
---                 return vim.fn.system({ "tidy", "-i", "-q", "-" }, body)
---             end,
---         }
---     },
---     jump_to_request = false,
---     env_file = '.env',
---     custom_dynamic_variables = {},
---     yank_dry_run = true,
--- })
-
 vim.g.rest_nvim = {
     ui = {
         winbar = true
     }
 }
+
+require('render-markdown').setup({
+    completions = { lsp = { enabled = true } },
+    heading = {
+        border = true,
+        border_virtual = true
+    },
+    code = {
+        border = 'thin'
+    }
+})
 
 ------------------------------------------------
 -- lsp config
@@ -400,12 +388,6 @@ vim.diagnostic.config({
             [vim.diagnostic.severity.WARN] = '',
             [vim.diagnostic.severity.HINT] = '󰌵',
             [vim.diagnostic.severity.INFO] = '',
-        },
-        linehl = {
-            [vim.diagnostic.severity.ERROR] = 'DiagnosticSignError',
-            [vim.diagnostic.severity.WARN] = 'DiagnosticSignWarn',
-            [vim.diagnostic.severity.HINT] = 'DiagnosticSignHint',
-            [vim.diagnostic.severity.INFO] = 'DiagnosticSignInfo',
         },
         numhl = {
             [vim.diagnostic.severity.ERROR] = 'DiagnosticSignError',
@@ -424,15 +406,6 @@ vim.api.nvim_create_autocmd({ "CursorHold" }, {
   callback = function ()
     _, float_winid = vim.diagnostic.open_float(nil, { focus = false, border = 'single' })
   end
-})
-
--- close all floating windows upon buffer leave
-vim.api.nvim_create_autocmd({ "BufLeave" }, {
-    callback = function ()
-        if float_winid ~= nil then
-            vim.api.nvim_win_close(float_winid, true)
-        end
-    end
 })
 
 local ensure_installed = {
@@ -484,6 +457,7 @@ local ensure_installed = {
     'pyright',
     'ruff',
     'rust-analyzer',
+    'shfmt',
     'shellcheck',
     'sqlfluff',
     'stylelint',
