@@ -122,15 +122,16 @@ main() {
 
 	# increase inotify watchers
 	echo "=> Configuring inotify watchers"
-	if ! grep -q -e "fs.inotify.max_user_watches" /etc/sysctl.d/00-max-user-watches.conf; then
-		echo fs.inotify.max_user_watches=999999 | sudo tee -a /etc/sysctl.d/00-max-user-watches.conf &>/dev/null
-		sudo sysctl -p
+	local current_watches_limit = "$(sudo sysctl -a | grep -e "^fs.inotify.max_user_watches" | cut -d "=" -f 2 | xargs)"
+	if [[ "$current_watches_limit" != "999999" ]]; then
+		echo fs.inotify.max_user_watches=999999 | sudo tee /etc/sysctl.d/00-max-user-watches.conf &>/dev/null
+		sudo sysctl -p /etc/sysctl.d/00-max-user-watches.conf
 	fi
 
 	# increase open files soft limit
 	echo "=> Increasing open files limit"
 	if ! grep -q -e "softnofile" /etc/security/limits.d/00-open-files.conf; then
-		echo "*    soft    nofile    4096" | sudo tee /etc/security/limits.d/00-open-files.conf &>/dev/null
+		echo "*    soft    nofile    4096" | sudo tee /etc/security/limits.d/50-open-files.conf &>/dev/null
 	fi
 
 	echo "=> running base server config"
