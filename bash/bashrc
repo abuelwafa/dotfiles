@@ -24,7 +24,7 @@ export LC_CTYPE=en_US.UTF-8
 
 alias cls='clear'
 alias l='ls -lahp --color=always'
-alias ll='ls -lah --color=alwaysp | $PAGER'
+alias ll='ls -lahp --color=always | $PAGER'
 alias md='mkdir -vp'
 alias tree='tree --gitignore -I .git -a -h --du'
 
@@ -38,22 +38,6 @@ alias ........='cd ../../../../../../..'
 
 function rule() {
     printf "%$(tput cols)s\n" | tr " " "-"
-}
-
-function setup_tmux_popup() {
-    local session
-    session="_popup_$(tmux display -p '#S')"
-
-    if ! tmux has -t "${session}" 2>/dev/null; then
-        local session_id
-        session_id="$(tmux new-session -dP -s "${session}" -F '#{session_id}')"
-        tmux set-option -s -t "${session_id}" key-table popup
-        # tmux set-option -s -t "$session_id" status off
-        # tmux set-option -s -t "$session_id" prefix None
-        session="${session_id}"
-    fi
-
-    tmux attach -t "${session}" >/dev/null
 }
 
 # to make sudo work with aliases
@@ -88,7 +72,7 @@ function gstash() {
     if [[ -z "$1" ]]; then
         git stash list
     else
-        git stash show stash@{"$1"} -p
+        git stash show stash@"{""$1""}" -p
     fi
 }
 
@@ -141,9 +125,9 @@ alias lzd='docker run --rm -it --pull always -v /var/run/docker.sock:/var/run/do
 # function for downloading files from urls
 function download() {
     if [[ -n "$2" ]]; then
-        curl -# $1 -o $2
+        curl -# "$1" -o "$2"
     else
-        curl -O -# $1
+        curl -O -# "$1"
     fi
 }
 
@@ -190,7 +174,17 @@ function pg_connect() {
     echo -n "Enter DB port(5432): "
     read -r db_port
 
-    local cmd="psql postgresql://${db_user}:${db_password}@${db_host}:${db_port}/${db_name}"
+    local app
+    if command -v pgcli &>/dev/null 2>&1; then
+        app="pgcli"
+    elif command -v psql &>/dev/null 2>&1; then
+        app="psql"
+    else
+        echo "Error: Neither pgcli or psql are not installed. Exiting."
+        exit 1
+    fi
+
+    local cmd="${app} postgresql://${db_user}:${db_password}@${db_host}:${db_port}/${db_name}"
 
     eval "${cmd}"
 }
@@ -209,26 +203,26 @@ function compress() {
 }
 
 # enable bash completions
-if command -v kubectl 2>&1 >/dev/null; then
+if command -v kubectl &>/dev/null 2>&1; then
     source <(kubectl completion bash)
     complete -o default -F __start_kubectl kctl
 fi
 
-if command -v kustomize 2>&1 >/dev/null; then
+if command -v kustomize &>/dev/null 2>&1; then
     source <(kustomize completion bash)
 fi
 
 # enable fluxcd completions
-if command -v flux 2>&1 >/dev/null; then
+if command -v flux &>/dev/null 2>&1; then
     source <(flux completion bash)
 fi
 
 # enable helm completion
-if command -v helm 2>&1 >/dev/null; then
+if command -v helm &>/dev/null 2>&1; then
     source <(helm completion bash)
 fi
 
-if command -v hcloud 2>&1 >/dev/null; then
+if command -v hcloud &>/dev/null 2>&1; then
     source <(hcloud completion bash)
 fi
 
@@ -318,7 +312,7 @@ function in_ssh_prompt() {
 }
 
 set_bash_prompt() {
-    PS1="${bldgreen}$(rule)${txtrst}\n${debian_chroot:+($debian_chroot)}${bldblue}\u@\H${txtrst} \$(in_ssh_prompt)\$(system_reboot_prompt)\n${bldyellow}\w${bldpurple}\$(which git &>/dev/null && __git_ps1)\n\$(virtualenv_info)${bldcyan}-> ${txtrst}"
+    PS1="${bldgreen}$(rule)${txtrst}\n${debian_chroot:+(${debian_chroot})}${bldblue}\u@\H${txtrst} \$(in_ssh_prompt)\$(system_reboot_prompt)\n${bldyellow}\w${bldpurple}\$(which git &>/dev/null && __git_ps1)\n\$(virtualenv_info)${bldcyan}-> ${txtrst}"
 }
 
 export GIT_PS1_SHOWCONFLICTSTATE=1
