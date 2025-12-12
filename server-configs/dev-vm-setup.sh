@@ -246,6 +246,10 @@ main() {
 	mkdir -p ~/.config/pgcli
 	ln --force -s ~/workspace/dotfiles/pgcli.config ~/.config/pgcli/config
 	ln --force -s ~/workspace/dotfiles/yamlfmt.yml ~/yamlfmt.yml
+	ln --force -s ~/workspace/dotfiles/.shellcheckrc ~/.shellcheckrc
+	ln --force -s ~/workspace/dotfiles/.editorconfig ~/.editorconfig
+    mkdir -p ~/.config/lazydocker
+	ln --force -s ~/workspace/dotfiles/lazydocker-config.yml ~/.config/lazydocker/config.yml
 
 	# install sdkman
 	setup_sdkman
