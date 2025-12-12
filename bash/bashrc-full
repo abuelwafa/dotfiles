@@ -7,17 +7,13 @@
 # █    █ ██▄█▀  ▀▄▄▀█  ▀█▄▄▀    ▀▄▄   █ █   ▀▄▄▀█    █    ▀▄▄▀█
 #
 
+os_name="$(uname -s)"
+[[ "${os_name}" == "Linux" ]] && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+[[ "${os_name}" == "Darwin" ]] && eval "$(/opt/homebrew/bin/brew shellenv)"
+
+# shellcheck source=bashrc
 source ~/workspace/dotfiles/bash/bashrc
-source ~/applications/tinted-shell/base16-shell.plugin.bash
-[[ "$(uname -s)" == "Linux" ]] && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-[[ "$(uname -s)" == "Darwin" ]] && eval $(/opt/homebrew/bin/brew shellenv)
-
-# Android SDK path installed by Android Studio
-export ANDROID_HOME="$HOME/Android/Sdk"
-export ANDROID_SDK_ROOT="$ANDROID_HOME"
-export PATH="$PATH:$ANDROID_HOME/emulator"
-export PATH="$PATH:$ANDROID_HOME/platform-tools"
-
+[[ -d "${HOME}/applications/tinted-shell" ]] && source ~/applications/tinted-shell/base16-shell.plugin.bash
 export BASE16_THEME_DEFAULT="monokai"
 export BASE16_THEME="monokai"
 
@@ -26,13 +22,14 @@ export EDITOR='nvim'
 
 export BAT_THEME="base16"
 
-export PATH="$(brew --prefix libpq)/bin:$PATH"
+export PATH="${HOMEBREW_PREFIX}/opt/libpq/bin:${PATH}"
 
-node_path="$(brew --prefix node@24)"
-export PATH="$node_path/bin:$PATH"
-export LDFLAGS="-L$node_path/lib"
-export CPPFLAGS="-I$node_path/include"
-export NODE_BINARY="$(which node)"
+node_path="${HOMEBREW_PREFIX}/opt/node@24"
+export PATH="${node_path}/bin:${PATH}"
+export LDFLAGS="-L${node_path}/lib ${LDFLAGS}"
+export CPPFLAGS="-I${node_path}/include ${CPPFLAGS}"
+export NODE_BINARY="${node_path}/bin/node"
+unset node_path
 
 unalias show
 alias show=bat
@@ -65,29 +62,29 @@ alias pod-clean='pod cache clean --all'
 
 function ssh_connect() {
     local selected_host
-    selected_host="$(grep -P "^Host ([^*]+)$" $HOME/.ssh/config | sed 's/Host //' | fzf)"
+    selected_host="$(grep -P "^Host ([^*]+)$" "${HOME}"/.ssh/config | sed 's/Host //' | fzf)"
 
-    if [ ! -z "$selected_host" ]; then
-        eval "ssh $selected_host"
+    if [[ ! -z "${selected_host}" ]]; then
+        eval "ssh ${selected_host}"
     fi
 }
 
 function pg_select() {
     local db_name
-    db_name="$(cat $HOME/workspace/db-connections/connections.json | jq -r '.[] | .name' | fzf)"
+    db_name="$(cat "${HOME}"/workspace/db-connections/connections.json | jq -r '.[] | .name' | fzf)"
 
     local connection_string
-    connection_string="$(cat $HOME/workspace/db-connections/connections.json | jq -r "map(select(.name == \"$db_name\")) | .[0].url")"
+    connection_string="$(cat "${HOME}"/workspace/db-connections/connections.json | jq -r "map(select(.name == \"${db_name}\")) | .[0].url")"
 
-    if [[ $connection_string =~ ^postgres ]]; then
-        local cmd="pgcli $connection_string"
-        eval $cmd
-    elif [[ $connection_string =~ ^mysql ]]; then
-        local cmd="mycli $connection_string"
-        eval $cmd
-    elif [[ $connection_string =~ ^sqlite ]]; then
-        local cmd="litecli $connection_string"
-        eval $cmd
+    if [[ ${connection_string} =~ ^postgres ]]; then
+        local cmd="pgcli ${connection_string}"
+        eval "${cmd}"
+    elif [[ ${connection_string} =~ ^mysql ]]; then
+        local cmd="mycli ${connection_string}"
+        eval "${cmd}"
+    elif [[ ${connection_string} =~ ^sqlite ]]; then
+        local cmd="litecli ${connection_string}"
+        eval "${cmd}"
     else
         >&2 echo "Connection string does not point to a postgresql database"
     fi
@@ -106,23 +103,16 @@ if command -v rbenv &>/dev/null; then
     eval "$(rbenv init - zsh)"
 fi
 
-if [[ "$(uname -s)" == "Darwin" ]]; then
-    # re-export android sdk location according
-    export ANDROID_HOME="$HOME/Library/Android/sdk"
-    export ANDROID_SDK_ROOT="$ANDROID_HOME"
-    export PATH="$PATH:$ANDROID_HOME/emulator"
-    export PATH="$PATH:$ANDROID_HOME/platform-tools"
-
-    export PATH="$(brew --prefix gsed)/libexec/gnubin:$PATH"
+if [[ "${os_name}" == "Darwin" ]]; then
+    export ANDROID_HOME="${HOME}/Library/Android/sdk"
+    export PATH="${HOMEBREW_PREFIX}/opt/gnu-sed/libexec/gnubin:${PATH}"
     alias ql='qlmanage -p'
     alias copy='pbcopy'
     alias sed='gsed'
-
-    # git-prompt.sh script is automatically sourced in linux
-    source $(brew --prefix git)/etc/bash_completion.d/git-prompt.sh
 fi
 
-if [[ "$(uname -s)" == "Linux" ]]; then
+if [[ "${os_name}" == "Linux" ]]; then
+    export ANDROID_HOME="${HOME}/Android/Sdk"
     alias open='xdg-open'
     alias copy='xclip -i -selection clipboard'
     if [[ "${TERM}" = "xterm" ]]; then
@@ -130,6 +120,22 @@ if [[ "$(uname -s)" == "Linux" ]]; then
     fi
 fi
 
+unset os_name
+
+export ANDROID_SDK_ROOT="${ANDROID_HOME}"
+export PATH="${PATH}:${ANDROID_HOME}/emulator"
+export PATH="${PATH}:${ANDROID_HOME}/platform-tools"
+
+# source bash completion scripts from homebrew
+[[ -r "${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh" ]] &&
+    source "${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh"
+
+# setup limactl complettions
+if command -v limactl &>/dev/null 2>&1; then
+    source <(limactl completion bash)
+    complete -o default -F __start_limactl lima
+fi
+
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
-export SDKMAN_DIR="$HOME/.sdkman"
-[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+export SDKMAN_DIR="${HOME}/.sdkman"
+[[ -s "${HOME}/.sdkman/bin/sdkman-init.sh" ]] && source "${HOME}/.sdkman/bin/sdkman-init.sh"
