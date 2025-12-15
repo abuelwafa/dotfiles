@@ -16,7 +16,6 @@ Mac only: brew install gsed watch
 clone essential repos
 cd ~/workspace
 git clone https://github.com/bigH/git-fuzzy.git
-git clone https://github.com/tinted-theming/tinted-shell.git
 =============================================================
 # install universal-ctags
 # https://ctags.io/
@@ -24,12 +23,8 @@ brew tap universal-ctags/universal-ctags
 brew install --HEAD universal-ctags
 =============================================================
 # link alacritty config
-mkdir -p ~/.config/alacritty
-ln -s ~/workspace/dotfiles/alacritty/alacritty.toml ~/.config/alacritty/alacritty.toml
 =============================================================
 # install nerd-fonts using homebrew
-brew install font-jetbrains-mono-nerd-font
-brew install font-meslo-lg-nerd-font
 =============================================================
 MACOS
 # system preferences configurations:
@@ -80,6 +75,7 @@ Spotify (snap store for Ubuntu)
 # base16_theme: run the base16 theme command with the colorscheme you want
 base16_gruvbox-dark-hard
 base16_seti
+base16_ayu-dark
 base16_material-darker
 base16_catppuccin
 base16_catppuccin-mocha
@@ -93,7 +89,7 @@ sed -i -e 's/↑//' ~/.tmux/plugins/tmux-network-speed/network_speed.sh
 # linux only: export the correct network interface to get online speeds correctly if not on macos
 # for macos, it should be already configured. no need to export this variable
 # you can look at available interfaces in /proc/net/dev for linux.
-echo 'export TMUX_STATUS_NETWORK_SPEED_INTERFACE="wlan0"' | tee -a ~/workspace/.machine-config
+echo 'export TMUX_STATUS_NETWORK_SPEED_INTERFACE="wlan0"' | tee -a ~/.machine-config
 =============================================================
 # change the default shell to be bash installed from homebrew
 # MACOS only: add bash path to standard shells in /etc/shells
@@ -156,9 +152,6 @@ killall Dock
 MACOS
 # optional: install OSXfuse for dealing with NTFS and external hard disk drives
 https://github.com/osxfuse/osxfuse
-=============================================================
-# increase ubuntu inotify watchers for dropbox sync and for projects file watching
-echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
 ==================================================================
 # for ubuntu cloud vms
 # create new non-root user
@@ -186,18 +179,3 @@ usermod -aG sudo username
 mkdir -p /home/username/.ssh
 cp /root/.ssh/authorized_keys /home/username/.ssh/authorized_keys
 chown --recursive username:username /home/username/.ssh
-============================================================
-debian
-mkdir -p ~/applications
-install apt packages: xclip, libgnome-desktop-3-dev
-install gnome extenstions: clipboard indicator, dash to dock, desktop icons NG(DING)
-make caps lock as ctrl in gnome tweaks
-============================================================
-install nvidia cuda drivers from
-https://developer.nvidia.com/cuda-downloads?target_os=Linux&target_arch=x86_64&Distribution=Debian&target_version=12&target_type=deb_local
-============================================================
-install alacritty
-============================================================
-install thunderbird
-https://support.mozilla.org/en-US/kb/installing-thunderbird-linux
-============================================================
