@@ -51,8 +51,9 @@ function setup_fail2ban() {
 }
 
 function enable_packet_forwarding() {
-	local value="$(sysctl net.ipv4.ip_forward)"
-	if [[ ! "$value" == "net.ipv4.ip_forward = 1" ]]; then
+	local value
+	value="$(sysctl net.ipv4.ip_forward)"
+	if [[ ! "${value}" == "net.ipv4.ip_forward = 1" ]]; then
 		cat <<-EOF | sudo tee /etc/sysctl.d/k8s.conf
 			net.ipv4.ip_forward = 1
 		EOF
@@ -171,7 +172,7 @@ function setup_nerdctl_minimal() {
 
 function validate_node_setup() {
 	sudo nerdctl run -it --rm --privileged --net=host \
-		-v /:/rootfs -v $CONFIG_DIR:$CONFIG_DIR -v $LOG_DIR:/var/result \
+		-v /:/rootfs -v "${{CONFIG_DI}R}":"${CONFIG_DIR}" -v "${LOG_DIR}":/var/result \
 		registry.k8s.io/node-test:0.2
 	# TODO: print the test result
 	# TODO: clean the images
@@ -179,7 +180,7 @@ function validate_node_setup() {
 
 function check_system_reboot() {
 	echo "=> Checking if system reboot is required..."
-	if [ -f /var/run/reboot-required ]; then
+	if [[ -f /var/run/reboot-required ]]; then
 		echo "=> WARNING: System restart required. Consider rebooting by running: sudo shutdown -r now"
 	fi
 	echo
@@ -207,7 +208,7 @@ function main() {
 
 	curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/bash/bashrc >~/.bash_aliases
 	curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/vim/.vimrc >~/.vimrc
-	sudo update-alternatives --set editor $(which vim.basic)
+	sudo update-alternatives --set editor "$(command -v vim.basic)"
 
 	echo
 

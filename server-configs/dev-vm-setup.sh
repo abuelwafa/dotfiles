@@ -73,9 +73,6 @@ function setup_homebrew() {
 	if ! command -v brew &>/dev/null 2>&1; then
 		NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 		eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-		if ! grep -q -e "brew shellenv" ~/.machine-config; then
-			echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' | tee -a ~/.machine-config
-		fi
 	else
 		echo "   brew is already installed. Updating..."
 		brew update
@@ -118,12 +115,20 @@ main() {
 		python3-dev
 
 	mkdir -p ~/workspace
+	mkdir -p ~/temp
 	touch ~/.machine-config
+
+	echo "=> Setting up DB connections file"
+	if [[ ! -f ~/workspace/db-connections/connections.json ]]; then
+		mkdir -p ~/workspace/db-connections
+		echo '[{ "name": "postgres-local", "url": "postgresql://postgres:postgres@localhost:5432/postgres" }]' | tee ~/workspace/db-connections/connections.json &>/dev/null
+	fi
 
 	# increase inotify watchers
 	echo "=> Configuring inotify watchers"
-	local current_watches_limit = "$(sudo sysctl -a | grep -e "^fs.inotify.max_user_watches" | cut -d "=" -f 2 | xargs)"
-	if [[ "$current_watches_limit" != "999999" ]]; then
+	local current_watches_limit
+	current_watches_limit="$(sudo sysctl -a | grep -e "^fs.inotify.max_user_watches" | cut -d "=" -f 2 | xargs)"
+	if [[ "${current_watches_limit}" != "999999" ]]; then
 		echo fs.inotify.max_user_watches=999999 | sudo tee /etc/sysctl.d/00-max-user-watches.conf &>/dev/null
 		sudo sysctl -p /etc/sysctl.d/00-max-user-watches.conf
 	fi
@@ -135,7 +140,9 @@ main() {
 	fi
 
 	echo "=> running base server config"
-	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/server-configs/setup.sh)"
+	/bin/bash -c "$(
+		curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/server-configs/setup.sh
+	)"
 
 	# clone essential repos
 	echo "=> Cloning dotfiles repository"
@@ -243,12 +250,16 @@ main() {
 		echo 'export GIT_AUTHOR_EMAIL="mohamed.abuelwafa@gmail.com"' | tee -a ~/.machine-config &>/dev/null
 	fi
 
+	if ! grep -q -e "export OPENAI_API_KEY" ~/.machine-config; then
+		echo 'export OPENAI_API_KEY="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"' | tee -a ~/.machine-config &>/dev/null
+	fi
+
 	mkdir -p ~/.config/pgcli
 	ln --force -s ~/workspace/dotfiles/pgcli.config ~/.config/pgcli/config
 	ln --force -s ~/workspace/dotfiles/yamlfmt.yml ~/yamlfmt.yml
 	ln --force -s ~/workspace/dotfiles/.shellcheckrc ~/.shellcheckrc
 	ln --force -s ~/workspace/dotfiles/.editorconfig ~/.editorconfig
-    mkdir -p ~/.config/lazydocker
+	mkdir -p ~/.config/lazydocker
 	ln --force -s ~/workspace/dotfiles/lazydocker-config.yml ~/.config/lazydocker/config.yml
 
 	# install sdkman

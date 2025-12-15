@@ -150,7 +150,11 @@ function jwtparse() {
         result="${payload}"'='
     fi
 
-    echo -n "${result}" | base64 -d | jq '.' | ${PAGER}
+    if command -v fx &>/dev/null 2>&1; then
+        echo -n "${result}" | base64 -d | fx
+    else
+        echo -n "${result}" | base64 -d | jq '.' | ${PAGER}
+    fi
 }
 
 backup-file() {
@@ -322,6 +326,7 @@ PROMPT_COMMAND=set_bash_prompt
 
 # run the ssh agent
 function start_ssh_agent() {
+    # - https://stackoverflow.com/questions/18880024/start-ssh-agent-on-login
     eval "$(ssh-agent -s)"
     ssh-add ~/.ssh/id_ed25519
 }

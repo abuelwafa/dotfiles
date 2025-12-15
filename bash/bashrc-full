@@ -11,18 +11,20 @@ os_name="$(uname -s)"
 [[ "${os_name}" == "Linux" ]] && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 [[ "${os_name}" == "Darwin" ]] && eval "$(/opt/homebrew/bin/brew shellenv)"
 
-# shellcheck source=bashrc
+# shellcheck source=./bashrc
 source ~/workspace/dotfiles/bash/bashrc
+
+# BASE16_THEME_DEFAULT only applies the theme for the first time only.
+# use base16_{theme_name} commands to apply different color schemes
+export BASE16_THEME_DEFAULT="ayu-dark"
 [[ -d "${HOME}/applications/tinted-shell" ]] && source ~/applications/tinted-shell/base16-shell.plugin.bash
-export BASE16_THEME_DEFAULT="monokai"
-export BASE16_THEME="monokai"
 
 export FX_THEME=6
 export EDITOR='nvim'
 
 export BAT_THEME="base16"
 
-export PATH="${HOMEBREW_PREFIX}/opt/libpq/bin:${PATH}"
+export PATH="${HOMEBREW_PREFIX:?}/opt/libpq/bin:${PATH}"
 
 node_path="${HOMEBREW_PREFIX}/opt/node@24"
 export PATH="${node_path}/bin:${PATH}"
