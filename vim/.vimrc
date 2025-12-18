@@ -371,9 +371,13 @@ cnoreabbrev ww WriteWithSudo
 " nnoremap <silent> N Nzz
 " nnoremap <silent> * *zz
 
-" command mode, ctrl-a to head, ctrl-e to tail
-cnoremap <C-j> <t_kd>
-cnoremap <C-k> <t_ku>
+" command mode mappings
+" ctrl-a to head, ctrl-e to tail
+" ctrl-{hjkl} for movement arrows
+cnoremap <C-j> <Down>
+cnoremap <C-k> <Up>
+cnoremap <C-h> <Left>
+cnoremap <C-l> <Right>
 cnoremap <C-a> <Home>
 cnoremap <C-e> <End>
 
