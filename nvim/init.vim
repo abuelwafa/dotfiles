@@ -41,7 +41,7 @@ Plug 'tpope/vim-git'
 Plug 'moll/vim-bbye'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'prisma/vim-prisma'
-Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install' }
+Plug 'brianhuster/live-preview.nvim'
 Plug 'MeanderingProgrammer/render-markdown.nvim'
 Plug 'christoomey/vim-system-copy'
 Plug 'numToStr/Comment.nvim'
@@ -84,11 +84,17 @@ Plug 'stevearc/conform.nvim'
 Plug 'hrsh7th/nvim-cmp'
 Plug 'hrsh7th/cmp-nvim-lsp'
 Plug 'hrsh7th/cmp-path'
+Plug 'hrsh7th/cmp-calc'
 Plug 'hrsh7th/cmp-buffer'
+Plug 'hrsh7th/cmp-omni'
 Plug 'hrsh7th/cmp-cmdline'
 Plug 'petertriho/cmp-git'
 Plug 'SergioRibera/cmp-dotenv'
 Plug 'onsails/lspkind.nvim'
+Plug 'ray-x/cmp-sql'
+Plug 'Snikimonkd/cmp-go-pkgs'
+Plug 'vrslev/cmp-pypi'
+Plug 'nat-418/cmp-color-names.nvim'
 
 Plug 'L3MON4D3/LuaSnip', {'tag': 'v2.*', 'do': 'make install_jsregexp'}
 Plug 'saadparwaiz1/cmp_luasnip'
@@ -99,19 +105,14 @@ Plug 'mfussenegger/nvim-dap'
 Plug 'rcarriga/nvim-dap-ui'
 Plug 'nvim-telescope/telescope-dap.nvim'
 Plug 'grafana/vim-alloy'
-
-" Plug 'mfussenegger/nvim-lint'
+Plug 'mfussenegger/nvim-ansible'
+Plug 'mfussenegger/nvim-lint'
+Plug 'sindrets/diffview.nvim'
 
 " Plug 'pwntester/octo.nvim'
-
 " Plug 'zbirenbaum/copilot.lua'
 " Plug 'zbirenbaum/copilot-cmp'
-
-Plug 'sindrets/diffview.nvim'
 " Plug 'NeogitOrg/neogit'
-
-"-- to be explored
-" Plug 'numToStr/FTerm.nvim'
 
 function! UpdateRemotePlugins(...)
     " Needed to refresh runtime files
@@ -238,6 +239,8 @@ set background=dark
 lua << EOF
 if os.getenv('BASE16_THEME') ~= nil then
     vim.cmd.colorscheme('base16-' .. os.getenv('BASE16_THEME'))
+else
+    vim.cmd.colorscheme('murphy')
 end
 EOF
 
@@ -343,29 +346,43 @@ require("conform").setup({
     },
 })
 
-require'nvim-treesitter.configs'.setup({ autotag = { enable = true } })
-require('nvim-treesitter.configs').setup({
-    ensure_installed = "all",
-    auto_install = true,
-    sync_install = false,
-    ignore_install = { "ipkg" },
-    highlight = {
-        enable = true,
-        disable = {},
-        additional_vim_regex_highlighting = false
+-- treesitter setup
+require'nvim-treesitter'.install({ 'all' })
+vim.api.nvim_create_autocmd('FileType', {
+    pattern = {
+        'ada', 'alloy', 'ansible', 'ant', 'apache', 'apachestyle', 'arduino', 'asciidoc',
+        'asm', 'astro', 'autodoc', 'automake', 'awk', 'bash', 'basic', 'c', 'c3', 'cfg', 'changelog',
+        'cmake', 'colortest', 'conf', 'config', 'cpp', 'crontab', 'cs', 'csc', 'csh', 'css', 'csv',
+        'csv_pipe', 'csv_semicolon', 'csv_whitespace', 'cterm', 'cucumber', 'dart', 'datascript',
+        'dbout', 'dbui', 'debsources', 'desktop', 'diff', 'dircolors', 'dirpager', 'django', 'dns',
+        'dnsmasq', 'dockerfile', 'doxygen', 'dsl', 'dtrace', 'editorconfig', 'elixir', 'elm',
+        'elmfilt', 'erlang', 'esqlc', 'fish', 'fstab', 'fugitive', 'gdscript', 'gdshader', 'git',
+        'gitattributes', 'gitcommit', 'gitconfig', 'gitignore', 'gitrebase', 'gitsendemail', 'gleam',
+        'glsl', 'go', 'goaccess', 'godoc', 'gomod', 'gpg', 'graphql', 'groovy', 'group', 'grub',
+        'hcl', 'hex', 'html', 'htmlangular', 'htmlcheetah', 'htmldjango', 'htmlm4', 'htmlos', 'http',
+        'http_stat', 'hurl', 'i3config', 'inittab', 'ipfilter', 'ipkg', 'java', 'javacc', 'javascript',
+        'javascriptreact', 'jgraph', 'jinja', 'jproperties', 'jq', 'json', 'json5', 'jsonc', 'jsonnet',
+        'jsp', 'julia', 'kivy', 'kotlin', 'lisp', 'lite', 'llvm', 'lsp_markdown', 'lua',
+        'luatemplate', 'mail', 'mailaliases', 'mailcap', 'make', 'man', 'manconf', 'manual',
+        'markdown', 'mediawiki', 'mermaid', 'meson', 'msql', 'muttrc', 'mysql', 'netrc', 'nginx',
+        'ninja', 'objc', 'objcpp', 'ocaml', 'openvpn', 'perl', 'php', 'plsql', 'prisma', 'ps1',
+        'python', 'python2', 'qml', 'query', 'ruby', 'rust', 'sass', 'scala', 'scss', 'sh', 'snippets',
+        'spec', 'sql', 'sqlanywhere', 'sqlforms', 'sqlhana', 'sqlinformix', 'sqlj', 'sqloracle',
+        'sshconfig', 'sshdconfig', 'strace', 'structurizr', 'stylus', 'sudoers', 'svelte', 'svg',
+        'swift', 'syntax', 'sysctl', 'systemd', 'tagbar', 'tags', 'tar', 'tcl', 'tcsh', 'template',
+        'terminfo', 'terraform', 'text', 'tf', 'thrift', 'tmux', 'toml', 'tutor', 'typescript',
+        'typescriptreact', 'updatedb', 'vim', 'viminfo', 'vimnormal', 'vue', 'web', 'wget', 'wget2',
+        'whitespace', 'yaml', 'zig', 'zsh'
     },
-    indent = { enable = true }
+    callback = function()
+        vim.treesitter.start()
+        vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+        vim.wo.foldmethod = 'expr'
+        vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+    end,
 })
 
-function fxJSONFormat(content)
-    return vim.fn.system({ "fx", "." }, content)
-end
-
-vim.g.rest_nvim = {
-    ui = {
-        winbar = true
-    }
-}
+vim.g.rest_nvim = { ui = { winbar = true } }
 
 require('render-markdown').setup({
     completions = { lsp = { enabled = true } },
@@ -411,6 +428,7 @@ vim.api.nvim_create_autocmd({ "CursorHold" }, {
 local ensure_installed = {
     'actionlint',
     'ansiblels',
+    'ansible-lint',
     'astro',
     'bash-debug-adapter',
     'bashls',
@@ -437,6 +455,7 @@ local ensure_installed = {
     'gradle_ls',
     'graphql',
     'groovyls',
+    'hadolint',
     'helm_ls',
     'html',
     'intelephense',
@@ -621,6 +640,14 @@ cmp.setup({
         { name = 'nvim_lsp' },
         { name = 'luasnip' },
         { name = 'buffer' },
+        { name = 'path' },
+        { name = 'calc' },
+        { name = 'color_names' },
+        { name = 'sql' },
+        { name = "go_pkgs" },
+        { name = "omni" },
+        { name = "git" },
+        { name = "pypi", keyword_length = 4 },
         { name = 'dotenv', option = { load_shell = false, show_content_on_docs = false } },
     })
 })
@@ -653,6 +680,24 @@ vim.cmd [[autocmd FileType sql,mysql,plsql lua require('cmp').setup.buffer({ sou
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
+
+-- linting config
+require('lint').linters_by_ft = {
+    python = { "ruff" },
+    terrafrom = { "tflint" },
+    markdown = { "vale" },
+    make = { "checkmake" },
+    sh = { "bash" },
+    yaml = { "yamllint" },
+    vim = { "vint" },
+    dockerfile = { "hadolint" },
+}
+
+vim.api.nvim_create_autocmd({ "BufWritePost", "BufReadPost" }, {
+  callback = function()
+    require("lint").try_lint()
+  end,
+})
 
 -- telescope setup
 require('telescope').setup({
@@ -943,12 +988,13 @@ require('lualine').setup {
             'branch', 'diff', {
                 'diagnostics',
                 sources = { 'nvim_diagnostic' },
-                symbols = {error = '󱎘 ', warn = ' ', info = ' ', hint = '󰌵 '},
+                symbols = { error = '󱎘 ', warn = ' ', info = ' ', hint = '󰌵 ' },
             }
         },
         lualine_c = {
             { 'filename', path = 1 }
         },
+        lualine_x = { 'lsp_status', 'filetype', 'encoding', 'fileformat', 'filesize' }
     }
 }
 
@@ -1154,11 +1200,6 @@ autocmd FileType go imap logkj fmt.Println(
 autocmd FileType js,javascript,typescript,javascriptreact,typescriptreact imap imkj import  from '
 autocmd FileType js,javascript,typescript,javascriptreact,typescriptreact inoremap ifkj if () {<cr>}<esc>k$2hi
 
-" override default ft plugin to update tab width for yaml files
-autocmd FileType yaml set tabstop=4
-autocmd FileType yaml set shiftwidth=4
-autocmd FileType yaml set softtabstop=4
-
 nmap <leader><leader>w :HopWord<cr>
 
 "make < > keep selection after indentenation
@@ -1204,6 +1245,16 @@ nnoremap <silent><leader>9 <Cmd>BufferLineGoToBuffer 9<CR>
 command! -nargs=0 WriteWithSudo :w !sudo tee % >/dev/null
 " Use :ww instead of :WriteWithSudo
 cnoreabbrev ww WriteWithSudo
+
+" command mode mappings
+" ctrl-a to head, ctrl-e to tail
+" ctrl-{hjkl} for movement arrows
+cnoremap <C-j> <Down>
+cnoremap <C-k> <Up>
+cnoremap <C-h> <Left>
+cnoremap <C-l> <Right>
+cnoremap <C-a> <Home>
+cnoremap <C-e> <End>
 
 " database UI
 let g:db_ui_save_location = '~/workspace/db-connections'
