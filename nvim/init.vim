@@ -370,7 +370,7 @@ vim.api.nvim_create_autocmd('FileType', {
         'spec', 'sql', 'sqlanywhere', 'sqlforms', 'sqlhana', 'sqlinformix', 'sqlj', 'sqloracle',
         'sshconfig', 'sshdconfig', 'strace', 'structurizr', 'stylus', 'sudoers', 'svelte', 'svg',
         'swift', 'syntax', 'sysctl', 'systemd', 'tagbar', 'tags', 'tar', 'tcl', 'tcsh', 'template',
-        'terminfo', 'terraform', 'text', 'tf', 'thrift', 'tmux', 'toml', 'tutor', 'typescript',
+        'terminfo', 'terraform', 'tf', 'thrift', 'tmux', 'toml', 'tutor', 'typescript',
         'typescriptreact', 'updatedb', 'vim', 'viminfo', 'vimnormal', 'vue', 'web', 'wget', 'wget2',
         'whitespace', 'yaml', 'zig', 'zsh'
     },

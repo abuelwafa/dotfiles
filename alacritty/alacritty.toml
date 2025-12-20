@@ -12,7 +12,7 @@ decorations_theme_variant = "Dark"
 resize_increments = true
 
 [font]
-size = 14
+size = 15
 normal.family = "MesloLGL Nerd Font"
 offset.y = 2
 glyph_offset.y = 1
