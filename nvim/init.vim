@@ -350,14 +350,14 @@ require("conform").setup({
 require'nvim-treesitter'.install({ 'all' })
 vim.api.nvim_create_autocmd('FileType', {
     pattern = {
-        'ada', 'alloy', 'ansible', 'ant', 'apache', 'apachestyle', 'arduino', 'asciidoc',
-        'asm', 'astro', 'autodoc', 'automake', 'awk', 'bash', 'basic', 'c', 'c3', 'cfg', 'changelog',
+        'alloy', 'ansible', 'ant', 'apache', 'apachestyle', 'arduino', 'asciidoc',
+        'asm', 'astro', 'autodoc', 'automake', 'awk', 'bash', 'basic', 'c', 'cfg', 'changelog',
         'cmake', 'colortest', 'conf', 'config', 'cpp', 'crontab', 'cs', 'csc', 'csh', 'css', 'csv',
-        'csv_pipe', 'csv_semicolon', 'csv_whitespace', 'cterm', 'cucumber', 'dart', 'datascript',
+        'csv_pipe', 'csv_semicolon', 'csv_whitespace', 'cterm', 'cucumber', 'datascript',
         'dbout', 'dbui', 'debsources', 'desktop', 'diff', 'dircolors', 'dirpager', 'django', 'dns',
         'dnsmasq', 'dockerfile', 'doxygen', 'dsl', 'dtrace', 'editorconfig', 'elixir', 'elm',
         'elmfilt', 'erlang', 'esqlc', 'fish', 'fstab', 'fugitive', 'gdscript', 'gdshader', 'git',
-        'gitattributes', 'gitcommit', 'gitconfig', 'gitignore', 'gitrebase', 'gitsendemail', 'gleam',
+        'gitattributes', 'gitcommit', 'gitconfig', 'gitignore', 'gitrebase', 'gitsendemail',
         'glsl', 'go', 'goaccess', 'godoc', 'gomod', 'gpg', 'graphql', 'groovy', 'group', 'grub',
         'hcl', 'hex', 'html', 'htmlangular', 'htmlcheetah', 'htmldjango', 'htmlm4', 'htmlos', 'http',
         'http_stat', 'hurl', 'i3config', 'inittab', 'ipfilter', 'ipkg', 'java', 'javacc', 'javascript',
@@ -366,11 +366,11 @@ vim.api.nvim_create_autocmd('FileType', {
         'luatemplate', 'mail', 'mailaliases', 'mailcap', 'make', 'man', 'manconf', 'manual',
         'markdown', 'mediawiki', 'mermaid', 'meson', 'msql', 'muttrc', 'mysql', 'netrc', 'nginx',
         'ninja', 'objc', 'objcpp', 'ocaml', 'openvpn', 'perl', 'php', 'plsql', 'prisma', 'ps1',
-        'python', 'python2', 'qml', 'query', 'ruby', 'rust', 'sass', 'scala', 'scss', 'sh', 'snippets',
+        'python', 'qml', 'query', 'ruby', 'rust', 'sass', 'scala', 'scss', 'sh', 'snippets',
         'spec', 'sql', 'sqlanywhere', 'sqlforms', 'sqlhana', 'sqlinformix', 'sqlj', 'sqloracle',
-        'sshconfig', 'sshdconfig', 'strace', 'structurizr', 'stylus', 'sudoers', 'svelte', 'svg',
+        'sshconfig', 'sshdconfig', 'strace', 'structurizr', 'stylus', 'sudoers', 'svg',
         'swift', 'syntax', 'sysctl', 'systemd', 'tagbar', 'tags', 'tar', 'tcl', 'tcsh', 'template',
-        'terminfo', 'terraform', 'tf', 'thrift', 'tmux', 'toml', 'tutor', 'typescript',
+        'terminfo', 'terraform', 'tf', 'tmux', 'toml', 'tutor', 'typescript',
         'typescriptreact', 'updatedb', 'vim', 'viminfo', 'vimnormal', 'vue', 'web', 'wget', 'wget2',
         'whitespace', 'yaml', 'zig', 'zsh'
     },
