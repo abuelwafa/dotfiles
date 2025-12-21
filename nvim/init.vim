@@ -92,7 +92,6 @@ Plug 'petertriho/cmp-git'
 Plug 'SergioRibera/cmp-dotenv'
 Plug 'onsails/lspkind.nvim'
 Plug 'ray-x/cmp-sql'
-Plug 'Snikimonkd/cmp-go-pkgs'
 Plug 'vrslev/cmp-pypi'
 Plug 'nat-418/cmp-color-names.nvim'
 
@@ -284,7 +283,7 @@ vim.opt.showmode = false
 vim.o.updatetime = 50
 vim.opt.timeoutlen = 1000
 vim.opt.cursorline = true
-vim.opt.scrolloff = 6
+vim.opt.scrolloff = 4
 vim.opt.list = true
 vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
 vim.opt.splitright = true
@@ -644,7 +643,6 @@ cmp.setup({
         { name = 'calc' },
         { name = 'color_names' },
         { name = 'sql' },
-        { name = "go_pkgs" },
         { name = "omni" },
         { name = "git" },
         { name = "pypi", keyword_length = 4 },
