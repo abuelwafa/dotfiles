@@ -98,7 +98,6 @@ alias lzd='docker run --rm -it --pull always -v /var/run/docker.sock:/var/run/do
 # TODO: enhacne the prompt by adding back the following info:
 #  - kubectx_prompt_info
 #  - aws_prompt_info
-#  - node version: "node: $(node -v)"
 #  - gcp auth/project info
 
 if command -v rbenv &>/dev/null; then
