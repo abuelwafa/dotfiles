@@ -1,0 +1,11 @@
+ ---
+ extends: default
+
+ rules:
+     indentation:
+         spaces: 4
+
+     document-start:
+         present: true
+     line-length:
+         max: 90
