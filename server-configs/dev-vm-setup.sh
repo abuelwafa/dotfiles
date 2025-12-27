@@ -52,7 +52,7 @@ function setup_neovim() {
 	ln --force -s ~/workspace/dotfiles/nvim/init.lua ~/.config/nvim/init.lua
 	mkdir -p ~/.nvim/_temp
 	mkdir -p ~/.nvim/_backup
-    cargo install --locked tree-sitter-cli
+	cargo install --locked tree-sitter-cli
 	echo "=> Openning neovim to install plugins and language servers. Exit when finished."
 	sleep 2
 	echo -n "=> Openning in 5 seconds."
