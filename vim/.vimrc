@@ -25,7 +25,7 @@ set ttyfast
 set encoding=utf-8
 set fileencodings=ucs-bom,utf-8,cp936,gb18030,big5,euc-jp,euc-kr,latin1
 set termencoding=utf-8
-set ffs=unix,dos,mac
+set fileformats=unix,dos,mac
 set formatoptions+=m
 set formatoptions+=B
 
@@ -68,13 +68,13 @@ set novisualbell
 set noerrorbells
 set visualbell t_vb=
 set t_vb=
-set tm=500
+set timeoutlen=500
 set cmdheight=1
 
 set ruler
 set lazyredraw
 set fsync
-set lbr
+set linebreak
 set nopaste
 set showcmd
 set showmode
@@ -191,7 +191,9 @@ vmap <C-k> 10kzz
 
 " single and double quotes in normal mode navigate forward and backwards 20 lines
 nnoremap ' 20jzz
+vnoremap ' 20jzz
 nnoremap " 20kzz
+vnoremap " 20kzz
 
 " split resizing
 " increase vertically
@@ -342,8 +344,8 @@ endfunction
 let s:motion_to_direction_mapping = {'h': 'L', 'j': 'D', 'k': 'U', 'l': 'R'}
 function! TmuxAwareNavigate(direction)
     if IsMostDirection(a:direction)
-        silent! execute "!tmux select-pane -" . s:motion_to_direction_mapping[a:direction] . "Z"
-        silent! execute "redraw!"
+        silent! execute '!tmux select-pane -' . s:motion_to_direction_mapping[a:direction] . 'Z'
+        silent! execute 'redraw!'
     else
         silent! execute "normal! \<c-w>" . a:direction
     endif
@@ -416,8 +418,8 @@ augroup END
 autocmd FileType * autocmd BufWritePre <buffer> :call <SID>StripTrailingWhitespaces()
 command! -nargs=0 TrimTrailingWhitespace call <SID>StripTrailingWhitespaces()
 fun! <SID>StripTrailingWhitespaces()
-    let l = line(".")
-    let c = col(".")
+    let l = line('.')
+    let c = col('.')
     %s/\s\+$//e
     call cursor(l, c)
 endfun
@@ -497,14 +499,14 @@ function! s:quickFixOpenAll()
     endfor
 
     for file in keys(files)
-        silent exe "edit ".file
+        silent exe 'edit '.file
     endfor
 endfunction
 
 " update vimrc file
 function! UpdateVimrc()
-    silent! execute "!curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/vim/.vimrc -o ~/.vimrc"
-    silent! execute "redraw!"
-    echom "Vimrc has been udpated."
+    silent! execute '!curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/vim/.vimrc -o ~/.vimrc'
+    silent! execute 'redraw!'
+    echom 'Vimrc has been udpated.'
 endfunction
 command! -nargs=0 UpdateVimrc call UpdateVimrc()

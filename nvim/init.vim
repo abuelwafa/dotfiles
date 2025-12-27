@@ -1223,6 +1223,8 @@ vim.api.nvim_set_keymap('v', '<C-k>', '10kzz', {noremap = true})
 -- single and double quotes in normal mode navigate forward and backwards 24 lines
 vim.api.nvim_set_keymap('n', "'", '20jzz', {noremap = true})
 vim.api.nvim_set_keymap('n', '"', '20kzz', {noremap = true})
+vim.api.nvim_set_keymap('v', "'", '20jzz', {noremap = true})
+vim.api.nvim_set_keymap('v', '"', '20kzz', {noremap = true})
 EOF
 
 "split resizing
