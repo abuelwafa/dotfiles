@@ -66,6 +66,7 @@ Plug 'kristijanhusak/vim-dadbod-completion'
 Plug 'jackMort/ChatGPT.nvim'
 Plug 'stevearc/dressing.nvim'
 Plug 'mechatroner/rainbow_csv'
+Plug 'hat0uma/csvview.nvim'
 Plug 'folke/trouble.nvim'
 Plug 'j-hui/fidget.nvim'
 Plug 'windwp/nvim-autopairs'
@@ -315,6 +316,14 @@ require('trouble').setup()
 require('fidget').setup()
 require("nvim-autopairs").setup()
 require("todo-comments").setup()
+require('csvview').setup({
+    view = {
+        min_column_width = 8,
+        spacing = 4,
+        display_mode = 'border'
+    }
+})
+
 require("conform").setup({
     notify_on_error = true,
     format_on_save = { timeout_ms = 1000, lsp_fallback = true },
