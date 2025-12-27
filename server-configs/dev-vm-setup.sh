@@ -255,6 +255,10 @@ main() {
 		echo 'export OPENAI_API_KEY="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"' | tee -a ~/.machine-config &>/dev/null
 	fi
 
+	if ! grep -q -e "export ENABLE_AUTOMATIC_SSH_AGENT" ~/.machine-config; then
+		echo 'export ENABLE_AUTOMATIC_SSH_AGENT="true"' | tee -a ~/.machine-config &>/dev/null
+	fi
+
 	mkdir -p ~/.config/pgcli
 	ln --force -s ~/workspace/dotfiles/pgcli.config ~/.config/pgcli/config
 	ln --force -s ~/workspace/dotfiles/yamlfmt.yml ~/yamlfmt.yml
