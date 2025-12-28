@@ -36,6 +36,8 @@ unset node_path
 unalias show
 alias show=bat
 
+alias yh="bat -l yaml --plain"
+
 alias vim="nvim"
 alias vimdiff="nvim -d"
 
