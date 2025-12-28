@@ -207,9 +207,11 @@ function compress() {
 }
 
 # enable bash completions
+ENABLE_KUBE_PROMPT="false"
 if command -v kubectl &>/dev/null 2>&1; then
     source <(kubectl completion bash)
     complete -o default -F __start_kubectl kctl
+    ENABLE_KUBE_PROMPT="true"
 fi
 
 if command -v kustomize &>/dev/null 2>&1; then
@@ -245,7 +247,7 @@ function virtualenv_info() {
         # In case you don't have one activated
         venv=''
     fi
-    [[ -n "${venv}" ]] && echo "(venv:${venv}) "
+    [[ -n "${venv}" ]] && echo -ne "\e[38;5;214m(venv:${venv})\e[m "
 }
 
 # ------------------------------------
@@ -295,8 +297,21 @@ function print_node_prompt() {
     fi
 }
 
+function kube_prompt() {
+    if [[ "${ENABLE_KUBE_PROMPT}" == "true" ]]; then
+        local context
+        context="$(kubectl config view --minify -o json | jq '.contexts[0]')"
+        local context_name
+        context_name="$(echo "${context}" | jq -r '.name')"
+        local namespace
+        namespace="$(echo "${context}" | jq -r '.context.namespace')"
+        echo -ne "\e[38;5;4m[ 󱃾 ${context_name}:${namespace} ]\e[m "
+        # echo -ne "\e[48;5;4;38;5;0m 󱃾 ${context_name}:${namespace} \e[m "
+    fi
+}
+
 set_bash_prompt() {
-    PS1="${bldgreen}$(rule)${txtrst}\n${debian_chroot:+(${debian_chroot})}${bldblue}\u@\H${txtrst} \$(in_ssh_prompt)\$(system_reboot_prompt)\$(print_node_prompt)\n${bldyellow}\w${bldpurple}\$(which git &>/dev/null && __git_ps1)\n\$(virtualenv_info)${bldcyan}-> ${txtrst}"
+    PS1="\n${bldgreen}$(rule)${txtrst}\n${debian_chroot:+(${debian_chroot})}${bldblue}\u@\H${txtrst} \$(in_ssh_prompt)\$(system_reboot_prompt)\$(print_node_prompt)\n${bldyellow}\w${bldpurple}\$(which git &>/dev/null && __git_ps1)\n\$(virtualenv_info)\$(kube_prompt)${bldcyan}-> ${txtrst}"
 }
 
 export GIT_PS1_SHOWCONFLICTSTATE=1

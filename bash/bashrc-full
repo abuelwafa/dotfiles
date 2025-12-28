@@ -98,7 +98,6 @@ unalias lzd
 alias lzd='docker run --rm -it --pull always -v /var/run/docker.sock:/var/run/docker.sock -v ~/workspace/dotfiles/lazydocker-config.yml:/.config/jesseduffield/lazydocker/config.yml lazyteam/lazydocker'
 
 # TODO: enhacne the prompt by adding back the following info:
-#  - kubectx_prompt_info
 #  - aws_prompt_info
 #  - gcp auth/project info
 
