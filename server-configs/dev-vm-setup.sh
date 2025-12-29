@@ -53,6 +53,8 @@ function setup_neovim() {
 	mkdir -p ~/.nvim/_temp
 	mkdir -p ~/.nvim/_backup
 	cargo install --locked tree-sitter-cli
+	luarocks install mimetypes
+	luarocks install xml2lua
 	echo "=> Openning neovim to install plugins and language servers. Exit when finished."
 	sleep 2
 	echo -n "=> Openning in 5 seconds."

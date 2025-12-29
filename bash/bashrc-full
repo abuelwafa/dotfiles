@@ -138,6 +138,12 @@ if command -v limactl &>/dev/null 2>&1; then
     complete -o default -F __start_limactl lima
 fi
 
+# add lua user tree to path
+eval "$(luarocks path --bin)"
+
+# source cargo bin directory
+source "${HOME}/.cargo/env"
+
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="${HOME}/.sdkman"
 [[ -s "${HOME}/.sdkman/bin/sdkman-init.sh" ]] && source "${HOME}/.sdkman/bin/sdkman-init.sh"
