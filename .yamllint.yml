@@ -1,11 +1,11 @@
- ---
- extends: default
+---
+extends: default
 
- rules:
-     indentation:
-         spaces: 4
+rules:
+    indentation:
+        spaces: 4
 
-     document-start:
-         present: true
-     line-length:
-         max: 90
+    document-start:
+        present: true
+    line-length:
+        max: 90
