@@ -66,7 +66,7 @@ alias pod-clean='pod cache clean --all'
 
 function ssh_connect() {
     local selected_host
-    selected_host="$(grep -P "^Host ([^*]+)$" "${HOME}"/.ssh/config | sed 's/Host //' | fzf)"
+    selected_host="$(cat "${HOME}"/.ssh/config | grep --color=never -E -e "^Host ([^*]+)$" | sed 's/Host //' | fzf)"
 
     if [[ ! -z "${selected_host}" ]]; then
         eval "ssh ${selected_host}"
@@ -96,10 +96,6 @@ function pg_select() {
 
 unalias lzd
 alias lzd='docker run --rm -it --pull always -v /var/run/docker.sock:/var/run/docker.sock -v ~/workspace/dotfiles/lazydocker-config.yml:/.config/jesseduffield/lazydocker/config.yml lazyteam/lazydocker'
-
-# TODO: enhacne the prompt by adding back the following info:
-#  - aws_prompt_info
-#  - gcp auth/project info
 
 if command -v rbenv &>/dev/null; then
     eval "$(rbenv init - zsh)"
@@ -143,6 +139,9 @@ eval "$(luarocks path --bin)"
 
 # source cargo bin directory
 source "${HOME}/.cargo/env"
+
+# source go bin directory
+export PATH="${PATH}:${HOME}/go/bin"
 
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="${HOME}/.sdkman"
