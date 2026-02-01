@@ -76,8 +76,8 @@ Plug 'nvim-tree/nvim-web-devicons'
 Plug 'windwp/nvim-ts-autotag'
 
 Plug 'neovim/nvim-lspconfig'
-Plug 'williamboman/mason.nvim'
-Plug 'williamboman/mason-lspconfig.nvim'
+Plug 'mason-org/mason.nvim'
+Plug 'mason-org/mason-lspconfig.nvim'
 Plug 'WhoIsSethDaniel/mason-tool-installer.nvim'
 Plug 'folke/todo-comments.nvim'
 Plug 'stevearc/conform.nvim'
@@ -91,6 +91,7 @@ Plug 'hrsh7th/cmp-omni'
 Plug 'hrsh7th/cmp-cmdline'
 Plug 'petertriho/cmp-git'
 Plug 'SergioRibera/cmp-dotenv'
+Plug 'Jezda1337/nvim-html-css'
 Plug 'onsails/lspkind.nvim'
 Plug 'ray-x/cmp-sql'
 Plug 'vrslev/cmp-pypi'
@@ -152,7 +153,7 @@ vim.opt.cindent = true
 vim.opt.incsearch = true
 vim.opt.showmatch = true
 
-vim.opt.colorcolumn = '101'
+vim.opt.colorcolumn = '91'
 
 vim.opt.foldenable = true
 vim.opt.foldmethod = "indent"
@@ -284,6 +285,7 @@ vim.opt.showmode = false
 vim.o.updatetime = 50
 vim.opt.timeoutlen = 1000
 vim.opt.cursorline = true
+vim.o.winborder = 'rounded'
 vim.opt.scrolloff = 4
 vim.opt.list = true
 vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
@@ -486,7 +488,7 @@ vim.api.nvim_create_autocmd('FileType', {
         'cmake', 'colortest', 'config', 'cpp', 'crontab', 'cs', 'csc', 'csh', 'css',
         'desktop', 'diff', 'dircolors', 'dirpager', 'django', 'dns',
         'dnsmasq', 'dockerfile', 'doxygen', 'dsl', 'dtrace', 'editorconfig', 'elixir', 'elm',
-        'elmfilt', 'erlang', 'esqlc', 'fish', 'fstab', 'fugitive', 'gdscript', 'gdshader', 'git',
+        'elmfilt', 'erlang', 'esqlc', 'fish', 'fstab', 'fugitive', 'gdscript', 'gdshader',
         'gitattributes', 'gitcommit', 'gitconfig', 'gitignore', 'gitrebase', 'gitsendemail',
         'glsl', 'go', 'goaccess', 'godoc', 'gomod', 'gpg', 'graphql', 'groovy', 'group', 'grub',
         'hcl', 'hex', 'html', 'htmlangular', 'htmlcheetah', 'htmldjango', 'htmlm4', 'htmlos', 'http',
@@ -613,9 +615,9 @@ local ensure_installed = {
     'tailwindcss',
     'taplo',
     'templ',
-    'terraform',
-    'terraform-ls',
-    -- 'tofu-ls',
+    -- 'terraform',
+    -- 'terraform-ls',
+    'tofu-ls',
     'tflint',
     'typescript-language-server',
     'vale',
@@ -774,6 +776,7 @@ cmp.setup({
         { name = 'color_names' },
         { name = 'sql' },
         { name = "omni" },
+        { name = "html-css" },
         { name = "git" },
         { name = "pypi", keyword_length = 4 },
         { name = 'dotenv', option = { load_shell = false, show_content_on_docs = false } },
@@ -1009,7 +1012,7 @@ require("nvim-tree").setup({
     view = {
         centralize_selection = false,
         width = 32,
-        side = "left",
+        side = "right",
     },
     renderer = {
         highlight_git = true,
@@ -1168,6 +1171,16 @@ require('bufferline').setup({
     },
 })
 
+vim.g.html_css = {
+    enable_on = { "html", "jsx", "tsx", "htmldjango", "erb", "svelte", "vue", "blade", "php", "templ", "astro" },
+    documentation = { auto_show = true },
+    style_sheets = {},
+    handlers = {
+      definition = { bind = "gd" },
+      hover = { bind = "K", wrap = true, border = "none", position = "cursor" }
+    }
+}
+
 vim.g.tmux_navigator_no_mappings = 1
 vim.g.tmux_navigator_disable_when_zoomed = 1
 vim.api.nvim_set_keymap('n', '<c-h>', ':TmuxNavigateLeft<CR>', {silent = true})
@@ -1215,12 +1228,13 @@ augroup END
 
 lua << EOF
 -- faster movoment - multiple line jumping
-vim.api.nvim_set_keymap('n', '<C-j>', '10jzz', {noremap = true})
-vim.api.nvim_set_keymap('v', '<C-j>', '10jzz', {noremap = true})
-vim.api.nvim_set_keymap('n', '<C-k>', '10kzz', {noremap = true})
-vim.api.nvim_set_keymap('v', '<C-k>', '10kzz', {noremap = true})
+vim.api.nvim_set_keymap('n', '<C-j>', '10j', {noremap = true})
+vim.api.nvim_set_keymap('v', '<C-j>', '10j', {noremap = true})
+vim.api.nvim_set_keymap('n', '<C-k>', '10k', {noremap = true})
+vim.api.nvim_set_keymap('v', '<C-k>', '10k', {noremap = true})
 
--- single and double quotes in normal mode navigate forward and backwards 24 lines
+-- single and double quotes in normal/visual modes navigate
+-- forward and backwards 24 lines and center the cursor in the middle
 vim.api.nvim_set_keymap('n', "'", '20jzz', {noremap = true})
 vim.api.nvim_set_keymap('n', '"', '20kzz', {noremap = true})
 vim.api.nvim_set_keymap('v', "'", '20jzz', {noremap = true})
