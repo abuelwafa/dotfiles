@@ -305,13 +305,41 @@ function kube_prompt() {
         context_name="$(echo "${context}" | jq -r '.name')"
         local namespace
         namespace="$(echo "${context}" | jq -r '.context.namespace')"
-        echo -ne "\e[38;5;4m[ 󱃾 ${context_name}:${namespace} ]\e[m "
+        echo -ne "\e[1;5;36;38;5;4m[ 󱃾 ${context_name}:${namespace} ]\e[m "
         # echo -ne "\e[48;5;4;38;5;0m 󱃾 ${context_name}:${namespace} \e[m "
     fi
 }
 
+ENABLE_GCP_PROMPT="false"
+if command -v gcloud &>/dev/null 2>&1; then
+    ENABLE_GCP_PROMPT="true"
+fi
+function gcp_prompt() {
+    if [[ "${ENABLE_GCP_PROMPT}" == "true" ]]; then
+        local project
+        project="$(gcloud config get project)"
+        local account
+        account="$(gcloud config get account)"
+        echo -ne "\e[1;5;36;38;5;33m[  ${account}  ${project} ]\e[m "
+    fi
+}
+
+ENABLE_AWS_PROMPT="false"
+if command -v aws &>/dev/null 2>&1; then
+    ENABLE_AWS_PROMPT="true"
+fi
+function aws_prompt() {
+    if [[ "${ENABLE_AWS_PROMPT}" == "true" ]]; then
+        local account
+        account="$(echo -ne account)"
+        local region
+        region="$(echo -ne region)"
+        echo -ne "\e[1;5;36;38;5;202m[ 󰸏 ${account} : ${region} ]\e[m "
+    fi
+}
+
 set_bash_prompt() {
-    PS1="\n${bldgreen}$(rule)${txtrst}\n${debian_chroot:+(${debian_chroot})}${bldblue}\u@\H${txtrst} \$(in_ssh_prompt)\$(system_reboot_prompt)\$(print_node_prompt)\n${bldyellow}\w${bldpurple}\$(which git &>/dev/null && __git_ps1)\n\$(virtualenv_info)\$(kube_prompt)${bldcyan}-> ${txtrst}"
+    PS1="\n${bldgreen}$(rule)${txtrst}\n${debian_chroot:+(${debian_chroot})}${bldblue}\u@\H${txtrst} \$(in_ssh_prompt)\$(system_reboot_prompt)\$(print_node_prompt)\n${bldyellow}\w${bldpurple}\$(which git &>/dev/null && __git_ps1)${txtrst} \$(aws_prompt)\$(gcp_prompt)\n\$(virtualenv_info)\$(kube_prompt)${bldcyan}-> ${txtrst}"
 }
 
 export GIT_PS1_SHOWCONFLICTSTATE=1
