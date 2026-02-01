@@ -91,7 +91,7 @@ function gpopstash() {
         git stash pop stash@"{""$1""}"
     fi
 }
-alias gsavestash='git stash push'
+alias gsavestash='git stash push --include-untracked'
 
 alias cp='cp -ir'
 alias mv='mv -i'
