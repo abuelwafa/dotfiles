@@ -229,6 +229,8 @@ main() {
 		superfile
 		cmatrix
 		pre-commit
+		yamllint
+		shellcheck
 		yarn
 		# watchman
 		# fd
@@ -289,7 +291,10 @@ main() {
 
 	# install lazytrivy
 	echo "=> Installing lazytrivy"
-	# go install github.com/owenrumney/lazytrivy@latest
+	go install github.com/owenrumney/lazytrivy@latest
+
+	# install yamlfmt
+	go install github.com/google/yamlfmt/cmd/yamlfmt@latest
 
 	# configure opencode
 	echo "=> Configuring Opencode."
