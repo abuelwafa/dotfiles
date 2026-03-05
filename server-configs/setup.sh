@@ -424,6 +424,17 @@ function setup_prometheus_node_exporter() {
 	echo
 }
 
+function setup_prometheus_server() {
+	read -p "Setup and configure Prometheus server? (y/n): " -r install_prometheus
+	echo
+	if [[ ${install_prometheus} =~ ^[Yy]$ ]]; then
+		echo "TODO"
+	else
+		echo "Skipping installation of prometheus server"
+	fi
+	echo
+}
+
 function setup_grafana_alloy() {
 	read -p "Setup and configure Grafana Alloy? (y/n): " -r install_alloy
 	echo
@@ -841,6 +852,7 @@ main() {
 	setup_aws_cli
 	setup_gcloud_cli
 	setup_hetzner_cli
+	setup_prometheus_server
 	setup_prometheus_node_exporter
 	setup_grafana_alloy
 	setup_harbor
