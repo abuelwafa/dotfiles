@@ -12,8 +12,13 @@ decorations_theme_variant = "Dark"
 resize_increments = true
 
 [font]
-size = 15
+size = 16
 normal.family = "MesloLGL Nerd Font"
+# normal.family = "JetbrainsMono Nerd Font"
+# normal.family = "FiraMono Nerd Font"
+# normal.family = "Hack Nerd Font"
+# normal.family = "UbuntuMono Nerd Font"
+# normal.family = "InconsolataGo Nerd Font"
 offset.y = 2
 glyph_offset.y = 1
 # force italics to be displayed as regular font
