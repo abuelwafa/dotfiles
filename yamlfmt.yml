@@ -5,7 +5,7 @@ formatter:
     indent: 4
     include_document_start: true
     line_ending: lf
-    max_line_length: 99
+    max_line_length: 120
     retain_line_breaks: true
     retain_line_breaks_single: true
     eof_newline: true
