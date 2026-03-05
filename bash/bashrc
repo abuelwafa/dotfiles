@@ -277,64 +277,70 @@ bldcyan='\[\e[1;36m\]'
 # 37 white
 
 # Text Reset
-txtrst='\[\e[m\]'
+txtrst='\[\e[0m\]'
 
 function system_reboot_prompt() {
     if [[ -f /var/run/reboot-required ]]; then
-        echo -ne " \e[1;30;41m [ REBOOT REQUIRED ] \e[m "
+        echo -ne " \e[1;30;41m [ REBOOT REQUIRED ] \e[0m "
     fi
 }
 
 function in_ssh_prompt() {
     if [[ -n "${SSH_CLIENT}" ]] || [[ -n "${SSH_TTY}" ]]; then
-        echo -ne " \e[1;30;41m (SSH) \e[m "
+        echo -ne " \e[1;30;41m (SSH) \e[0m "
     fi
 }
 
 function print_node_prompt() {
     if command -v node &>/dev/null 2>&1; then
-        echo -ne " \e[48;5;22;38;5;15m Node: $(node -v) \e[m "
+        echo -ne " \e[48;5;22;38;5;15m Node: $(node -v) \e[0m "
     fi
 }
 
 function kube_prompt() {
     if [[ "${ENABLE_KUBE_PROMPT}" == "true" ]]; then
         local context
-        context="$(kubectl config view --minify -o json | jq '.contexts[0]')"
+        context="$(kubectl config view --minify -o json | jq -r '.contexts[0]')"
         local context_name
         context_name="$(echo "${context}" | jq -r '.name')"
         local namespace
         namespace="$(echo "${context}" | jq -r '.context.namespace')"
-        echo -ne "\e[1;5;36;38;5;4m[ 󱃾 ${context_name}:${namespace} ]\e[m "
+        echo -ne "\e[1;1;36;38;5;4m[ 󱃾 ${context_name:--}:${namespace:--} ]\e[0m "
         # echo -ne "\e[48;5;4;38;5;0m 󱃾 ${context_name}:${namespace} \e[m "
     fi
 }
 
-ENABLE_GCP_PROMPT="false"
-if command -v gcloud &>/dev/null 2>&1; then
-    ENABLE_GCP_PROMPT="true"
+_ENABLE_GCP_PROMPT="false"
+if [[ "${ENABLE_GCP_PROMPT}" == "true" ]]; then
+    if command -v gcloud &>/dev/null 2>&1; then
+        _ENABLE_GCP_PROMPT="true"
+    fi
 fi
+
 function gcp_prompt() {
-    if [[ "${ENABLE_GCP_PROMPT}" == "true" ]]; then
+    if [[ "${_ENABLE_GCP_PROMPT}" == "true" ]]; then
         local project
         project="$(gcloud config get project)"
         local account
         account="$(gcloud config get account)"
-        echo -ne "\e[1;5;36;38;5;33m[  ${account}  ${project} ]\e[m "
+        echo -ne "\e[1;1;36;38;5;33m[   ${account}  ${project:---} ]\e[0m "
     fi
 }
 
-ENABLE_AWS_PROMPT="false"
-if command -v aws &>/dev/null 2>&1; then
-    ENABLE_AWS_PROMPT="true"
+_ENABLE_AWS_PROMPT="false"
+if [[ "${ENABLE_AWS_PROMPT}" == "true" ]]; then
+    if command -v aws &>/dev/null 2>&1; then
+        _ENABLE_AWS_PROMPT="true"
+    fi
 fi
+
 function aws_prompt() {
-    if [[ "${ENABLE_AWS_PROMPT}" == "true" ]]; then
+    if [[ "${_ENABLE_AWS_PROMPT}" == "true" ]]; then
         local account
         account="$(echo -ne account)"
         local region
         region="$(echo -ne region)"
-        echo -ne "\e[1;5;36;38;5;202m[ 󰸏 ${account} : ${region} ]\e[m "
+        echo -ne "\e[1;1;36;38;5;202m[ 󰸏  ${account} : ${region} ]\e[0m "
     fi
 }
 
