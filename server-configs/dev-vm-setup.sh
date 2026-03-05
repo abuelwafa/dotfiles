@@ -201,6 +201,7 @@ main() {
 		fzf
 		jq
 		lazygit
+        lazyjournal
 		libpq
 		kubernetes-cli
 		helm
@@ -220,8 +221,8 @@ main() {
 		litecli
 		mycli
 		iredis
-		lnav
-		goaccess
+		# lnav
+		# goaccess
 		hcloud
 		gh
 		dust
