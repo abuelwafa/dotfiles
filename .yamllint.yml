@@ -8,4 +8,4 @@ rules:
     document-start:
         present: true
     line-length:
-        max: 90
+        max: 120
