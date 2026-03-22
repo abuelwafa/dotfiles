@@ -1011,7 +1011,7 @@ require("nvim-tree").setup({
     end,
     view = {
         centralize_selection = false,
-        width = 32,
+        width = 34,
         side = "right",
     },
     renderer = {

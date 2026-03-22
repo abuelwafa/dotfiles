@@ -20,3 +20,4 @@ venv/
 # generated swap files
 **/*.swp
 
+k9s/clusters/*

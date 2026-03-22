@@ -95,3 +95,16 @@ GCloud commands
 gcloud auth login
 gcloud organizations list --format json
 gcloud billing accounts list
+
+gcloud sql instances execute-sql instance_name --database=my_db --sql="ALTER TABLE employees RENAME TO people;"
+gcloud sql instances execute-sql instance_name --database=my_db --sql="SELECT * FORM users;"
+
+gcloud storage cp --recursive ~/ gs://my-bucket
+
+====================================================================================================
+flux cd
+---------
+# manually reconcile a specific kustomization
+flux reconcile kustomization my_kustomization --with-source
+
+====================================================================================================

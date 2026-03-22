@@ -98,6 +98,7 @@ alias mv='mv -i'
 alias remove='rm -rf'
 
 alias kctl='kubectl'
+alias k='kubectl'
 alias sctl='systemctl'
 if command -v nerdctl &>/dev/null 2>&1; then
     alias docker="sudo nerdctl"
@@ -211,6 +212,7 @@ ENABLE_KUBE_PROMPT="false"
 if command -v kubectl &>/dev/null 2>&1; then
     source <(kubectl completion bash)
     complete -o default -F __start_kubectl kctl
+    complete -o default -F __start_kubectl k
     ENABLE_KUBE_PROMPT="true"
 fi
 

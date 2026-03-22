@@ -201,13 +201,14 @@ main() {
 		fzf
 		jq
 		lazygit
-        lazyjournal
+		lazyjournal
 		libpq
 		kubernetes-cli
 		helm
 		fluxcd/tap/flux
 		kind
 		derailed/k9s/k9s
+		dgunzy/flux9s
 		kubectx
 		kustomize
 		trivy

@@ -1,13 +1,17 @@
 ---
 k9s:
     liveViewAutoRefresh: true
-    screenDumpDir: /Users/abuelwafa/Library/Application Support/k9s/screen-dumps
-    refreshRate: 1
+    screenDumpDir: ~/abuelwafa/k9s/screen-dumps
+    refreshRate: 2
+    apiServerTimeout: 15s
     maxConnRetry: 5
     readOnly: false
     noExitOnCtrlC: false
+    defaultView: "pods"
+    namespace:
+        active: all
     ui:
-        enableMouse: false
+        enableMouse: true
         headless: false
         logoless: true
         crumbsless: false
