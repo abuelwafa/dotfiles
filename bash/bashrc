@@ -207,13 +207,18 @@ function compress() {
     echo "Done compressing..."
 }
 
+# machine specific config/overrides
+[[ -s "${HOME}/.machine-config" ]] && source "${HOME}/.machine-config"
+
 # enable bash completions
-ENABLE_KUBE_PROMPT="false"
+_ENABLE_KUBE_PROMPT="false"
 if command -v kubectl &>/dev/null 2>&1; then
     source <(kubectl completion bash)
     complete -o default -F __start_kubectl kctl
     complete -o default -F __start_kubectl k
-    ENABLE_KUBE_PROMPT="true"
+    if [[ "${ENABLE_KUBE_PROMPT:-false}" == "true" ]]; then
+        _ENABLE_KUBE_PROMPT="true"
+    fi
 fi
 
 if command -v kustomize &>/dev/null 2>&1; then
@@ -233,9 +238,6 @@ fi
 if command -v hcloud &>/dev/null 2>&1; then
     source <(hcloud completion bash)
 fi
-
-# machine specific config/overrides
-[[ -s "${HOME}/.machine-config" ]] && source "${HOME}/.machine-config"
 
 # disable the default virtualenv prompt change
 export VIRTUAL_ENV_DISABLE_PROMPT=1
@@ -293,14 +295,20 @@ function in_ssh_prompt() {
     fi
 }
 
-function print_node_prompt() {
+_ENABLE_NODE_PROMPT="false"
+if [[ "${ENABLE_NODE_PROMPT:-false}" == "true" ]]; then
     if command -v node &>/dev/null 2>&1; then
+        _ENABLE_NODE_PROMPT="true"
+    fi
+fi
+function print_node_prompt() {
+    if [[ "${_ENABLE_NODE_PROMPT}" == "true" ]]; then
         echo -ne " \e[48;5;22;38;5;15m Node: $(node -v) \e[0m "
     fi
 }
 
 function kube_prompt() {
-    if [[ "${ENABLE_KUBE_PROMPT}" == "true" ]]; then
+    if [[ "${_ENABLE_KUBE_PROMPT}" == "true" ]]; then
         local context
         context="$(kubectl config view --minify -o json | jq -r '.contexts[0]')"
         local context_name
@@ -313,7 +321,7 @@ function kube_prompt() {
 }
 
 _ENABLE_GCP_PROMPT="false"
-if [[ "${ENABLE_GCP_PROMPT}" == "true" ]]; then
+if [[ "${ENABLE_GCP_PROMPT:-false}" == "true" ]]; then
     if command -v gcloud &>/dev/null 2>&1; then
         _ENABLE_GCP_PROMPT="true"
     fi
@@ -321,16 +329,18 @@ fi
 
 function gcp_prompt() {
     if [[ "${_ENABLE_GCP_PROMPT}" == "true" ]]; then
+        local config
+        config="$(gcloud config configurations describe default --format=json)"
         local project
-        project="$(gcloud config get project)"
+        project="$(echo "${config}" | jq -r '.properties.core.project')"
         local account
-        account="$(gcloud config get account)"
+        account="$(echo "${config}" | jq -r '.properties.core.account')"
         echo -ne "\e[1;1;36;38;5;33m[   ${account}  ${project:---} ]\e[0m "
     fi
 }
 
 _ENABLE_AWS_PROMPT="false"
-if [[ "${ENABLE_AWS_PROMPT}" == "true" ]]; then
+if [[ "${ENABLE_AWS_PROMPT:-false}" == "true" ]]; then
     if command -v aws &>/dev/null 2>&1; then
         _ENABLE_AWS_PROMPT="true"
     fi
