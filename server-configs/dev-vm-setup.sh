@@ -196,6 +196,7 @@ main() {
 		gnupg
 		sops
 		doggo
+		dive # https://github.com/wagoodman/dive
 		bat
 		ripgrep
 		fzf
