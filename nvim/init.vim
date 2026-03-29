@@ -63,7 +63,7 @@ Plug 'preservim/tagbar'
 Plug 'tpope/vim-dadbod'
 Plug 'kristijanhusak/vim-dadbod-ui'
 Plug 'kristijanhusak/vim-dadbod-completion'
-Plug 'jackMort/ChatGPT.nvim'
+" Plug 'jackMort/ChatGPT.nvim'
 Plug 'stevearc/dressing.nvim'
 Plug 'mechatroner/rainbow_csv'
 Plug 'hat0uma/csvview.nvim'
@@ -229,7 +229,7 @@ let g:EditorConfig_exclude_patterns = ['fugitive://.*', 'scp://.*']
 au FileType gitcommit let b:EditorConfig_disable = 1
 
 " git blame configuration
-let g:gitblame_enabled = 0
+let g:gitblame_enabled = 1
 let g:gitblame_date_format = '%d %b %y'
 let g:gitblame_message_when_not_committed = ''
 
@@ -312,7 +312,7 @@ require('gitsigns').setup({
     signs_staged_enable = false
 })
 require('numb').setup()
-require("chatgpt").setup()
+-- require("chatgpt").setup()
 require('dressing').setup()
 require('trouble').setup()
 require('fidget').setup()
@@ -514,7 +514,10 @@ vim.api.nvim_create_autocmd('FileType', {
     end,
 })
 
-vim.g.rest_nvim = { ui = { winbar = true } }
+vim.g.rest_nvim = {
+    ui = { winbar = true },
+    env = { enable = false },
+}
 
 require('render-markdown').setup({
     completions = { lsp = { enabled = true } },
