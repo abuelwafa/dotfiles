@@ -1,6 +1,12 @@
 ---
 extends: default
 
+yaml-files:
+  - '*.kyaml'
+  - '*.yaml'
+  - '*.yml'
+  - '.yamllint'
+
 rules:
   indentation:
     spaces: 2
