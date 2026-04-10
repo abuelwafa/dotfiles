@@ -11,7 +11,7 @@ formatter:
   eof_newline: true
   trim_trailing_whitespace: true
   indentless_arrays: false
-  array_indent: 4
+  array_indent: 2
   indent_root_array: false
   pad_line_comments: 2
   scan_folded_as_literal: false
