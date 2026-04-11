@@ -124,16 +124,20 @@ main() {
 	echo "=> Setting up DB connections file"
 	if [[ ! -f ~/workspace/db-connections/connections.json ]]; then
 		mkdir -p ~/workspace/db-connections
-		echo '[{ "name": "postgres-local", "url": "postgresql://postgres:postgres@localhost:5432/postgres" }]' | tee ~/workspace/db-connections/connections.json &>/dev/null
+		echo '[{ "name": "postgres-local", "url": "postgresql://postgres:postgres@localhost:5432/postgres" }]' |
+			tee ~/workspace/db-connections/connections.json &>/dev/null
 	fi
 
 	# increase inotify watchers
 	echo "=> Configuring inotify watchers"
-	local current_watches_limit
-	current_watches_limit="$(sudo sysctl -a | grep -e "^fs.inotify.max_user_watches" | cut -d "=" -f 2 | xargs)"
-	if [[ "${current_watches_limit}" != "999999" ]]; then
-		echo fs.inotify.max_user_watches=999999 | sudo tee /etc/sysctl.d/00-max-user-watches.conf &>/dev/null
-		sudo sysctl -p /etc/sysctl.d/00-max-user-watches.conf
+	if [[ "$(cat /proc/sys/fs/inotify/max_user_watches)" != "1048576" ]]; then
+		echo "fs.inotify.max_user_watches=1048576" | sudo tee -a /etc/sysctl.d/99-dev-vm.conf &>/dev/null
+		sudo sysctl -p /etc/sysctl.d/99-dev-vm.conf
+	fi
+
+	if [[ "$(cat /proc/sys/fs/inotify/max_user_isntances)" != "1048576" ]]; then
+		echo "fs.inotify.max_user_instances=2048" | sudo tee -a /etc/sysctl.d/99-dev-vm.conf &>/dev/null
+		sudo sysctl -p /etc/sysctl.d/99-dev-vm.conf
 	fi
 
 	# increase open files soft limit
