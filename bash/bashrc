@@ -117,6 +117,16 @@ alias start-db='docker run -p 5432:5432 --env POSTGRES_PASSWORD=postgres --env P
 # show file contents
 alias show=less
 
+# usage:
+# k get secret secret_name -o json | decode-secret
+alias decode-secret='jq ".data | map_values(@base64d)"'
+# other variations for the same implementation
+# k get secret secret_name -o jsonpath="{.data}" | jq -M 'map_values(@base64d)'
+# k get secret secret_name -o yaml | yq '.data' | yq '.* |= (@base64d | from_yaml)'
+
+alias yamltojson='yq -o json'
+alias jsontoyaml='yq -p json -o yaml'
+
 function serve() {
     docker run --rm -p "$1":80/tcp -v "$(pwd)":/usr/share/nginx/html:ro nginx:stable-alpine
 }
@@ -153,8 +163,10 @@ function jwtparse() {
 
     if command -v fx &>/dev/null 2>&1; then
         echo -n "${result}" | base64 -d | fx
-    else
+    elif command -v jq &>/dev/null 2>&1; then
         echo -n "${result}" | base64 -d | jq '.' | ${PAGER}
+    else
+        echo -n "${result}" | base64 -d | ${PAGER}
     fi
 }
 

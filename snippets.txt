@@ -1,3 +1,11 @@
+# ==================================================================
+# ==================================================================
+# ====================  snippets and cheatcheats ===================
+# ==================================================================
+# ==================================================================
+
+
+====================================================================================================
 function bash_read_param() {
     local some_var="some_arbitary_value"
     echo -n "Enter anything: "
@@ -108,3 +116,22 @@ flux cd
 flux reconcile kustomization my_kustomization --with-source
 
 ====================================================================================================
+# restart latest deployment. causgin restart of all pods in the deployment
+k rollout restart deployment deployment_name -n namespace
+
+# rollback a deployment
+
+# -c or --container  --> container name is optional. exec against the first container if not present
+# exec on deployments or services gets the first pod in the respective selector
+k exec --stdin --tty pods/pod_name --container container_name -n namespace -- command
+k exec -it pods/pod_name -c container_name -n namespace -- /bin/sh
+
+k top
+k top nodes
+k top node node_name
+k top pods -A
+k top pod pod_name
+
+k endpoints
+
+k debug

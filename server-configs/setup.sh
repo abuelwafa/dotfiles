@@ -848,6 +848,7 @@ main() {
 	setup_docker
 	setup_nerdctl_minimal
 	setup_nerdctl_full
+	# setup_crictl
 
 	setup_aws_cli
 	setup_gcloud_cli

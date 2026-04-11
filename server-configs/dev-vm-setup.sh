@@ -235,6 +235,7 @@ main() {
 		yamllint
 		shellcheck
 		yarn
+		yq
 		# watchman
 		# fd
 		# rbenv
