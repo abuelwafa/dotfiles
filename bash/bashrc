@@ -322,13 +322,17 @@ function print_node_prompt() {
 function kube_prompt() {
     if [[ "${_ENABLE_KUBE_PROMPT}" == "true" ]]; then
         local context
-        context="$(kubectl config view --minify -o json | jq -r '.contexts[0]')"
-        local context_name
-        context_name="$(echo "${context}" | jq -r '.name')"
-        local namespace
-        namespace="$(echo "${context}" | jq -r '.context.namespace')"
-        echo -ne "\e[1;1;36;38;5;4m[ 󱃾 ${context_name:--}:${namespace:--} ]\e[0m "
+        # ref: https://unix.stackexchange.com/questions/786103/in-bash-how-to-capture-stdout-and-the-exit-code-of-a-command-when-the-e-flag-i
+        exit_code=0
+        context="$(kubectl config view --minify -o jsonpath="{.contexts[0]}" 2>&1)" || exit_code=$?
+        if [[ "${exit_code}" == 0 ]]; then
+            local context_name
+            context_name="$(echo "${context}" | jq -r '.name')"
+            local namespace
+            namespace="$(echo "${context}" | jq -r '.context.namespace')"
+            echo -ne "\e[1;1;36;38;5;4m[ 󱃾 ${context_name:--}:${namespace:--} ]\e[0m "
         # echo -ne "\e[48;5;4;38;5;0m 󱃾 ${context_name}:${namespace} \e[m "
+        fi
     fi
 }
 
