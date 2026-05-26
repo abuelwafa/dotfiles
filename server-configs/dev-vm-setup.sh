@@ -53,20 +53,11 @@ function setup_neovim() {
 	mkdir -p ~/.nvim/_temp
 	mkdir -p ~/.nvim/_backup
 	cargo install --locked tree-sitter-cli
+    luarocks config lua_version 5.4
 	luarocks install mimetypes
 	luarocks install xml2lua
 	echo "=> Openning neovim to install plugins and language servers. Exit when finished."
-	sleep 2
-	echo -n "=> Openning in 5 seconds."
-	sleep 1
-	echo -ne "\r=> Openning in 4 seconds."
-	sleep 1
-	echo -ne "\r=> Openning in 3 seconds."
-	sleep 1
-	echo -ne "\r=> Openning in 2 seconds."
-	sleep 1
-	echo -ne "\r=> Openning in 1 seconds."
-	sleep 1
+	sleep 4
 	nvim
 	echo
 }
@@ -135,7 +126,7 @@ main() {
 		sudo sysctl -p /etc/sysctl.d/99-dev-vm.conf
 	fi
 
-	if [[ "$(cat /proc/sys/fs/inotify/max_user_isntances)" != "1048576" ]]; then
+	if [[ "$(cat /proc/sys/fs/inotify/max_user_instances)" != "1048576" ]]; then
 		echo "fs.inotify.max_user_instances=2048" | sudo tee -a /etc/sysctl.d/99-dev-vm.conf &>/dev/null
 		sudo sysctl -p /etc/sysctl.d/99-dev-vm.conf
 	fi
@@ -171,6 +162,8 @@ main() {
 	if [[ ! -f ~/.ssh/id_ed25519 ]]; then
 		echo "   SSH key already exists. skiping..."
 		ssh-keygen -t ed25519 -C "mohamed.abuelwafa"
+    else
+        echo "--> Default SSH key is already present. skipping.."
 	fi
 
 	# install homebrew
@@ -179,7 +172,7 @@ main() {
 	# install essential homebrew packages
 	# DB CLIs
 	brew tap dbcli/tap
-	brew tap hashicorp/tap
+	# brew tap hashicorp/tap
 
 	local brew_packages_list
 	brew_packages_list=(
@@ -187,7 +180,8 @@ main() {
 		bash-completion@2
 		vim
 		neovim
-		lua
+        nmap
+		lua@5.4
 		luarocks
 		git
 		tmux
@@ -207,22 +201,26 @@ main() {
 		jq
 		lazygit
 		lazyjournal
+        jesseduffield/lazydocker/lazydocker
 		libpq
 		kubernetes-cli
 		helm
 		fluxcd/tap/flux
 		kind
 		derailed/k9s/k9s
-		dgunzy/flux9s
+		dgunzy/tap/flux9s
+        kdash-rs/kdash/kdash
 		kubectx
 		kustomize
 		trivy
 		go
+        just
+        lefthook
 		ansible
 		python@3
-		sst/tap/opencode
+		anomalyco/tap/opencode
 		opentofu
-		hashicorp/tap/terraform
+		# hashicorp/tap/terraform
 		pgcli
 		litecli
 		mycli
@@ -240,6 +238,12 @@ main() {
 		shellcheck
 		yarn
 		yq
+        grype # TODO: make an alias that utilizes the docker image
+        syft # TODO: make an alias that utilizes the docker image
+        osv-scanner
+        egctl
+        viddy
+        hey
 		# watchman
 		# fd
 		# rbenv
