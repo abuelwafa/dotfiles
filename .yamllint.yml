@@ -7,11 +7,20 @@ yaml-files:
   - '*.yml'
   - '.yamllint'
 
+ignore:
+  - "**/flux-system/"
+
 rules:
   indentation:
     spaces: 2
 
+  comments-indentation: false
+
+  truthy:
+    check-keys: false
+
   document-start:
     present: true
+
   line-length:
     max: 150

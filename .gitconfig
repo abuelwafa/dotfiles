@@ -10,7 +10,8 @@
     new = black green
 [core]
     editor = nvim
-    pager = delta
+    ; pager = delta
+    pager = hunk pager --mode split
     autocrlf = input
     askPass = false
 [push]
@@ -24,7 +25,7 @@
     tool = nvim -d
     guitool = meld
     colorMoved = default
-    context = 5
+    context = 6
 [difftool]
     prompt = false
     trustExitCode = true
@@ -32,11 +33,11 @@
     diffFilter = delta --color-only
 [delta]
     side-by-side = false
-    features = line-numbers decorations
+    features = line-numbers decorations zebra-dark
     whitespace-error-style = 22 reverse
-    plus-style = bold normal "#008400"
-    minus-style = bold normal "#3f0001"
-    light = false
+    map-styles = bold purple => white darkred, bold cyan => blue
+    plus-style = normal "#00aa00"
+    minus-style = normal darkred
 
 [delta "decorations"]
     commit-decoration-style = bold yellow

@@ -860,6 +860,11 @@ main() {
 	setup_nfs
 	setup_keycloak
 
+	# setup following CLIs:
+	# - cmctl cert manager
+	# - linkerd
+	# - egctl envoy gateway cli
+
 	check_system_reboot
 
 	echo "Done. Enjoy your newly configured server."

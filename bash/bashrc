@@ -37,7 +37,7 @@ alias .......='cd ../../../../../..'
 alias ........='cd ../../../../../../..'
 
 function rule() {
-    printf "%$(tput cols)s\n" | tr " " "-"
+    printf "%$(tput cols)s\n" | tr " " "-" # ━
 }
 
 # to make sudo work with aliases
@@ -53,7 +53,6 @@ alias glog1='git log --graph --decorate --format=medium --date-order'
 alias glog1p='git log --graph --decorate --format=medium --stat --summary --date-order'
 alias glog1pp='git log --graph --decorate --format=medium --stat --summary --patch --date-order'
 alias gst='git status'
-alias gs='git status -sb'
 alias gdif='git diff --minimal --color --patch --stat'
 alias gpush='git push'
 alias ga='git add'
@@ -64,8 +63,6 @@ alias gshow='git show'
 alias gfetch='git fetch --all --prune'
 alias gbranch='git branch --all'
 alias gnewbranch='git checkout -b'
-alias gdelbranch='git branch -d'
-alias greset='git checkout --'
 alias gclean='git clean -ifdx'
 
 function gstash() {
@@ -131,7 +128,9 @@ function serve() {
     docker run --rm -p "$1":80/tcp -v "$(pwd)":/usr/share/nginx/html:ro nginx:stable-alpine
 }
 
-alias lzd='docker run --rm -it --pull always -v /var/run/docker.sock:/var/run/docker.sock lazyteam/lazydocker'
+alias lzd="lazydocker"
+
+alias is_reboot_required='[ ! -f /var/run/reboot-required ] && echo "FALSE" || echo "TRUE"'
 
 # function for downloading files from urls
 function download() {
@@ -263,7 +262,7 @@ function virtualenv_info() {
         # In case you don't have one activated
         venv=''
     fi
-    [[ -n "${venv}" ]] && echo -ne "\e[38;5;214m(venv:${venv})\e[m "
+    [[ -n "${venv}" ]] && echo -ne "(venv:${venv}) "
 }
 
 # ------------------------------------
@@ -277,18 +276,25 @@ function virtualenv_info() {
 
 # 32 green
 bldgreen='\[\e[1;32m\]'
+# green='\[\e[0;32m\]'
 
 # 33 yellow
-bldyellow='\[\e[1;33m\]'
+# bldyellow='\[\e[1;33m\]'
+yellow='\[\e[0;33m\]'
 
 # 34 blue
-bldblue='\[\e[1;34m\]'
+# bldblue='\[\e[1;34m\]'
+blue='\[\e[0;34m\]'
 
 # 35 purple
-bldpurple='\[\e[1;35m\]'
+# bldpurple='\[\e[1;35m\]'
+purple='\[\e[0;35m\]'
 
 # 36 cyan
-bldcyan='\[\e[1;36m\]'
+# bldcyan='\[\e[1;36m\]'
+cyan='\[\e[0;36m\]'
+
+venv_color='\[\e[38;5;214m\]'
 
 # 37 white
 
@@ -330,8 +336,9 @@ function kube_prompt() {
             context_name="$(echo "${context}" | jq -r '.name')"
             local namespace
             namespace="$(echo "${context}" | jq -r '.context.namespace')"
-            echo -ne "\e[1;1;36;38;5;4m[ 󱃾 ${context_name:--}:${namespace:--} ]\e[0m "
-        # echo -ne "\e[48;5;4;38;5;0m 󱃾 ${context_name}:${namespace} \e[m "
+            echo -n "[ 󱃾 ${context_name:--}:${namespace:--} ] "
+            # echo -ne "\e[1;0;36;38;5;4m[ 󱃾 ${context_name:--}:${namespace:--} ] "
+            # echo -ne "\e[48;5;4;38;5;0m 󱃾 ${context_name}:${namespace} \e[m "
         fi
     fi
 }
@@ -373,7 +380,23 @@ function aws_prompt() {
 }
 
 set_bash_prompt() {
-    PS1="\n${bldgreen}$(rule)${txtrst}\n${debian_chroot:+(${debian_chroot})}${bldblue}\u@\H${txtrst} \$(in_ssh_prompt)\$(system_reboot_prompt)\$(print_node_prompt)\n${bldyellow}\w${bldpurple}\$(which git &>/dev/null && __git_ps1)${txtrst} \$(aws_prompt)\$(gcp_prompt)\n\$(virtualenv_info)\$(kube_prompt)${bldcyan}-> ${txtrst}"
+    local prompt_string
+    prompt_string="\n"                            # extra space between commands
+    prompt_string="${bldgreen}$(rule)${txtrst}\n" # horizontal line
+    prompt_string="${prompt_string}${debian_chroot:+(${debian_chroot})}${blue}\u@\H${txtrst} "
+    prompt_string="${prompt_string}\$(in_ssh_prompt)"
+    prompt_string="${prompt_string}\$(system_reboot_prompt)"
+    prompt_string="${prompt_string}\$(print_node_prompt)"
+    prompt_string="${prompt_string}\n"
+    prompt_string="${prompt_string}${yellow}\w${purple}"
+    prompt_string="${prompt_string}\$(which git &>/dev/null && __git_ps1)${txtrst} "
+    prompt_string="${prompt_string}\$(aws_prompt)${txtrst}"
+    prompt_string="${prompt_string}\$(gcp_prompt)${txtrst}"
+    prompt_string="${prompt_string}\n"
+    prompt_string="${prompt_string}${venv_color}\$(virtualenv_info)${txtrst}"
+    prompt_string="${prompt_string}${blue}\$(kube_prompt)${txtrst}"
+    prompt_string="${prompt_string}${cyan}=> ${txtrst}"
+    PS1="${prompt_string}"
 }
 
 export GIT_PS1_SHOWCONFLICTSTATE=1
@@ -416,6 +439,7 @@ function update_setup() {
     curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/tmux/tmux-minimal.conf >~/.tmux.conf
 
     # check if system reboot is required
+    [[ -f /var/run/reboot-required ]] && echo "=> System reboot is required."
 }
 
 if [[ -v ENABLE_AUTOMATIC_SSH_AGENT ]]; then

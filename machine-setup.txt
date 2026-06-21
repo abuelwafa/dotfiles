@@ -1,5 +1,3 @@
-echo 'export OPENAI_API_KEY="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"' | tee -a ~/workspace/.machine-config
-=============================================================
 # ubuntu/debian: setup firewall
 sudo apt install ufw
 sudo ufw default deny incoming
@@ -9,22 +7,11 @@ sudo ufw allow in 3000/tcp
 sudo ufw enable
 sudo ufw status verbose
 =============================================================
-Mac only: brew install gsed watch
-# install GNU version of sed (for MACOS)
-# MacOS doesn't have the watch command
-=============================================================
 clone essential repos
 cd ~/workspace
 git clone https://github.com/bigH/git-fuzzy.git
 =============================================================
-# install universal-ctags
-# https://ctags.io/
-brew tap universal-ctags/universal-ctags
-brew install --HEAD universal-ctags
-=============================================================
 # link alacritty config
-=============================================================
-# install nerd-fonts using homebrew
 =============================================================
 MACOS
 # system preferences configurations:
@@ -51,14 +38,9 @@ install i stat menus, magnet, xcode from app store
 MACOS
 download the ios simulator from Xcode preferences
 =============================================================
-MACOS
-# install docker cli and container runtime through colima from homebrew
-# https://github.com/abiosoft/colima
-brew install docker colima lima-additional-guestagents
-================================================================
-install from their respective websites
+install from their respective websites (as needed)
 Google Chrome
-Zoom
+Zoom/teams
 VSCode
 slack (from snap store for Ubuntu)
 Dropbox

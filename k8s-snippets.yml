@@ -1,29 +1,110 @@
+# -----------------------------------------
+# -----------------------------------------
+#
+# k config set-context --current --namespace ns_name
+# k config
+#
+# create a debug container within the pod
+# k debug my_pod --image alpine -it
+#
+# k top pod my_pod
+#
+#
+# -----------------------------------------
+# -----------------------------------------
+---
+# network policy
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: ___
+  namespace: ___  # namespace for which this network policy is gonna be applied on its pods
+spec:
+  podSelector:
+    matchLabels:
+  policyTypes:  # choose policy type to be Ingress only, Egress only or both
+    - Ingress
+    - Egress
+  Ingress:
+    - from:
+        - ipBlock:
+            cidr: 0.0.0.0/32
+        - namespaceSelector:
+            matchLabels:
+            matchExpression:
+        - podSelector:
+            matchLabels:
+            matchExpression:
+  Egress:
+    - to:
 ---
 # deployment
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ___
-  annotations:
   labels:
-    ___: ___
+    app.kubernetes.io/name: ___
+    app: ___
 spec:
-  replicas: 1
+  replicas: 2
+  revisionHistoryLimit: 10
+  minReadySeconds: 30
+  progressDeadlineSeconds: 300
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
   selector:
     matchLabels:
-      ___: ___
-  minReadySeconds: 5
+      app: ___
+      app.kubernetes.io/name: ___
   template:
     metadata:
       labels:
-        ___: ___
+        app: ___
+        app.kubernetes.io/name: ___
     spec:
-      # initContainers:
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      serviceAccountName: ___
       containers:
-        - name: nginx
-          image: nginx:stable-alpine
+        - name: ___
+          image: nginx:1.29.7-alpine-slim
+          imagePullPolicy: IfNotPresent
           ports:
-            - containerPort: 80
+            - name: app
+              containerPort: 3000
+              protocol: TCP
+          env:
+            - name: MY_VAR
+              value: my_value
+              valueFrom:
+                secretKeyRef:
+                  name: ___secret_name___
+                  key: ___secret_key___
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: app
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 15
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: app
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 15
+          resources:
+            requests:
+              memory: 512Mi
+              cpu: 500m
+            limits:
+              memory: 1024Mi
+              cpu: 1000m
 
 ---
 # service
@@ -113,6 +194,13 @@ kind: Namespace
 metadata:
   name: ___
   labels:
+
+---
+# ServiceAccount
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: ___
 
 ---
 # persistent-volume

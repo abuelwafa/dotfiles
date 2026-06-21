@@ -17,9 +17,10 @@ source ~/workspace/dotfiles/bash/bashrc
 # BASE16_THEME_DEFAULT only applies the theme for the first time only.
 # use base16_{theme_name} commands to apply different color schemes
 export BASE16_THEME_DEFAULT="ayu-dark"
-[[ -d "${HOME}/applications/tinted-shell" ]] && source ~/applications/tinted-shell/base16-shell.plugin.bash
+[[ -d "${HOME}/workspace/tinted-shell" ]] && source ~/workspace/tinted-shell/base16-shell.plugin.bash
 
 export FX_THEME=6
+# export K9S_SKIN="gruvbox-light"
 export EDITOR='nvim'
 
 export BAT_THEME="base16"
@@ -50,9 +51,9 @@ alias rnstart="watchman-clean && yarn start --reset-cache"
 alias gradle-clean="cd android && ./gradlew clean && .."
 alias blowup="rm -rf node_modules ios/Pods && yarn cache clean && watchman watch-del-all && pod cache clean --all && npm cache clean --force"
 
-alias lima="limactl"
-alias lima-create-debian="limactl create template://debian-13 --arch=x86_64 --plain --vm-type qemu --cpus=2 --memory 2 --disk 20 --network lima:user-v2 --name "
-alias lima-create-dev-vm="limactl create template://debian-13 --arch=x86_64 --plain --vm-type qemu --cpus=2 --memory 6 --disk 20 --network lima:user-v2 --name "
+# alias lima="limactl"
+alias lima-create-debian="limactl create template:debian-13 --arch x86_64 --plain --vm-type qemu --cpus 2 --memory 2 --disk 20 --network lima:user-v2 --name "
+alias lima-create-dev-vm="limactl create template:debian-13 --arch=x86_64 --plain --vm-type qemu --cpus=2 --memory 6 --disk 20 --network lima:user-v2 --name "
 alias dog="doggo --any"
 
 alias lg="lazygit"
@@ -113,6 +114,10 @@ if [[ "${os_name}" == "Darwin" ]]; then
     alias ql='qlmanage -p'
     alias copy='pbcopy'
     alias sed='gsed'
+
+    # point docker host to the docker socket from colima
+    # export DOCKER_HOST="unix://${HOME}/.colima/default/docker.sock"
+    # export KIND_EXPERIMENTAL_PROVIDER=nerdctl.lima
 fi
 
 if [[ "${os_name}" == "Linux" ]]; then

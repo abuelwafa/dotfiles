@@ -49,6 +49,7 @@ Plug 'lewis6991/gitsigns.nvim'
 Plug 'tinted-theming/tinted-vim'
 Plug 'MarcWeber/vim-addon-mw-utils'
 Plug 'mattn/emmet-vim'
+Plug 'b0o/SchemaStore.nvim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'nvim-lualine/lualine.nvim'
 Plug 'nacro90/numb.nvim'
@@ -711,6 +712,16 @@ require("mason-lspconfig").setup({
                 }
             })
         end,
+        yamlls = function ()
+            require('lspconfig').yamlls.setup {
+                settings = {
+                    yaml = {
+                        schemaStore = { enable = false, url = "" },
+                        schemas = require('schemastore').yaml.schemas(),
+                    },
+                },
+            }
+        end
         -- overrides
         -- ["lsp_name"] = function ()
         --     require("lspconfig").setup()
@@ -773,7 +784,13 @@ cmp.setup({
     sources = cmp.config.sources({
         { name = 'nvim_lsp' },
         { name = 'luasnip' },
-        { name = 'buffer' },
+        {
+            name = 'buffer', option = {
+                get_bufnrs = function()
+                    return vim.api.nvim_list_bufs()
+                end
+            }
+        },
         { name = 'path' },
         { name = 'calc' },
         { name = 'color_names' },
@@ -961,6 +978,11 @@ require("nvim-tree").setup({
     hijack_netrw = false,
     reload_on_bufenter = true,
     update_focused_file = { enable = true },
+    reload_on_bufenter = true,
+    hijack_directories = {
+        enable = false,
+        auto_open = false
+    },
     git = { enable = true },
     filters = {
         git_ignored = false,
@@ -1014,8 +1036,9 @@ require("nvim-tree").setup({
     end,
     view = {
         centralize_selection = false,
-        width = 34,
-        side = "right",
+        preserve_window_proportions = true,
+        width = 40,
+        side = "left",
     },
     renderer = {
         highlight_git = true,
@@ -1036,6 +1059,13 @@ require("nvim-tree").setup({
         },
     },
 })
+
+-- local function open_nvim_tree()
+--   require("nvim-tree.api").tree.open()
+--   vim.cmd "wincmd p"
+-- end
+-- vim.api.nvim_create_autocmd({ "VimEnter" }, { callback = open_nvim_tree })
+
 -- Indent blankline
 local hooks = require "ibl.hooks"
 hooks.register(
@@ -1367,10 +1397,10 @@ nnoremap <leader>m :MaximizerToggle<cr>
 nnoremap <silent> <leader>h <c-w>H
 nnoremap <silent> <leader>u <c-w>K
 
-nnoremap <C-p> <cmd>lua require"telescope.builtin".find_files({ hidden = true })<CR>
-nnoremap <C-o> <cmd>Telescope buffers<CR>
+nnoremap <C-p> <cmd>lua require"telescope.builtin".find_files({ hidden = true, no_ignore = true })<CR>
+nnoremap <leader>o <cmd>Telescope buffers<CR>
 nnoremap <C-f> <cmd>Telescope live_grep<CR>
-nnoremap <leader>o <cmd>Telescope file_browser path=%:p:h select_buffer=true initial_mode=normal hidden=true<CR>
+nnoremap <C-o> <cmd>Telescope file_browser path=%:p:h select_buffer=true initial_mode=normal hidden=true no_ignore=true<CR>
 
 " toggle tag bar
 nnoremap <leader>i <cmd>TagbarToggle<CR>

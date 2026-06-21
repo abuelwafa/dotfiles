@@ -1,0 +1,25 @@
+{
+    "$schema": "https://opencode.ai/config.json",
+    "default_agent": "plan",
+    "share": "disabled",
+    "lsp": true,
+    "tools": {
+        "read": false,
+        "write": false,
+        "bash": false,
+        "edit": false,
+        "websearch": false,
+        "webfetch": false,
+        "skill": false,
+        "apply_patch": false,
+        "todowrite": false,
+        "question": false,
+        "grep": false,
+        "glob": false,
+        "lsp": false,
+    },
+    "permission": {
+        "*": "ask",
+    },
+    "mcp": {}
+}

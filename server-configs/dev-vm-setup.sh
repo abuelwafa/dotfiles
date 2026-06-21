@@ -30,6 +30,59 @@ function check_system_reboot() {
 	echo
 }
 
+function mac_setup() {
+	# install appropriate gnu utils on macos
+	# install GNU version of sed (for MACOS)
+	# MacOS doesn't have the watch command
+
+	# install docker cli through homebrew
+	# install colima
+	local os_name
+	os_name="$(uname -s)"
+	if [[ "${os_name}" == "Darwin" ]]; then
+		echo "=> Starting Mac specific setup"
+		echo "=> Installing GNU version of sed"
+		echo "=> Installing watch command"
+		brew install gsed watch
+		echo "=> installing Colima and docker cli"
+		brew install colima docker
+	else
+		echo "Skipping Mac specific setup."
+	fi
+	echo
+}
+
+function install_lima() {
+	read -p "Install Lima for managing virtual machines? choose yes only if the system supports virtualization. (y/n): " -r setup_lima
+	echo
+	if [[ ${setup_lima} =~ ^[Yy]$ ]]; then
+		echo "=> Installing Lima, and additional guest agents"
+		brew install lima lima-additional-guestagents
+	else
+		echo "Skipping install of lima"
+	fi
+	echo
+}
+
+function install_nerdfonts() {
+	read -p "Install nerdfonts through homebrew? if you are in a desktop environment (y/n): " -r setup_nerdfonts
+	echo
+	if [[ ${setup_nerdfonts} =~ ^[Yy]$ ]]; then
+		brew install \
+			font-meslo-lg-nerd-font \
+			font-jetbrains-mono-nerd-font
+		# font-fira-mono-nerd-font \
+		# font-hack-nerd-font \
+		# font-inconsolata-go-nerd-font \
+		# font-roboto-mono-nerd-font \
+		# font-ubuntu-mono-nerd-font \
+		# font-ubuntu-sans-nerd-font \
+	else
+		echo "Skipping install of nerd fonts"
+	fi
+	echo
+}
+
 function setup_sdkman() {
 	read -p "Setup and configure SDKMAN with java, kotlin and gradle? (y/n): " -r install_sdkman
 	echo
@@ -47,13 +100,43 @@ function setup_sdkman() {
 	echo
 }
 
+function setup_trivy() {
+	read -p "Setup and configure trivy and lazytrivy? (y/n): " -r install_trivy
+	echo
+	if [[ ${install_trivy} =~ ^[Yy]$ ]]; then
+		echo "=> Installing trivy and lazytrivy"
+		brew install trivy
+		echo "=> Installing lazytrivy"
+		go install github.com/owenrumney/lazytrivy@latest
+	else
+		echo "Skipping install of trivy"
+	fi
+	echo
+}
+
+function setup_opencode() {
+	read -p "Setup and configure Opencode? (y/n): " -r install_opencode
+	echo
+	if [[ ${install_opencode} =~ ^[Yy]$ ]]; then
+		echo "=> Installing Opencode"
+		brew install anomalyco/tap/opencode
+
+		echo "=> Configuring Opencode."
+		echo "   ESC to cancel. to do it later, run opencode auth login"
+		opencode auth login || true
+	else
+		echo "Skipping install of opencode"
+	fi
+	echo
+}
+
 function setup_neovim() {
 	mkdir -p ~/.config/nvim
 	ln --force -s ~/workspace/dotfiles/nvim/init.lua ~/.config/nvim/init.lua
 	mkdir -p ~/.nvim/_temp
 	mkdir -p ~/.nvim/_backup
 	cargo install --locked tree-sitter-cli
-    luarocks config lua_version 5.4
+	luarocks config lua_version 5.4
 	luarocks install mimetypes
 	luarocks install xml2lua
 	echo "=> Openning neovim to install plugins and language servers. Exit when finished."
@@ -162,17 +245,12 @@ main() {
 	if [[ ! -f ~/.ssh/id_ed25519 ]]; then
 		echo "   SSH key already exists. skiping..."
 		ssh-keygen -t ed25519 -C "mohamed.abuelwafa"
-    else
-        echo "--> Default SSH key is already present. skipping.."
+	else
+		echo "--> Default SSH key is already present. skipping.."
 	fi
 
 	# install homebrew
 	setup_homebrew
-
-	# install essential homebrew packages
-	# DB CLIs
-	brew tap dbcli/tap
-	# brew tap hashicorp/tap
 
 	local brew_packages_list
 	brew_packages_list=(
@@ -180,7 +258,7 @@ main() {
 		bash-completion@2
 		vim
 		neovim
-        nmap
+		nmap
 		lua@5.4
 		luarocks
 		git
@@ -189,7 +267,9 @@ main() {
 		cmake
 		tree
 		htop
+		# btop
 		git-delta
+		modem-dev/tap/hunk
 		node@24
 		gnupg
 		sops
@@ -201,7 +281,7 @@ main() {
 		jq
 		lazygit
 		lazyjournal
-        jesseduffield/lazydocker/lazydocker
+		jesseduffield/lazydocker/lazydocker
 		libpq
 		kubernetes-cli
 		helm
@@ -209,20 +289,18 @@ main() {
 		kind
 		derailed/k9s/k9s
 		dgunzy/tap/flux9s
-        kdash-rs/kdash/kdash
+		kdash-rs/kdash/kdash
 		kubectx
 		kustomize
-		trivy
 		go
-        just
-        lefthook
+		sqlite
+		just
+		lefthook
 		ansible
 		python@3
-		anomalyco/tap/opencode
 		opentofu
-		# hashicorp/tap/terraform
 		pgcli
-		litecli
+		dbcli/tap/litecli
 		mycli
 		iredis
 		# lnav
@@ -238,16 +316,25 @@ main() {
 		shellcheck
 		yarn
 		yq
-        grype # TODO: make an alias that utilizes the docker image
-        syft # TODO: make an alias that utilizes the docker image
-        osv-scanner
-        egctl
-        viddy
-        hey
+		grype # TODO: make an alias that utilizes the docker image
+		syft  # TODO: make an alias that utilizes the docker image
+		osv-scanner
+		egctl
+		viddy
+		hey
 		# watchman
 		# fd
 		# rbenv
 		# ruby-build
+		# cmus
+		# mutt
+		# act
+		# llm
+		# iftop
+		# tflint
+		# minikube
+		# ffmpeg
+		# graphviz
 	)
 
 	local batchsize=8
@@ -261,6 +348,7 @@ main() {
 	ln --force -s ~/workspace/dotfiles/tmux/tmux.conf ~/.tmux.conf
 	ln --force -s ~/workspace/dotfiles/vim/.vimrc ~/.vimrc
 	ln --force -s ~/workspace/dotfiles/.gitconfig ~/.gitconfig
+	ln --force -s ~/workspace/dotfiles/hunk.config.toml ~/.config/hunk/config.toml
 
 	if ! grep -q -e "export GIT_COMMITTER_EMAIL" ~/.machine-config; then
 		echo 'export GIT_COMMITTER_EMAIL="mohamed.abuelwafa@gmail.com"' | tee -a ~/.machine-config &>/dev/null
@@ -317,21 +405,24 @@ main() {
 	echo "=> Installing tclock"
 	cargo install clock-tui
 
-	# install lazytrivy
-	echo "=> Installing lazytrivy"
-	go install github.com/owenrumney/lazytrivy@latest
-
 	# install yamlfmt
+	echo "=> Installing yamlfmt"
 	go install github.com/google/yamlfmt/cmd/yamlfmt@latest
 
-	# configure opencode
-	echo "=> Configuring Opencode."
-	echo "   ESC to cancel. to do it later, run opencode auth login"
-	opencode auth login || true
+	# install Github CLI dash extenstion
+	echo "=> Installing Github CLI dash extenstion"
+	gh extension install dlvhdr/gh-dash
+	ln --force -s ~/workspace/dotfiles/gh-dash.config.yaml ~/.config/gh-dash/config.yml
 
 	# setup neovim
 	echo "=> Configuring Neovim"
 	setup_neovim
+
+	setup_trivy
+	setup_opencode
+	mac_setup
+	install_nerdfonts
+	install_lima
 
 	check_system_reboot
 
