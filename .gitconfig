@@ -10,8 +10,7 @@
     new = black green
 [core]
     editor = nvim
-    ; pager = delta
-    pager = hunk pager --mode split
+    pager = delta
     autocrlf = input
     askPass = false
 [push]
