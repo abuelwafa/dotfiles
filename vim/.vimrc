@@ -141,13 +141,14 @@ set signcolumn=yes
 
 set updatetime=50
 
+set termguicolors
 set background=dark
-colorscheme murphy
-hi Cursorline term=none cterm=none ctermbg=238
-hi CursorlineNR term=none cterm=none ctermbg=238
+colorscheme ron
+hi Cursorline term=NONE cterm=NONE ctermbg=235 guibg=#262626
+hi CursorlineNR term=NONE cterm=NONE ctermbg=235 guibg=#262626
 " change background color to black or none for transparent, better for my eyes
-hi Normal term=none cterm=none ctermbg=black
-" hi Normal term=none cterm=none ctermbg=none
+hi Normal term=NONE cterm=NONE ctermbg=black
+" hi Normal term=NONE cterm=NONE ctermbg=NONE
 
 hi! link Search IncSearch
 
@@ -155,8 +156,8 @@ hi! link Search IncSearch
 set guicursor=i:block
 
 " remove vim background - makes it transparent if the colorscheme has no background
-highlight nonText ctermbg=NONE
-highlight EndOfBuffer ctermbg=NONE
+highlight nonText ctermbg=NONE guibg=NONE
+highlight EndOfBuffer ctermbg=NONE guibg=NONE
 
 " set mark column color
 hi! link SignColumn   LineNr
