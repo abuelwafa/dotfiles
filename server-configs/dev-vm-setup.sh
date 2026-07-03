@@ -360,23 +360,23 @@ main() {
 	fi
 
 	if ! grep -q -e "export ENABLE_AUTOMATIC_SSH_AGENT" ~/.machine-config; then
-		echo 'export ENABLE_AUTOMATIC_SSH_AGENT="true"' | tee -a ~/.machine-config &>/dev/null
+		echo 'export ENABLE_AUTOMATIC_SSH_AGENT="TRUE"' | tee -a ~/.machine-config &>/dev/null
 	fi
 
 	if ! grep -q -e "export ENABLE_KUBE_PROMPT" ~/.machine-config; then
-		echo 'export ENABLE_KUBE_PROMPT="true"' | tee -a ~/.machine-config &>/dev/null
+		echo 'export ENABLE_KUBE_PROMPT="TRUE"' | tee -a ~/.machine-config &>/dev/null
 	fi
 
 	if ! grep -q -e "export ENABLE_NODE_PROMPT" ~/.machine-config; then
-		echo 'export ENABLE_NODE_PROMPT="true"' | tee -a ~/.machine-config &>/dev/null
+		echo 'export ENABLE_NODE_PROMPT="TRUE"' | tee -a ~/.machine-config &>/dev/null
 	fi
 
 	if ! grep -q -e "export ENABLE_GCP_PROMPT" ~/.machine-config; then
-		echo 'export ENABLE_GCP_PROMPT="true"' | tee -a ~/.machine-config &>/dev/null
+		echo 'export ENABLE_GCP_PROMPT="TRUE"' | tee -a ~/.machine-config &>/dev/null
 	fi
 
 	if ! grep -q -e "export ENABLE_AWS_PROMPT" ~/.machine-config; then
-		echo 'export ENABLE_AWS_PROMPT="true"' | tee -a ~/.machine-config &>/dev/null
+		echo 'export ENABLE_AWS_PROMPT="TRUE"' | tee -a ~/.machine-config &>/dev/null
 	fi
 
 	mkdir -p ~/.config/pgcli

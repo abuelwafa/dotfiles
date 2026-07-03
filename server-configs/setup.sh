@@ -140,7 +140,7 @@ function harden_ssh() {
 		if [[ -z "${ssh_listen_address}" ]]; then
 			command -v ufw >/dev/null 2>&1 && sudo ufw allow "${ssh_listen_port}"/tcp
 		else
-			command -v ufw >/dev/null 2>&1 && sudo ufw limit in proto tcp to "${ssh_listen_address}" port "${ssh_listen_port}" from 0.0.0.0/24 comment "allow ssh over vpn"
+			command -v ufw >/dev/null 2>&1 && sudo ufw limit in proto tcp to "${ssh_listen_address}" port "${ssh_listen_port}" from 0.0.0.0/0 comment "allow ssh over vpn"
 		fi
 
 		# restart the ssh service
