@@ -355,9 +355,9 @@ main() {
 		echo 'export GIT_AUTHOR_EMAIL="mohamed.abuelwafa@gmail.com"' | tee -a ~/.machine-config &>/dev/null
 	fi
 
-	if ! grep -q -e "export OPENAI_API_KEY" ~/.machine-config; then
-		echo 'export OPENAI_API_KEY="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"' | tee -a ~/.machine-config &>/dev/null
-	fi
+	# if ! grep -q -e "export OPENAI_API_KEY" ~/.machine-config; then
+		# echo 'export OPENAI_API_KEY="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"' | tee -a ~/.machine-config &>/dev/null
+	# fi
 
 	if ! grep -q -e "export ENABLE_AUTOMATIC_SSH_AGENT" ~/.machine-config; then
 		echo 'export ENABLE_AUTOMATIC_SSH_AGENT="TRUE"' | tee -a ~/.machine-config &>/dev/null

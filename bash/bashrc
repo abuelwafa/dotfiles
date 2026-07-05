@@ -395,7 +395,7 @@ set_bash_prompt() {
     prompt_string="${prompt_string}\n"
     prompt_string="${prompt_string}${venv_color}\$(virtualenv_info)${txtrst}"
     prompt_string="${prompt_string}${blue}\$(kube_prompt)${txtrst}"
-    prompt_string="${prompt_string}${cyan}=> ${txtrst}"
+    prompt_string="${prompt_string}${cyan}-> ${txtrst}"
     PS1="${prompt_string}"
 }
 
