@@ -141,7 +141,6 @@ set signcolumn=yes
 
 set updatetime=50
 
-set termguicolors
 set background=dark
 colorscheme ron
 hi Cursorline term=NONE cterm=NONE ctermbg=235 guibg=#262626
