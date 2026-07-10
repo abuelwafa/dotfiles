@@ -106,6 +106,10 @@ the unarchiver
 # showing hidden files on mac
 defaults write com.apple.finder AppleShowAllFiles YES && killall Finder
 =============================================================
+install meld gui diff viewer
+macos: brew install --cask meld
+linux: check website
+=============================================================
 gimp
 MACOS through Homebrew
 brew install gimp
