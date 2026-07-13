@@ -127,7 +127,7 @@ spec:
           command:
             - "sh"
             - "-c"
-            - "echo \"hello kubernets\" && sleep 3600"
+            - "echo \"hello kubernets\" && sleep 30"
             # command: ['python3', 'some-script.py']
 
 ---

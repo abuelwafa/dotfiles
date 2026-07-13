@@ -116,7 +116,7 @@ if [[ "${os_name}" == "Darwin" ]]; then
     alias sed='gsed'
 
     # point docker host to the docker socket from colima
-    # export DOCKER_HOST="unix://${HOME}/.colima/default/docker.sock"
+    export DOCKER_HOST="unix://${HOME}/.colima/default/docker.sock"
     # export KIND_EXPERIMENTAL_PROVIDER=nerdctl.lima
 fi
 
@@ -149,10 +149,14 @@ fi
 eval "$(luarocks path --bin)"
 
 # source cargo bin directory
-source "${HOME}/.cargo/env"
+if [[ -f "${HOME}/.cargo/env" ]]; then
+    source "${HOME}/.cargo/env"
+if
 
 # source go bin directory
-export PATH="${PATH}:${HOME}/go/bin"
+if [[ -d "${HOME}/go/bin" ]]; then
+    export PATH="${PATH}:${HOME}/go/bin"
+fi
 
 export K9S_CONFIG_DIR=~/workspace/dotfiles/k9s
 

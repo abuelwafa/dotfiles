@@ -626,7 +626,7 @@ local ensure_installed = {
     'typescript-language-server',
     'vale',
     'vimls',
-    'vint',
+    -- 'vint',
     'xmlformatter',
     'yamlfmt' ,
     'yamllint',
@@ -833,15 +833,29 @@ local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
 
 -- linting config
+
+vim.filetype.add({
+    pattern = {
+        [".*/%.github/workflows/.*%.ya?ml"] = "yaml.ghaction"
+    }
+})
+
 require('lint').linters_by_ft = {
     python = { "ruff" },
     terrafrom = { "tflint" },
     markdown = { "vale" },
     make = { "checkmake" },
-    sh = { "bash" },
+    sh = { "bash", "shellcheck" },
     yaml = { "yamllint" },
-    vim = { "vint" },
+    ["yaml.ghaction"] = { "yamllint", "actionlint" },
+    -- vim = { "vint" },
+    json = { "jsonlint" }
     dockerfile = { "hadolint" },
+    -- eslint_d
+    -- golangci-lint
+    -- stylelint
+    -- djlint
+    -- ansible-lint
 }
 
 vim.api.nvim_create_autocmd({ "BufWritePost", "BufReadPost" }, {
