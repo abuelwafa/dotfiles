@@ -849,7 +849,7 @@ require('lint').linters_by_ft = {
     yaml = { "yamllint" },
     ["yaml.ghaction"] = { "yamllint", "actionlint" },
     -- vim = { "vint" },
-    json = { "jsonlint" }
+    json = { "jsonlint" },
     dockerfile = { "hadolint" },
     -- eslint_d
     -- golangci-lint
