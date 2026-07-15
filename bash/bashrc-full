@@ -151,7 +151,7 @@ eval "$(luarocks path --bin)"
 # source cargo bin directory
 if [[ -f "${HOME}/.cargo/env" ]]; then
     source "${HOME}/.cargo/env"
-if
+fi
 
 # source go bin directory
 if [[ -d "${HOME}/go/bin" ]]; then
