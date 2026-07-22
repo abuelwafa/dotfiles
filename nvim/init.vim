@@ -82,6 +82,7 @@ Plug 'mason-org/mason-lspconfig.nvim'
 Plug 'WhoIsSethDaniel/mason-tool-installer.nvim'
 Plug 'folke/todo-comments.nvim'
 Plug 'stevearc/conform.nvim'
+Plug 'Bekaboo/dropbar.nvim'
 
 Plug 'hrsh7th/nvim-cmp'
 Plug 'hrsh7th/cmp-nvim-lsp'
@@ -251,8 +252,8 @@ highlight nonText ctermbg=NONE
 hi Normal guibg=NONE ctermbg=NONE
 
 " custom highlights
-highlight WinBar cterm=bold gui=bold guibg=NvimDarkGrey3 guifg=White
-highlight WinBarNC cterm=bold guibg=NvimDarkGrey3 gui=bold
+" highlight WinBar cterm=bold gui=bold guibg=NvimDarkGrey3 guifg=White
+" highlight WinBarNC cterm=bold guibg=NvimDarkGrey3 gui=bold
 
 
 " ===================================================================================
@@ -1112,48 +1113,52 @@ require("ibl").setup {
     exclude = { filetypes = { "dbout" } },
 }
 
--- winbar setup
-local function getWinBarDiagnostics()
-    local count = {}
-    local levels = {
-        errors = "Error",
-        warnings = "Warn",
-        info = "Info",
-        hints = "Hint",
-    }
+-- -- winbar setup
+-- local function getWinBarDiagnostics()
+--     local count = {}
+--     local levels = {
+--         errors = "Error",
+--         warnings = "Warn",
+--         info = "Info",
+--         hints = "Hint",
+--     }
+--
+--     for k, level in pairs(levels) do
+--         count[k] = vim.tbl_count(vim.diagnostic.get(0, { severity = level }))
+--     end
+--
+--     local errors = ""
+--     local warnings = ""
+--     local hints = ""
+--     local info = ""
+--
+--     --    󰌵    󱎘 ⛔️   
+--     if count["errors"] ~= 0 then
+--         errors = "%#DiagnosticSignError# 󱎘 " .. count["errors"]
+--     end
+--     if count["warnings"] ~= 0 then
+--         warnings = "%#DiagnosticSignWarn#  " .. count["warnings"]
+--     end
+--     if count["hints"] ~= 0 then
+--         hints = "%#DiagnosticSignHint# 󰌵 " .. count["hints"]
+--     end
+--     if count["info"] ~= 0 then
+--         info = "%#DiagnosticSignInfo#  " .. count["info"]
+--     end
+--
+--     return errors .. warnings .. info .. hints
+-- end
 
-    for k, level in pairs(levels) do
-        count[k] = vim.tbl_count(vim.diagnostic.get(0, { severity = level }))
-    end
-
-    local errors = ""
-    local warnings = ""
-    local hints = ""
-    local info = ""
-
-    --    󰌵    󱎘 ⛔️   
-    if count["errors"] ~= 0 then
-        errors = "%#DiagnosticSignError# 󱎘 " .. count["errors"]
-    end
-    if count["warnings"] ~= 0 then
-        warnings = "%#DiagnosticSignWarn#  " .. count["warnings"]
-    end
-    if count["hints"] ~= 0 then
-        hints = "%#DiagnosticSignHint# 󰌵 " .. count["hints"]
-    end
-    if count["info"] ~= 0 then
-        info = "%#DiagnosticSignInfo#  " .. count["info"]
-    end
-
-    return errors .. warnings .. info .. hints
-end
-
-function build_winbar()
-    return " %{expand(\"%:~:.\")} %m%=" .. getWinBarDiagnostics() .. " "
-end
-vim.opt.winbar = "%!v:lua.build_winbar()"
+-- function build_winbar()
+--     return " %{expand(\"%:~:.\")} %m%=" .. getWinBarDiagnostics() .. " "
+-- end
+-- vim.opt.winbar = "%!v:lua.build_winbar()"
 
 -- status line setup
+local function total_line_count()
+    return "%L"
+end
+
 require('lualine').setup {
     options = {
         theme = 'powerline_dark', -- other values: powerline, powerline_dark, gruvbox_dark, everforest
@@ -1162,17 +1167,15 @@ require('lualine').setup {
         component_separators = { left = '', right = '' },
     },
     sections = {
-        lualine_b = {
-            'branch', 'diff', {
+        lualine_b = { 'branch', 'diff' },
+        lualine_c = { { 'filename', path = 1 } },
+        lualine_x = {
+            {
                 'diagnostics',
                 sources = { 'nvim_diagnostic' },
                 symbols = { error = '󱎘 ', warn = ' ', info = ' ', hint = '󰌵 ' },
-            }
-        },
-        lualine_c = {
-            { 'filename', path = 1 }
-        },
-        lualine_x = { 'lsp_status', 'filetype', 'encoding', 'fileformat', 'filesize' }
+            }, 'lsp_status', 'filetype', 'encoding', 'fileformat', 'filesize' },
+        lualine_y = { 'progress', total_line_count }
     }
 }
 
