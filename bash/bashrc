@@ -111,6 +111,8 @@ alias highlight="grep --color=always --ignore-case -e \"^\" -e"
 
 alias start-db='docker run -p 5432:5432 --env POSTGRES_PASSWORD=postgres --env PGDATA=/var/lib/postgresql/data/pgdata postgres'
 
+alias testssl='docker run --rm -it ghcr.io/testssl/testssl.sh'
+
 # show file contents
 alias show=less
 
