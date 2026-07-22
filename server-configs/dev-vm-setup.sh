@@ -43,7 +43,8 @@ function mac_setup() {
 		echo "=> Starting Mac specific setup"
 		echo "=> Installing GNU version of sed"
 		echo "=> Installing watch command"
-		brew install gsed watch
+        echo "=> Installing GNU core utils"
+		brew install gsed watch coreutils
 		echo "=> installing Colima and docker cli"
 		brew install colima docker
 	else
