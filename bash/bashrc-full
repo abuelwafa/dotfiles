@@ -114,6 +114,7 @@ if [[ "${os_name}" == "Darwin" ]]; then
     alias ql='qlmanage -p'
     alias copy='pbcopy'
     alias sed='gsed'
+    alias date='gdate'
 
     # point docker host to the docker socket from colima
     export DOCKER_HOST="unix://${HOME}/.colima/default/docker.sock"
