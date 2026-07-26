@@ -301,7 +301,63 @@ vim.opt.undofile = true
 vim.opt.inccommand = 'split'
 vim.opt.hlsearch = true
 vim.keymap.set('n', '<esc>', '<cmd>nohlsearch<CR>')
+
+-- terminal config
+vim.opt.shell = os.getenv("SHELL") .. ' -l'
+
+vim.api.nvim_create_autocmd('TermOpen', {
+    group = vim.api.nvim_create_augroup('custom-term-open', { clear = true }),
+    callback = function()
+        vim.opt.number = false
+        vim.opt.relativenumber = false
+    end,
+})
+
+vim.api.nvim_create_autocmd({ 'BufWinEnter', 'WinEnter' }, {
+    pattern = {'term://*'},
+    group = vim.api.nvim_create_augroup('custom-term-enter', { clear = true }),
+    callback = function()
+        vim.cmd.startinsert()
+    end,
+})
+
+vim.api.nvim_create_autocmd('BufLeave', {
+    pattern = {'term://*'},
+    group = vim.api.nvim_create_augroup('custom-term-leave', { clear = true }),
+    callback = function()
+        vim.cmd.stopinsert()
+    end,
+})
+
+local state = { buf = -1, win = -1 }
+local function toggle_terminal()
+    if state.win and vim.api.nvim_win_is_valid(state.win) then
+        vim.api.nvim_win_hide(state.win)
+        state.win = -1
+        return
+    end
+
+    if not state.buf or not vim.api.nvim_buf_is_valid(state.buf) then
+        vim.cmd.vnew()
+        vim.cmd.term()
+        state.buf = vim.api.nvim_get_current_buf()
+    else
+        vim.cmd.vsplit()
+        vim.api.nvim_win_set_buf(0, state.buf)
+    end
+
+    vim.cmd.wincmd("J")
+    vim.api.nvim_win_set_height(0, 12)
+    vim.cmd.startinsert()
+    state.win = vim.api.nvim_get_current_win()
+end
+
 vim.keymap.set('t', '<esc><esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
+vim.keymap.set({ 'n', 't' }, '<leader>t', toggle_terminal, { desc = "Toggle terminal" })
+vim.api.nvim_set_keymap('t', '<c-h>', '<C-\\><C-n>:TmuxNavigateLeft<CR>', { silent = true })
+vim.api.nvim_set_keymap('t', '<c-d>', '<C-\\><C-n>:TmuxNavigateDown<CR>', { silent = true })
+vim.api.nvim_set_keymap('t', '<c-u>', '<C-\\><C-n>:TmuxNavigateUp<CR>', { silent = true })
+vim.api.nvim_set_keymap('t', '<c-l>', '<C-\\><C-n>:TmuxNavigateRight<CR>', { silent = true })
 
 -- plugins
 require('hop').setup()
@@ -1233,10 +1289,10 @@ vim.g.html_css = {
 
 vim.g.tmux_navigator_no_mappings = 1
 vim.g.tmux_navigator_disable_when_zoomed = 1
-vim.api.nvim_set_keymap('n', '<c-h>', ':TmuxNavigateLeft<CR>', {silent = true})
-vim.api.nvim_set_keymap('n', '<c-d>', ':TmuxNavigateDown<CR>', {silent = true})
-vim.api.nvim_set_keymap('n', '<c-u>', ':TmuxNavigateUp<CR>', {silent = true})
-vim.api.nvim_set_keymap('n', '<c-l>', ':TmuxNavigateRight<CR>', {silent = true})
+vim.api.nvim_set_keymap('n', '<c-h>', ':TmuxNavigateLeft<CR>', { silent = true })
+vim.api.nvim_set_keymap('n', '<c-d>', ':TmuxNavigateDown<CR>', { silent = true })
+vim.api.nvim_set_keymap('n', '<c-u>', ':TmuxNavigateUp<CR>', { silent = true })
+vim.api.nvim_set_keymap('n', '<c-l>', ':TmuxNavigateRight<CR>', { silent = true })
 
 -- e and r act as home and end keys
 vim.api.nvim_set_keymap('n', 'e', '^', {noremap = true})
