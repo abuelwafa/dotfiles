@@ -62,10 +62,6 @@ alias lg="lazygit"
 alias hetzner_list_servers="hcloud server list --output columns=id,name,status,ipv4,ipv6,private_net,datacenter,type,volumes,created,age,location,locked,protection,rescue_enabled,labels | show --wrap=never"
 
 alias pomodoro-start="tclock timer -d 45m -M"
-if [[ "${os_name}" == "Darwin" ]]; then
-    unalias pomodoro-start
-    alias pomodoro-start='tclock timer -d 45m -M -e "say -v Ava \"Work session finished...   Take some rest\""'
-fi
 
 alias podinstall="npx pod-install"
 alias watchman-clean='watchman watch-del-all'
@@ -119,6 +115,11 @@ if [[ "${os_name}" == "Darwin" ]]; then
     # point docker host to the docker socket from colima
     export DOCKER_HOST="unix://${HOME}/.colima/default/docker.sock"
     # export KIND_EXPERIMENTAL_PROVIDER=nerdctl.lima
+
+    unalias pomodoro-start
+    alias pomodoro-start='tclock timer -d 45m -M -e "say -v Ava \"Work session finished...   Take some rest\""'
+
+    alias speak='say -v "Ava (Premium)" --rate 220'
 fi
 
 if [[ "${os_name}" == "Linux" ]]; then

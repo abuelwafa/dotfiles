@@ -28,7 +28,6 @@ Plug 'nvim-telescope/telescope-file-browser.nvim'
 Plug 'nvim-telescope/telescope-ui-select.nvim'
 Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release' }
 Plug 'lukas-reineke/indent-blankline.nvim'
-Plug 'phaazon/hop.nvim'
 Plug 'lbrayner/vim-rzip'
 Plug 'mg979/vim-visual-multi', {'branch': 'master'}
 Plug 'christoomey/vim-tmux-navigator'
@@ -64,7 +63,6 @@ Plug 'preservim/tagbar'
 Plug 'tpope/vim-dadbod'
 Plug 'kristijanhusak/vim-dadbod-ui'
 Plug 'kristijanhusak/vim-dadbod-completion'
-" Plug 'jackMort/ChatGPT.nvim'
 Plug 'stevearc/dressing.nvim'
 Plug 'mechatroner/rainbow_csv'
 Plug 'hat0uma/csvview.nvim'
@@ -303,8 +301,6 @@ vim.opt.hlsearch = true
 vim.keymap.set('n', '<esc>', '<cmd>nohlsearch<CR>')
 
 -- terminal config
-vim.opt.shell = os.getenv("SHELL") .. ' -l'
-
 vim.api.nvim_create_autocmd('TermOpen', {
     group = vim.api.nvim_create_augroup('custom-term-open', { clear = true }),
     callback = function()
@@ -339,7 +335,7 @@ local function toggle_terminal()
 
     if not state.buf or not vim.api.nvim_buf_is_valid(state.buf) then
         vim.cmd.vnew()
-        vim.cmd.term()
+        vim.cmd.term(os.getenv("SHELL") .. ' -l')
         state.buf = vim.api.nvim_get_current_buf()
     else
         vim.cmd.vsplit()
@@ -360,7 +356,6 @@ vim.api.nvim_set_keymap('t', '<c-u>', '<C-\\><C-n>:TmuxNavigateUp<CR>', { silent
 vim.api.nvim_set_keymap('t', '<c-l>', '<C-\\><C-n>:TmuxNavigateRight<CR>', { silent = true })
 
 -- plugins
-require('hop').setup()
 require('Comment').setup()
 require('gitsigns').setup({
     signs = {
@@ -515,7 +510,6 @@ require'nvim-treesitter'.install({
     'swift',
     'templ',
     'terraform',
-    'tmux',
     'todotxt',
     'toml',
     'tsv',
