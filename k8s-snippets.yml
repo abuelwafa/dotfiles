@@ -1,3 +1,4 @@
+---
 # -----------------------------------------
 # -----------------------------------------
 #
@@ -7,9 +8,34 @@
 # create a debug container within the pod
 # k debug my_pod --image alpine -it
 #
+# k top
+# k top nodes
+# k top node node_name
+# k top pods -A
 # k top pod my_pod
 #
+# print all environment variables of a pod. specify container with -c
+# k exec <pod_name> -- env
 #
+# k cp <file-spec-src> <file-spec-dest>
+#
+# k endpoints
+#
+# restart latest deployment. causgin restart of all pods in the deployment
+# k rollout restart deployment deployment_name -n namespace
+
+# rollback a deployment
+
+# -c or --container  --> container name is optional. exec against the first container if not present
+# exec on deployments or services gets the first pod in the respective selector
+# k exec --stdin --tty pods/pod_name --container container_name -n namespace -- command
+# k exec -it pods/pod_name -c container_name -n namespace -- /bin/sh
+#
+#
+# flux cd
+# ---------
+# # manually reconcile a specific kustomization
+# flux reconcile kustomization my_kustomization --with-source
 # -----------------------------------------
 # -----------------------------------------
 ---

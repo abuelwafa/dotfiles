@@ -8,6 +8,8 @@
 #
 # Interactive bash script for configuring Debian machine for development
 # /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/server-configs/dev-vm-setup.sh)"
+# on a bare debian install, the above command will not work. out of the box.
+# apt update && apt install curl && useradd --create-home --user-group --groups sudo --shell $(which bash) my_username && su -c '/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/server-configs/dev-vm-setup.sh)"' - my_username
 
 set -o errexit
 set -o nounset
@@ -43,10 +45,9 @@ function mac_setup() {
 		echo "=> Starting Mac specific setup"
 		echo "=> Installing GNU version of sed"
 		echo "=> Installing watch command"
-        echo "=> Installing GNU core utils"
-		brew install gsed watch coreutils
+		echo "=> Installing GNU core utils"
 		echo "=> installing Colima and docker cli"
-		brew install colima docker
+		brew install gnu-sed watch coreutils colima docker openssl@3
 	else
 		echo "Skipping Mac specific setup."
 	fi
@@ -69,7 +70,7 @@ function install_nerdfonts() {
 	read -p "Install nerdfonts through homebrew? if you are in a desktop environment (y/n): " -r setup_nerdfonts
 	echo
 	if [[ ${setup_nerdfonts} =~ ^[Yy]$ ]]; then
-		brew install \
+		brew install --cask \
 			font-meslo-lg-nerd-font \
 			font-jetbrains-mono-nerd-font
 		# font-fira-mono-nerd-font \
@@ -136,7 +137,7 @@ function setup_neovim() {
 	ln --force -s ~/workspace/dotfiles/nvim/init.lua ~/.config/nvim/init.lua
 	mkdir -p ~/.nvim/_temp
 	mkdir -p ~/.nvim/_backup
-	cargo install --locked tree-sitter-cli
+	brew install tree-sitter-cli
 	luarocks config lua_version 5.4
 	luarocks install mimetypes
 	luarocks install xml2lua
@@ -292,6 +293,7 @@ main() {
 		dgunzy/tap/flux9s
 		kdash-rs/kdash/kdash
 		kubectx
+		kyverno
 		kustomize
 		go
 		sqlite
@@ -300,6 +302,10 @@ main() {
 		ansible
 		python@3
 		opentofu
+		# terragrunt
+		tree-sitter-cli
+		# step
+		llama.cpp
 		pgcli
 		dbcli/tap/litecli
 		mycli
@@ -320,10 +326,15 @@ main() {
 		grype # TODO: make an alias that utilizes the docker image
 		syft  # TODO: make an alias that utilizes the docker image
 		osv-scanner
-		egctl
-		viddy
-		hey
+		# egctl
+		# viddy
+		# hey
+		# cloc
+		# cloudflared
+		# doppler
+		# direnv
 		# watchman
+		# ast-grep
 		# fd
 		# rbenv
 		# ruby-build
@@ -336,6 +347,7 @@ main() {
 		# minikube
 		# ffmpeg
 		# graphviz
+		# wget
 	)
 
 	local batchsize=8
@@ -357,7 +369,7 @@ main() {
 	fi
 
 	# if ! grep -q -e "export OPENAI_API_KEY" ~/.machine-config; then
-		# echo 'export OPENAI_API_KEY="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"' | tee -a ~/.machine-config &>/dev/null
+	# 	# echo 'export OPENAI_API_KEY="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"' | tee -a ~/.machine-config &>/dev/null
 	# fi
 
 	if ! grep -q -e "export ENABLE_AUTOMATIC_SSH_AGENT" ~/.machine-config; then
