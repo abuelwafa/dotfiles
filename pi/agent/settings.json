@@ -1,0 +1,27 @@
+{
+    "defaultProvider": null,
+    "defaultModel": "gpt-5.4",
+    "defaultThinkingLevel": "xhigh",
+    "defaultProjectTrust": "never",
+    "hideThinkingBlcok": false,
+    "enableInstallTelemetry": false,
+    "enableAnalytics": false,
+    "showCacheMissNotices": true,
+    "doubleEscapeAction": "tree",
+    "editorPaddingX": 0,
+    "outputPad": 1,
+    "autocompleteMaxVisible": 5,
+    "tuiMode": "fullscreen",
+    "fullscreenScrollbar": "always",
+    "theme": "dark",
+    "compaction": {
+        "enabled": true
+    },
+    "terminal": {
+        "showTerminalProgress": false
+    },
+    "treeFilterMode": "default",
+    "enableSkillCommands": false,
+    "sessionDir": "~/workspace/pi-sessions",
+    "lastChangelogVersion": "0.84.1"
+}

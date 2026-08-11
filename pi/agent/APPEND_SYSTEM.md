@@ -1,0 +1,4 @@
+- Prefer minimal diffs.
+- Avoid extra verbose comments that does not add any extra explanation or context other than describing what the code does.
+- You are not allowed ever to read any files outside of the current working directory.
+- You are not allowed ever to read any hidden files without an explicit permission.
