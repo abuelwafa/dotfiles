@@ -1,6 +1,6 @@
 {
   "defaultProvider": null,
-  "defaultModel": "claude-opus-4.6",
+  "defaultModel": "claude-opus-5",
   "defaultThinkingLevel": "xhigh",
   "defaultProjectTrust": "never",
   "hideThinkingBlcok": false,
@@ -8,24 +8,28 @@
   "enableAnalytics": false,
   "showCacheMissNotices": true,
   "doubleEscapeAction": "tree",
-  "editorPaddingX": 0,
+  "editorPaddingX": 1,
   "outputPad": 1,
   "autocompleteMaxVisible": 5,
-  "tuiMode": "fullscreen",
+  "tuiMode": "regular",
   "fullscreenScrollbar": "always",
   "theme": "dark",
   "compaction": {
     "enabled": true
   },
   "terminal": {
-    "showTerminalProgress": false
+    "showTerminalProgress": true
   },
   "treeFilterMode": "default",
-  "enableSkillCommands": false,
-  "sessionDir": "~/workspace/pi-sessions",
-  "lastChangelogVersion": "0.84.1",
+  "enableSkillCommands": true,
+  "sessionDir": "~/pi-sessions",
+  "quietStartup": true,
+  "fullscreenExitOutput": "transcript",
+  "lastChangelogVersion": "0.84.2",
   "packages": [
     "npm:pi-web-access",
-    "npm:pi-mcp-adapter"
+    "npm:pi-mcp-adapter",
+    "npm:@gotgenes/pi-permission-system",
+    "npm:@juicesharp/rpiv-ask-user-question"
   ]
 }

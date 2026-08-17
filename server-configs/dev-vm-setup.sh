@@ -147,12 +147,6 @@ function setup_neovim() {
 	echo
 }
 
-function setup_pi_agent() {
-	npm install -g --ignore-scripts @earendil-works/pi-coding-agent
-	mkdir -p ~/workspace/pi-sessions
-	ln --force -s ~/workspace/dotfiles/pi ~/.pi
-}
-
 function setup_homebrew() {
 	echo "=> Setting up Homebrew"
 	if ! command -v brew &>/dev/null 2>&1; then
@@ -199,7 +193,7 @@ main() {
 		python3-pip \
 		python3-dev
 
-	mkdir -p ~/workspace
+	mkdir -p ~/workspace/scratchpad
 	mkdir -p ~/temp
 	touch ~/.machine-config
 
@@ -436,7 +430,8 @@ main() {
 	# setup neovim
 	echo "=> Configuring Neovim"
 	setup_neovim
-	setup_pi_agent
+
+	mkdir -p ~/workspace/pi-sessions
 
 	setup_trivy
 	setup_opencode

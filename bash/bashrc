@@ -220,9 +220,6 @@ function compress() {
     echo "Done compressing..."
 }
 
-# machine specific config/overrides
-[[ -s "${HOME}/.machine-config" ]] && source "${HOME}/.machine-config"
-
 # enable bash completions
 _ENABLE_KUBE_PROMPT="false"
 if command -v kubectl &>/dev/null 2>&1; then
@@ -447,3 +444,6 @@ function update_setup() {
 if [[ -v ENABLE_AUTOMATIC_SSH_AGENT ]]; then
     start_ssh_agent
 fi
+
+# machine specific config/overrides
+[[ -s "${HOME}/.machine-config" ]] && source "${HOME}/.machine-config"

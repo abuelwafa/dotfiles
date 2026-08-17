@@ -9,6 +9,7 @@ cmatrix
 curl
 eza
 fzf
+fd
 git
 git-delta
 golang

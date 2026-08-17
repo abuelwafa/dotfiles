@@ -2,3 +2,6 @@
 - Avoid extra verbose comments that does not add any extra explanation or context other than describing what the code does.
 - You are not allowed ever to read any files outside of the current working directory.
 - You are not allowed ever to read any hidden files without an explicit permission.
+- You are only an implementor. DO NOT try to be helpful. DO NOT provide any suggestions at the end of every response unless you were explicility told so.
+- Be concise and ONLY do the actions that you were explicitly told to do and NOTHING ELSE.
+- Do not edit any files you are not explicitly told to. even if this is the next logical step after the current action.

@@ -51,7 +51,7 @@ alias rnstart="watchman-clean && yarn start --reset-cache"
 alias gradle-clean="cd android && ./gradlew clean && .."
 alias blowup="rm -rf node_modules ios/Pods && yarn cache clean && watchman watch-del-all && pod cache clean --all && npm cache clean --force"
 
-# alias lima="limactl"
+alias lima="limactl"
 alias lima-create-debian="limactl create template:debian-13 --arch x86_64 --plain --vm-type qemu --cpus 2 --memory 2 --disk 20 --network lima:user-v2 --name "
 alias lima-create-dev-vm="limactl create template:debian-13 --arch=x86_64 --plain --vm-type qemu --cpus=2 --memory 6 --disk 20 --network lima:user-v2 --name "
 alias dog="doggo --any"
@@ -165,3 +165,34 @@ export K9S_CONFIG_DIR=~/workspace/dotfiles/k9s
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="${HOME}/.sdkman"
 [[ -s "${HOME}/.sdkman/bin/sdkman-init.sh" ]] && source "${HOME}/.sdkman/bin/sdkman-init.sh"
+
+function pi() {
+    # assert and exit if we are on the home directory, if we are outside
+    # the home directory, or if we are in direct descendant directory from home.
+    # the last rule automatically rules out any other sensitive or broad directories
+    # like .ssh, .kube, workspace, ...etc
+    if [[ "${PWD}" == "${HOME}" ]] || [[ ! "$(echo "${PWD}" | cut -d / -f 1-3)" == "${HOME}" ]] || [[ "$(dirname "${PWD}")" == "${HOME}" ]]; then
+        echo "EROR: Running PI within a sensitive or a very broad directory. Aborting..."
+        return 1
+    fi
+
+    docker run --rm -it \
+        -v "${PWD}:/home/node/workspace" \
+        -v "${HOME}/workspace/dotfiles/pi:/home/node/.pi" \
+        -v "${HOME}/workspace/pi-sessions:/home/node/pi-sessions" \
+        pi-sandboxed "$@"
+}
+
+alias pi-build='(cd ~/workspace/dotfiles/pi/pi-sandboxed && docker build -t pi-sandboxed -f Dockerfile .)'
+alias pi-resume='ls -1 ~/workspace/pi-sessions | fzf --print0 --preview "bat --color=always -l json ~/workspace/pi-sessions/{}" | cut -d _ -f 2 | cut -d . -f 1 | xargs -I{} -0 -o bash --login -c "pi --session {}"'
+
+function update_machine_config() {
+    (cd ~/workspace/dotfiles && git fetch --all --prune && git pull --rebase)
+    brew update
+    brew upgrade
+    pi-build
+    nvim +PlugUpgrade +PlugUpdate +MasonUpdate +MasonToolsUpdate
+}
+
+# machine specific config/overrides
+[[ -s "${HOME}/.machine-config" ]] && source "${HOME}/.machine-config"
