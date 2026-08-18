@@ -143,7 +143,7 @@ function setup_neovim() {
 	luarocks install xml2lua
 	echo "=> Openning neovim to install plugins and language servers. Exit when finished."
 	sleep 4
-	nvim
+	nvim +PlugUpgrade +PlugUpdate +MasonUpdate +MasonToolsUpdate +20sleep! +qall
 	echo
 }
 

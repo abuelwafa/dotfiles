@@ -191,7 +191,7 @@ function update_machine_config() {
     brew update
     brew upgrade
     pi-build
-    nvim +PlugUpgrade +PlugUpdate +MasonUpdate +MasonToolsUpdate
+    nvim +PlugUpgrade +PlugUpdate +MasonUpdate +MasonToolsUpdate +10sleep! +qall
 }
 
 # machine specific config/overrides
