@@ -192,6 +192,7 @@ main() {
 		python3-venv \
 		python3-pip \
 		python3-dev
+	# libfuse2t64 # only on desktop environments
 
 	mkdir -p ~/workspace/scratchpad
 	mkdir -p ~/temp

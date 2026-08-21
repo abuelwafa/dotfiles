@@ -184,14 +184,24 @@ function pi() {
 }
 
 alias pi-build='(cd ~/workspace/dotfiles/pi/pi-sandboxed && docker build -t pi-sandboxed -f Dockerfile .)'
-alias pi-resume='ls -1 ~/workspace/pi-sessions | fzf --print0 --preview "bat --color=always -l json ~/workspace/pi-sessions/{}" | cut -d _ -f 2 | cut -d . -f 1 | xargs -I{} -0 -o bash --login -c "pi --session {}"'
 
 function update_machine_config() {
+    local os_name
+    os_name="$(uname -s)"
+
+    if [[ "${os_name}" == "Linux" ]]; then
+        sudo apt update && sudo apt upgrade -y
+        sudo apt autoclean && sudo apt autoremove -y
+    fi
+
+    # if [[ "${os_name}" == "Darwin" ]]; then
+    # fi
+
     (cd ~/workspace/dotfiles && git fetch --all --prune && git pull --rebase)
     brew update
     brew upgrade
     pi-build
-    nvim +PlugUpgrade +PlugUpdate +MasonUpdate +MasonToolsUpdate +10sleep! +qall
+    nvim +PlugClean +PlugUpgrade +PlugUpdate +MasonToolsClean +MasonUpdate +MasonToolsUpdate +10sleep! +qall
 }
 
 # machine specific config/overrides
