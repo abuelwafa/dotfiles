@@ -185,6 +185,7 @@ main() {
 		ca-certificates \
 		gnupg \
 		build-essential \
+		libclang-dev \
 		ufw \
 		zip \
 		unzip \
