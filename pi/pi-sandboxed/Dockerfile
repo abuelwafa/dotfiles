@@ -11,7 +11,7 @@ RUN apt-get update \
     fd-find \
     && rm -rf /var/lib/apt/lists/*
 
-RUN npm install -g --ignore-scripts @earendil-works/pi-coding-agent@0.84.2
+RUN npm install -g --ignore-scripts @earendil-works/pi-coding-agent@0.84.3
 
 # switch to the node user
 USER 1000:1000
