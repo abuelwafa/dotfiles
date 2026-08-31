@@ -1354,6 +1354,9 @@ nnoremap <leader>[ <C-w>4<
 " leader+tab inserts a literal tab character in insert mode
 inoremap <leader><Tab> <C-V><Tab>
 
+" double leader (backslash) adds literal backslash charcter in order to skip waiting time
+inoremap <leader><leader> \
+
 nnoremap <Tab> za
 
 nnoremap <leader>sr :Rest run<cr>
@@ -1442,7 +1445,9 @@ autocmd FileType js,javascript,typescript,javascriptreact,typescriptreact inorem
 autocmd FileType js,javascript,typescript,javascriptreact,typescriptreact inoremap logkj console.log()<esc>i
 autocmd FileType go imap logkj fmt.Println(
 autocmd FileType js,javascript,typescript,javascriptreact,typescriptreact imap imkj import  from '
+autocmd FileType python imap imkj from  import
 autocmd FileType js,javascript,typescript,javascriptreact,typescriptreact inoremap ifkj if () {<cr>}<esc>k$2hi
+autocmd FileType python,go,rust inoremap ifkj if  {<cr>}<esc>k$hi
 
 "make < > keep selection after indentenation
 vnoremap < <gv

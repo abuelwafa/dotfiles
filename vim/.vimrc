@@ -208,6 +208,9 @@ nnoremap <leader>[ <C-w>4<
 " leader+tab inserts a literal tab character in insert mode
 inoremap <leader><Tab> <C-V><Tab>
 
+" double leader (backslash) adds literal backslash charcter in order to skip waiting time
+inoremap <leader><leader> \
+
 nnoremap <Tab> za
 
 " w moves to the end of word not the begining of it

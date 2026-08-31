@@ -114,3 +114,19 @@ gcloud sql instances execute-sql instance_name --database=my_db --sql="SELECT * 
 gcloud storage cp --recursive ~/ gs://my-bucket
 
 ====================================================================================================
+postgres snippets
+
+\c
+\conninfo
+\l  --> list databases
+\dt --> list tables
+\d table_name  --> describe table: show schema, indexes, and references
+\q  --> quit
+\!shell_command     --| example |-->  \!clear
+\e --> edit query in editor
+\? --> show help
+\i filename --> execute commands from file filename
+
+SHOW config_file;
+
+\df --> list functions
