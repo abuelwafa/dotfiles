@@ -86,7 +86,7 @@ set incsearch
 set ignorecase
 set smartcase
 set showmatch
-set colorcolumn=101
+set colorcolumn=0
 set tabstop=4
 set softtabstop=4
 set shiftwidth=4

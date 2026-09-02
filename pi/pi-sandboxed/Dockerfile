@@ -1,3 +1,4 @@
+# run pi-build after any change to this file
 FROM node:24-bookworm-slim
 
 # hadolint ignore=DL3008
@@ -11,7 +12,7 @@ RUN apt-get update \
     fd-find \
     && rm -rf /var/lib/apt/lists/*
 
-RUN npm install -g --ignore-scripts @earendil-works/pi-coding-agent@0.84.3
+RUN npm install -g --ignore-scripts @earendil-works/pi-coding-agent@0.84.4
 
 # switch to the node user
 USER 1000:1000

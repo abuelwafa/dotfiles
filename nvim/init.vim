@@ -153,7 +153,7 @@ vim.opt.cindent = true
 vim.opt.incsearch = true
 vim.opt.showmatch = true
 
-vim.opt.colorcolumn = '91'
+vim.opt.colorcolumn = '0'
 
 vim.opt.foldenable = true
 vim.opt.foldmethod = "indent"
