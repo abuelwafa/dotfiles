@@ -202,6 +202,7 @@ function update_machine_config() {
     brew upgrade
     pi-build
     nvim +PlugClean +PlugUpgrade +PlugUpdate +MasonToolsClean +MasonUpdate +MasonToolsUpdate +10sleep! +qall
+    command -v gcloud && gcloud components update || true
 }
 
 # machine specific config/overrides

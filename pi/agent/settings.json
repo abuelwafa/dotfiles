@@ -25,7 +25,7 @@
   "sessionDir": "~/pi-sessions",
   "quietStartup": true,
   "fullscreenExitOutput": "transcript",
-  "lastChangelogVersion": "0.84.3",
+  "lastChangelogVersion": "0.85.0",
   "packages": [
     "npm:pi-web-access",
     "npm:pi-mcp-adapter",

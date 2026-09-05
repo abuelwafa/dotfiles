@@ -138,7 +138,7 @@ function setup_neovim() {
 	mkdir -p ~/.nvim/_temp
 	mkdir -p ~/.nvim/_backup
 	brew install tree-sitter-cli
-	luarocks config lua_version 5.4
+	luarocks config lua_version 5.5
 	luarocks install mimetypes
 	luarocks install xml2lua
 	echo "=> Openning neovim to install plugins and language servers. Exit when finished."
@@ -263,7 +263,7 @@ main() {
 		vim
 		neovim
 		nmap
-		lua@5.4
+		lua
 		luarocks
 		git
 		tmux
