@@ -16,20 +16,21 @@ RUN apt-get update \
     jq \
     python3 \
     python3-venv \
+    python3-pip \
     locales \
-    locales-all \
     tzdata \
-    apt-transport-https \
     && rm -rf /var/lib/apt/lists/*
 
 RUN npm install -g npm@latest
 
 # hadolint ignore=DL3059
-RUN npm install -g --ignore-scripts @earendil-works/pi-coding-agent@0.85.0
+RUN npm install -g --ignore-scripts @earendil-works/pi-coding-agent@0.85.1
 
 # install Go
 COPY --from=golang:1.27-trixie /usr/local/go /usr/local/go
 ENV PATH=/usr/local/go/bin:$PATH
+
+RUN ln -s /usr/bin/fdfind /usr/bin/fd
 
 # switch to the node user
 USER 1000:1000
@@ -38,8 +39,8 @@ ENV npm_config_ignore_scripts='true'
 ENV PAGER='cat'
 ENV GIT_PAGER='cat'
 ENV EDITOR='vim'
-ENV NO_COLOR=1
-ENV TERM='dumb'
+ENV LANG='en_US.UTF-8'
+ENV LC_ALL='en_US.UTF-8'
 
 RUN curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/vim/.vimrc > /home/node/.vimrc
 

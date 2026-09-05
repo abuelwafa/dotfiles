@@ -176,9 +176,9 @@ function pi() {
         return 1
     fi
 
-    docker run --rm -it \
+    docker run --init --rm -it \
         -v "${PWD}:/home/node/workspace" \
-        -v "${HOME}/workspace/dotfiles/pi:/home/node/.pi" \
+        --mount type=bind,src="${HOME}"/workspace/dotfiles/pi,dst=/home/node/.pi,readonly,bind-recursive=readonly \
         -v "${HOME}/workspace/pi-sessions:/home/node/pi-sessions" \
         pi-sandboxed "$@"
 }

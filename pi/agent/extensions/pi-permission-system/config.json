@@ -2,7 +2,12 @@
   "permission": {
     "*": "ask",
     "path": {
-      "*": "allow",
+      "*": "ask",
+      "/proc/**": "deny",
+      "/sys/**": "deny",
+      "/run/secrets/**": "deny",
+      "/home/node/.pi/**": "deny",
+      "**/.ssh/**": "deny",
       "*.env": "deny",
       "*.env.*": "deny",
       "*.env.example": "allow"
