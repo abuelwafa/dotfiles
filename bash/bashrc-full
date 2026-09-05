@@ -199,7 +199,7 @@ function update_machine_config() {
 
     (cd ~/workspace/dotfiles && git fetch --all --prune && git pull --rebase)
     brew update
-    brew upgrade
+    brew upgrade -y
     pi-build
     nvim +PlugClean +PlugUpgrade +PlugUpdate +MasonToolsClean +MasonUpdate +MasonToolsUpdate +10sleep! +qall
     command -v gcloud && gcloud components update || true
