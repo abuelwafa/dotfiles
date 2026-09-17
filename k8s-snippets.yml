@@ -32,6 +32,14 @@
 # k exec -it pods/pod_name -c container_name -n namespace -- /bin/sh
 #
 #
+# k api-resources # list all api resource types in the cluster
+# k api-resources --namespaced # list only namespaced resource types
+# k api-resources --namespaced=false # only non namespaced (cluster wide) resources
+#
+# k explain resource_name[.fieldname]
+# recursively include nested resource. cap recursion limit with max-depth. 0 means no limit which is the default
+# k explain resource_name --recursive --max-depth 0
+#
 # flux cd
 # ---------
 # # manually reconcile a specific kustomization

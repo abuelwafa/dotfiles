@@ -40,9 +40,17 @@ docker run --name some-redis-instance --rm -p 6379:6379 valkey/valkey
 ## generate a new key
 openssl genpkey \
             -algorithm RSA \
-            -out private.key \
+            -pkeyopt rsa_keygen_bits:4096 \
+            -out private.key \  # or generate the file with the .pem extension. omit for stdout output
             -outpubkey public.key \
+            -quiet  # prevents progress dots output
             -aes256 # optional for encryption. will be prompted for passphrase
+
+# generate using ED25519 algorithm. same, omit -out for stdout
+openssl genpkey -algorithm ED25519 -out key.pem
+
+# generate public key from private one
+openssl pkey -in key.pem -pubout -out pub.pem
 
 ## generate a new self signed certifcate
 openssl req -x509 -new -sha256 -key private.key -out certificate.crt -days 365

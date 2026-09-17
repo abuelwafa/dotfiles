@@ -1,4 +1,13 @@
+# ===========================================
 # run pi-build after any change to this file
+# ===========================================
+
+FROM debian:trixie AS locale-base
+# hadolint ignore=DL3008
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends locales \
+    && localedef -i en_US -c -f UTF-8 en_US.UTF-8
+
 FROM node:26.8-trixie-slim
 
 # hadolint ignore=DL3008
@@ -17,9 +26,10 @@ RUN apt-get update \
     python3 \
     python3-venv \
     python3-pip \
-    locales \
     tzdata \
     && rm -rf /var/lib/apt/lists/*
+
+COPY --from=locale-base /usr/lib/locale/locale-archive /usr/lib/locale/locale-archive
 
 RUN npm install -g npm@latest
 
@@ -40,7 +50,6 @@ ENV PAGER='cat'
 ENV GIT_PAGER='cat'
 ENV EDITOR='vim'
 ENV LANG='en_US.UTF-8'
-ENV LC_ALL='en_US.UTF-8'
 
 RUN curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/vim/.vimrc > /home/node/.vimrc
 
