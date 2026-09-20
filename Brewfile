@@ -110,7 +110,7 @@ brew "dgunzy/tap/flux9s"
 brew "fluxcd/tap/flux", trusted: true
 brew "jesseduffield/lazydocker/lazydocker", trusted: true
 brew "kdash-rs/kdash/kdash", trusted: true
-brew "modem-dev/tap/hunk", trusted: true
+# brew "modem-dev/tap/hunk", trusted: true
 go "golang.org/x/tools/gopls"
 go "honnef.co/go/tools/cmd/staticcheck"
 go "github.com/asciimoo/wuzz"

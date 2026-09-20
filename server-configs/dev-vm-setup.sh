@@ -279,7 +279,7 @@ main() {
 		htop
 		# btop
 		git-delta
-		modem-dev/tap/hunk
+		# modem-dev/tap/hunk
 		node@24
 		gnupg
 		sops
@@ -369,7 +369,7 @@ main() {
 	ln --force -s ~/workspace/dotfiles/tmux/tmux.conf ~/.tmux.conf
 	ln --force -s ~/workspace/dotfiles/vim/.vimrc ~/.vimrc
 	ln --force -s ~/workspace/dotfiles/.gitconfig ~/.gitconfig
-	ln --force -s ~/workspace/dotfiles/hunk.config.toml ~/.config/hunk/config.toml
+	# mkdir -p ~/.config/hunk && ln --force -s ~/workspace/dotfiles/hunk.config.toml ~/.config/hunk/config.toml
 
 	if ! grep -q -e "export GIT_COMMITTER_EMAIL" ~/.machine-config; then
 		echo 'export GIT_COMMITTER_EMAIL="mohamed.abuelwafa@gmail.com"' | tee -a ~/.machine-config &>/dev/null
