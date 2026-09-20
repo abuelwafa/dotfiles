@@ -7,9 +7,15 @@
 # █    █ ██▄█▀  ▀▄▄▀█  ▀█▄▄▀    ▀▄▄   █ █   ▀▄▄▀█    █    ▀▄▄▀█
 #
 # Interactive bash script for configuring Debian machine for development
+# assuming sudo and curl are present
 # /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/server-configs/dev-vm-setup.sh)"
+#
 # on a bare debian install, the above command will not work. out of the box.
-# apt update && apt install curl && useradd --create-home --user-group --groups sudo --shell $(which bash) my_username && su -c '/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/server-configs/dev-vm-setup.sh)"' - my_username
+# if using a non root user, you can use the following one liner to install prerequisites
+# su -c "apt update && apt install curl sudo && usermod -aG sudo $USER" - root && newgrp sudo && /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/server-configs/dev-vm-setup.sh)"
+#
+# if using the root user,
+# apt update && apt install curl sudo && useradd --create-home --user-group --groups sudo --shell $(which bash) my_username && newgrp sudo && su -c '/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/server-configs/dev-vm-setup.sh)"' - my_username
 
 set -o errexit
 set -o nounset
@@ -392,6 +398,10 @@ main() {
 
 	if ! grep -q -e "export ENABLE_AWS_PROMPT" ~/.machine-config; then
 		echo 'export ENABLE_AWS_PROMPT="TRUE"' | tee -a ~/.machine-config &>/dev/null
+	fi
+
+	if ! grep -q -e "export NVIM_NOTTYFAST" ~/.machine-config; then
+		echo '# export NVIM_NOTTYFAST=1' >> ~/.machine-config
 	fi
 
 	mkdir -p ~/.config/pgcli

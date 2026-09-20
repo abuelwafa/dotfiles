@@ -1,10 +1,10 @@
+tap "homebrew/services"
 tap "anchore/syft", trusted: true
 tap "anomalyco/tap", trusted: true
 tap "dbcli/tap", trusted: true
 tap "derailed/k9s", trusted: true
 tap "dgunzy/tap", trusted: true
 tap "fluxcd/tap", trusted: true
-tap "homebrew/services"
 tap "jesseduffield/lazydocker"
 tap "kdash-rs/kdash", trusted: true
 tap "modem-dev/tap"
@@ -27,8 +27,6 @@ brew "cmake"
 brew "cmatrix"
 brew "cmus"
 brew "cocoapods"
-brew "lima"
-brew "colima", restart_service: :changed
 brew "coreutils"
 brew "dive"
 brew "docker"
@@ -137,10 +135,7 @@ cask "font-jetbrains-mono-nerd-font"
 # cask "font-ubuntu-mono-nerd-font"
 # cask "font-ubuntu-sans-nerd-font"
 
-# cask "aerospace"
 # cask "lazytrivy"
-cask "meld"
-cask "stats"
 
 # MAC only apps
 cask "coteditor"
@@ -148,3 +143,8 @@ mas "Microsoft Excel", id: 462058435
 mas "WireGuard", id: 1451685025
 mas "The Unarchiver", id: 425424353
 mas "Xcode", id: 497799835
+cask "stats"
+brew "lima"
+cask "meld"
+brew "colima", restart_service: :changed
+# cask "aerospace"

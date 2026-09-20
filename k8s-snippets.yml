@@ -39,6 +39,22 @@
 # k explain resource_name[.fieldname]
 # recursively include nested resource. cap recursion limit with max-depth. 0 means no limit which is the default
 # k explain resource_name --recursive --max-depth 0
+
+## logs
+# k logs \
+#  {pod_name} \ # get logs for a single pod
+#  deployment/{deployment_name} \ # get logs for all pods in a deployment
+#  --all-containers \
+#  --all-pods \ # implies --prefix
+#  -c --container {container_name} \
+#  --prefix \ # prefix each line with pod and container names
+#  --since=1h \ # show logs from 1 hour ago
+#  --since-time=YYYY-mm-ddT \
+#  --timestamps
+#  -l --selector {selector}
+#  -f --follow
+#  --tail=20 # show latest 20 log lines. -1 (default) for all lines
+#  --ignore-errors
 #
 # flux cd
 # ---------
