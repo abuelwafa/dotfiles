@@ -60,6 +60,11 @@ function mac_setup() {
 	echo
 }
 
+function configure_ufw() {
+    sudo ufw default deny incoming
+    sudo ufw enable
+}
+
 function install_lima() {
 	read -p "Install Lima for managing virtual machines? choose yes only if the system supports virtualization. (y/n): " -r setup_lima
 	echo
@@ -155,13 +160,11 @@ function setup_neovim() {
 
 function setup_homebrew() {
 	echo "=> Setting up Homebrew"
-	if ! command -v brew &>/dev/null 2>&1; then
+	if ! command -v brew &> /dev/null 2>&1; then
 		NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 		eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 	else
 		echo "   brew is already installed. Updating..."
-		brew update
-		brew upgrade
 	fi
 }
 
@@ -209,31 +212,26 @@ main() {
 	if [[ ! -f ~/workspace/db-connections/connections.json ]]; then
 		mkdir -p ~/workspace/db-connections
 		echo '[{ "name": "postgres-local", "url": "postgresql://postgres:postgres@localhost:5432/postgres" }]' |
-			tee ~/workspace/db-connections/connections.json &>/dev/null
+			tee ~/workspace/db-connections/connections.json &> /dev/null
 	fi
 
 	# increase inotify watchers
 	echo "=> Configuring inotify watchers"
 	if [[ "$(cat /proc/sys/fs/inotify/max_user_watches)" != "1048576" ]]; then
-		echo "fs.inotify.max_user_watches=1048576" | sudo tee -a /etc/sysctl.d/99-dev-vm.conf &>/dev/null
+		echo "fs.inotify.max_user_watches=1048576" | sudo tee -a /etc/sysctl.d/99-dev-vm.conf &> /dev/null
 		sudo sysctl -p /etc/sysctl.d/99-dev-vm.conf
 	fi
 
 	if [[ "$(cat /proc/sys/fs/inotify/max_user_instances)" != "1048576" ]]; then
-		echo "fs.inotify.max_user_instances=2048" | sudo tee -a /etc/sysctl.d/99-dev-vm.conf &>/dev/null
+		echo "fs.inotify.max_user_instances=2048" | sudo tee -a /etc/sysctl.d/99-dev-vm.conf &> /dev/null
 		sudo sysctl -p /etc/sysctl.d/99-dev-vm.conf
 	fi
 
 	# increase open files soft limit
 	echo "=> Increasing open files limit"
 	if ! grep -q -e "softnofile" /etc/security/limits.d/00-open-files.conf; then
-		echo "*    soft    nofile    4096" | sudo tee /etc/security/limits.d/50-open-files.conf &>/dev/null
+		echo "*    soft    nofile    4096" | sudo tee /etc/security/limits.d/50-open-files.conf &> /dev/null
 	fi
-
-	echo "=> running base server config"
-	/bin/bash -c "$(
-		curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/server-configs/setup.sh
-	)"
 
 	# clone essential repos
 	echo "=> Cloning dotfiles repository"
@@ -261,108 +259,7 @@ main() {
 
 	# install homebrew
 	setup_homebrew
-
-	local brew_packages_list
-	brew_packages_list=(
-		bash
-		bash-completion@2
-		vim
-		neovim
-		nmap
-		lua
-		luarocks
-		git
-		tmux
-		gcc
-		cmake
-		tree
-		htop
-		# btop
-		git-delta
-		# modem-dev/tap/hunk
-		node@24
-		gnupg
-		sops
-		doggo
-		dive # https://github.com/wagoodman/dive
-		bat
-		ripgrep
-		fzf
-		jq
-		lazygit
-		lazyjournal
-		jesseduffield/lazydocker/lazydocker
-		libpq
-		kubernetes-cli
-		helm
-		fluxcd/tap/flux
-		kind
-		derailed/k9s/k9s
-		dgunzy/tap/flux9s
-		kdash-rs/kdash/kdash
-		kubectx
-		kyverno
-		kustomize
-		go
-		sqlite
-		just
-		lefthook
-		ansible
-		python@3
-		opentofu
-		# terragrunt
-		tree-sitter-cli
-		# step
-		llama.cpp
-		pgcli
-		dbcli/tap/litecli
-		mycli
-		iredis
-		# lnav
-		# goaccess
-		hcloud
-		gh
-		dust
-		fx
-		superfile
-		cmatrix
-		pre-commit
-		yamllint
-		shellcheck
-		yarn
-		yq
-		grype # TODO: make an alias that utilizes the docker image
-		syft  # TODO: make an alias that utilizes the docker image
-		osv-scanner
-		# egctl
-		# viddy
-		# hey
-		# cloc
-		# cloudflared
-		# doppler
-		# direnv
-		# watchman
-		# ast-grep
-		# fd
-		# rbenv
-		# ruby-build
-		# cmus
-		# mutt
-		# act
-		# llm
-		# iftop
-		# tflint
-		# minikube
-		# ffmpeg
-		# graphviz
-		# wget
-	)
-
-	local batchsize=8
-	local len_packages=${#brew_packages_list[@]}
-	for ((i = 0; i < len_packages; i += 8)); do
-		brew install "${brew_packages_list[@]:i:batchsize}"
-	done
+	brew bundle install --upgrade --file ~/workspace/dotfiles/Brewfile
 
 	# linking config files
 	ln --force -s ~/workspace/dotfiles/bash/bashrc-full ~/.bash_aliases
@@ -371,33 +268,35 @@ main() {
 	ln --force -s ~/workspace/dotfiles/.gitconfig ~/.gitconfig
 	# mkdir -p ~/.config/hunk && ln --force -s ~/workspace/dotfiles/hunk.config.toml ~/.config/hunk/config.toml
 
+	sudo update-alternatives --set editor "$(command -v vim.basic)"
+
 	if ! grep -q -e "export GIT_COMMITTER_EMAIL" ~/.machine-config; then
-		echo 'export GIT_COMMITTER_EMAIL="mohamed.abuelwafa@gmail.com"' | tee -a ~/.machine-config &>/dev/null
-		echo 'export GIT_AUTHOR_EMAIL="mohamed.abuelwafa@gmail.com"' | tee -a ~/.machine-config &>/dev/null
+		echo 'export GIT_COMMITTER_EMAIL="mohamed.abuelwafa@gmail.com"' | tee -a ~/.machine-config &> /dev/null
+		echo 'export GIT_AUTHOR_EMAIL="mohamed.abuelwafa@gmail.com"' | tee -a ~/.machine-config &> /dev/null
 	fi
 
 	# if ! grep -q -e "export OPENAI_API_KEY" ~/.machine-config; then
-	# 	# echo 'export OPENAI_API_KEY="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"' | tee -a ~/.machine-config &>/dev/null
+	# 	# echo 'export OPENAI_API_KEY="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"' | tee -a ~/.machine-config &> /dev/null
 	# fi
 
 	if ! grep -q -e "export ENABLE_AUTOMATIC_SSH_AGENT" ~/.machine-config; then
-		echo 'export ENABLE_AUTOMATIC_SSH_AGENT="TRUE"' | tee -a ~/.machine-config &>/dev/null
+		echo 'export ENABLE_AUTOMATIC_SSH_AGENT="TRUE"' | tee -a ~/.machine-config &> /dev/null
 	fi
 
 	if ! grep -q -e "export ENABLE_KUBE_PROMPT" ~/.machine-config; then
-		echo 'export ENABLE_KUBE_PROMPT="TRUE"' | tee -a ~/.machine-config &>/dev/null
+		echo 'export ENABLE_KUBE_PROMPT="TRUE"' | tee -a ~/.machine-config &> /dev/null
 	fi
 
 	if ! grep -q -e "export ENABLE_NODE_PROMPT" ~/.machine-config; then
-		echo 'export ENABLE_NODE_PROMPT="TRUE"' | tee -a ~/.machine-config &>/dev/null
+		echo 'export ENABLE_NODE_PROMPT="TRUE"' | tee -a ~/.machine-config &> /dev/null
 	fi
 
 	if ! grep -q -e "export ENABLE_GCP_PROMPT" ~/.machine-config; then
-		echo 'export ENABLE_GCP_PROMPT="TRUE"' | tee -a ~/.machine-config &>/dev/null
+		echo 'export ENABLE_GCP_PROMPT="TRUE"' | tee -a ~/.machine-config &> /dev/null
 	fi
 
 	if ! grep -q -e "export ENABLE_AWS_PROMPT" ~/.machine-config; then
-		echo 'export ENABLE_AWS_PROMPT="TRUE"' | tee -a ~/.machine-config &>/dev/null
+		echo 'export ENABLE_AWS_PROMPT="TRUE"' | tee -a ~/.machine-config &> /dev/null
 	fi
 
 	if ! grep -q -e "export NVIM_NOTTYFAST" ~/.machine-config; then
@@ -452,6 +351,7 @@ main() {
 	install_lima
 
 	check_system_reboot
+	configure_ufw
 
 	echo -e "\n\e[90;102;2m INFO \e[m Review the values in ~/.machine-config."
 	echo -e "\n\e[90;102;2m INFO \e[m Logout and login again for all configuration changes to take effect."

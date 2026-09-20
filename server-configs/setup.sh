@@ -23,7 +23,7 @@ function setup_aws_cli() {
 		echo "=> installing AWS CLL"
 		curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" --output-dir /tmp -o "awscliv2.zip"
 		unzip -u awscliv2.zip
-		if command -v aws &>/dev/null; then
+		if command -v aws &> /dev/null; then
 			sudo ./aws/install --bin-dir /usr/local/bin --install-dir /usr/local/aws-cli --update
 		else
 			sudo ./aws/install
@@ -79,7 +79,7 @@ function setup_gcloud_cli() {
 	read -p "Setup and configure Google Cloud CLI? (y/n): " -r install_gcloud_cli
 	echo
 	if [[ ${install_gcloud_cli} =~ ^[Yy]$ ]]; then
-		if command -v gcloud &>/dev/null; then
+		if command -v gcloud &> /dev/null; then
 			echo "=> Google Cloud CLI is already installed. update"
 		else
 			echo "=> installing Google Cloud CLI"
@@ -146,7 +146,7 @@ function harden_ssh() {
 		local ssh_listen_port
 		read -p "SSH listen port: " -r ssh_listen_port
 
-		cat <<-EOF | sudo tee /etc/ssh/sshd_config.d/99-override.conf &>/dev/null
+		cat <<-EOF | sudo tee /etc/ssh/sshd_config.d/99-override.conf &> /dev/null
 			# disable root login
 			PermitRootLogin no
 
@@ -165,9 +165,9 @@ function harden_ssh() {
 
 		# enable the ssh port for ssh in firewall
 		if [[ -z "${ssh_listen_address}" ]]; then
-			command -v ufw >/dev/null 2>&1 && sudo ufw allow "${ssh_listen_port}"/tcp
+			command -v ufw > /dev/null 2>&1 && sudo ufw allow "${ssh_listen_port}"/tcp
 		else
-			command -v ufw >/dev/null 2>&1 && sudo ufw limit in proto tcp to "${ssh_listen_address}" port "${ssh_listen_port}" from 0.0.0.0/0 comment "allow ssh over vpn"
+			command -v ufw > /dev/null 2>&1 && sudo ufw limit in proto tcp to "${ssh_listen_address}" port "${ssh_listen_port}" from 0.0.0.0/0 comment "allow ssh over vpn"
 		fi
 
 		# restart the ssh service
@@ -185,7 +185,7 @@ function setup_nginx() {
 	if [[ ${install_nginx} =~ ^[Yy]$ ]]; then
 		echo "=> installing Nginx"
 		sudo apt-get install -y nginx nginx-extras
-		command -v ufw >/dev/null 2>&1 && sudo ufw allow http && sudo ufw reload
+		command -v ufw > /dev/null 2>&1 && sudo ufw allow http && sudo ufw reload
 	else
 		echo "Skipping install of Nginx"
 	fi
@@ -214,13 +214,13 @@ function setup_docker() {
 		local repo
 		repo="deb [arch=${arch} signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian ${codename} stable"
 
-		echo "${repo}" | sudo tee /etc/apt/sources.list.d/docker.list >/dev/null
+		echo "${repo}" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
 		sudo apt-get update
 
 		sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
-		getent group docker &>/dev/null || sudo groupadd docker
+		getent group docker &> /dev/null || sudo groupadd docker
 		sudo usermod -aG docker "${USER}"
 		newgrp docker
 
@@ -241,10 +241,10 @@ function setup_wireguard_client() {
 
 		# generate wireguard private key only if it doesn't exist
 		if [[ ! -f "/etc/wireguard/wg0.key" ]]; then
-			wg genkey | sudo tee /etc/wireguard/wg0.key &>/dev/null
+			wg genkey | sudo tee /etc/wireguard/wg0.key &> /dev/null
 		fi
 
-		sudo cat /etc/wireguard/wg0.key | wg pubkey | sudo tee /etc/wireguard/wg0.key.pub &>/dev/null
+		sudo cat /etc/wireguard/wg0.key | wg pubkey | sudo tee /etc/wireguard/wg0.key.pub &> /dev/null
 
 		echo
 		echo "==> The public key for wireguard is:"
@@ -258,7 +258,7 @@ function setup_wireguard_client() {
 		read -p "VPN server public key: " -r vpn_server_public_key
 		read -p "Client assigned IP: " -r vpn_client_ip
 		read -p "Client allowed IPs: " -r vpn_client_allowed_ips
-		cat <<-EOF | sudo tee /etc/wireguard/wg0.conf &>/dev/null
+		cat <<-EOF | sudo tee /etc/wireguard/wg0.conf &> /dev/null
 			[Interface]
 			Address = ${vpn_client_ip}/32
 			PrivateKey = $(sudo cat /etc/wireguard/wg0.key)
@@ -278,7 +278,7 @@ function setup_wireguard_client() {
 		# to fix ssh service error after restarts
 		sudo mkdir -p /etc/systemd/system/ssh.service.d
 		sudo touch /etc/systemd/system/ssh.service.d/override.conf
-		cat <<-EOF | sudo tee /etc/systemd/system/ssh.service.d/override.conf &>/dev/null
+		cat <<-EOF | sudo tee /etc/systemd/system/ssh.service.d/override.conf &> /dev/null
 			[Unit]
 			After=network.target auditd.service wg-quick@wg0.service
 			Requires=wg-quick@wg0.service
@@ -302,10 +302,10 @@ function setup_wireguard_server() {
 
 		# generate wireguard private key only if it doesn't exist
 		if [[ ! -f "/etc/wireguard/wg0.key" ]]; then
-			wg genkey | sudo tee /etc/wireguard/wg0.key &>/dev/null
+			wg genkey | sudo tee /etc/wireguard/wg0.key &> /dev/null
 		fi
 
-		sudo cat /etc/wireguard/wg0.key | wg pubkey | sudo tee /etc/wireguard/wg0.key.pub &>/dev/null
+		sudo cat /etc/wireguard/wg0.key | wg pubkey | sudo tee /etc/wireguard/wg0.key.pub &> /dev/null
 
 		echo
 		echo "==> The public key for wireguard is:"
@@ -316,7 +316,7 @@ function setup_wireguard_server() {
 		echo
 		read -p "VPN listen port: " -r vpn_listen_port
 		read -p "Wireguard subnets(example 10.0.0.0/8) [use commas for multiple subnets]: " -r vpn_network_subnet
-		cat <<-EOF | sudo tee /etc/wireguard/wg0.conf &>/dev/null
+		cat <<-EOF | sudo tee /etc/wireguard/wg0.conf &> /dev/null
 			[Interface]
 			Address = ${vpn_network_subnet}
 			ListenPort = ${vpn_listen_port}
@@ -343,8 +343,8 @@ function setup_prometheus_node_exporter() {
 	if [[ ${install_node_exporter} =~ ^[Yy]$ ]]; then
 		echo "=> setting up user account/group for monitoring"
 		# create group and user account if they doesn't exist
-		getent group monitoring &>/dev/null || sudo groupadd monitoring
-		id -u node_exporter &>/dev/null || sudo useradd \
+		getent group monitoring &> /dev/null || sudo groupadd monitoring
+		id -u node_exporter &> /dev/null || sudo useradd \
 			--no-create-home \
 			--no-user-group \
 			--shell /usr/sbin/nologin \
@@ -389,7 +389,7 @@ function setup_prometheus_node_exporter() {
 		sudo mkdir -p /etc/prometheus/exporters/node-exporter
 
 		# sudo touch /etc/prometheus/exporters/node-exporter/web-config.yml
-		# sudo tee -a /etc/prometheus/exporters/node-exporter/web-config.yml &>/dev/null <<-EOF
+		# sudo tee -a /etc/prometheus/exporters/node-exporter/web-config.yml &> /dev/null <<-EOF
 		# EOF
 
 		local node_exporter_listen_address
@@ -402,7 +402,7 @@ function setup_prometheus_node_exporter() {
 		fi
 
 		sudo touch /etc/systemd/system/prometheus-node-exporter.service
-		sudo tee -a /etc/systemd/system/prometheus-node-exporter.service &>/dev/null <<-EOF
+		sudo tee -a /etc/systemd/system/prometheus-node-exporter.service &> /dev/null <<-EOF
 			[Unit]
 			Description=Prometheus Node Exporter
 			After=network-online.target
@@ -468,11 +468,11 @@ function setup_grafana_alloy() {
 	if [[ ${install_alloy} =~ ^[Yy]$ ]]; then
 		echo "=> setting up Grafana alloy"
 
-		if command -v alloy &>/dev/null; then
+		if command -v alloy &> /dev/null; then
 			echo "=> Grafana alloy is already installed. update through apt."
 		else
 			sudo mkdir -p /etc/apt/keyrings/
-			curl -fsSL https://apt.grafana.com/gpg.key | gpg --dearmor | sudo tee /etc/apt/keyrings/grafana.gpg >/dev/null
+			curl -fsSL https://apt.grafana.com/gpg.key | gpg --dearmor | sudo tee /etc/apt/keyrings/grafana.gpg > /dev/null
 			local grafana_repo="deb [signed-by=/etc/apt/keyrings/grafana.gpg] https://apt.grafana.com stable main"
 			echo "${grafana_repo}" | sudo tee /etc/apt/sources.list.d/grafana.list
 
@@ -603,7 +603,7 @@ function setup_containerd() {
 		echo "=> setting up containerd systemd service"
 		# download containerd systemd service file
 		sudo mkdir -p /usr/local/lib/systemd/system
-		curl -fsSL https://raw.githubusercontent.com/containerd/containerd/main/containerd.service | sudo tee /usr/local/lib/systemd/system/containerd.service &>/dev/null
+		curl -fsSL https://raw.githubusercontent.com/containerd/containerd/main/containerd.service | sudo tee /usr/local/lib/systemd/system/containerd.service &> /dev/null
 		sudo systemctl daemon-reload
 		sudo systemctl enable --now containerd
 
@@ -747,8 +747,8 @@ function setup_hostname() {
 			echo "Updating the hosts file..."
 			cp /etc/hosts /etc/hosts.bak-"$(date +%s)"
 			sed -i -e "s/^127.0.1.1\(.*\)/# 127.0.1.1\1/" /etc/hosts
-			echo "" | sudo tee -a /etc/hosts &>/dev/null
-			echo "127.0.1.1    ${new_hostname}" | sudo tee -a /etc/hosts &>/dev/null
+			echo "" | sudo tee -a /etc/hosts &> /dev/null
+			echo "127.0.1.1    ${new_hostname}" | sudo tee -a /etc/hosts &> /dev/null
 			echo "Done."
 			echo
 		fi
@@ -765,7 +765,7 @@ function setup_harbor() {
 		echo "=> installing Harbor"
 		echo "TODO"
 		# install docker dependency if not already installed
-		if ! command -v docker &>/dev/null; then
+		if ! command -v docker &> /dev/null; then
 			setup_docker
 		fi
 		# download the install script
@@ -848,7 +848,7 @@ main() {
 		cp ~/.bash_aliases ~/.bash_aliases-bak-"$(date +%s)"
 		echo '=> old ~/.bash_aliases have been backed up'
 	fi
-	curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/bash/bashrc >~/.bash_aliases
+	curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/bash/bashrc > ~/.bash_aliases
 
 	# backup .vimrc file if it already exists
 	if [[ -f "${HOME}/.vimrc" ]]; then

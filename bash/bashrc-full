@@ -194,14 +194,13 @@ function update_machine_config() {
         sudo apt autoclean && sudo apt autoremove -y
     fi
 
-    # if [[ "${os_name}" == "Darwin" ]]; then
-    # fi
-
     (cd ~/workspace/dotfiles && git fetch --all --prune && git pull --rebase)
-    brew update
-    brew upgrade -y
+
+    brew bundle cleanup --force --file ~/workspace/dotfiles/Brewfile
+    brew bundle install --upgrade --file ~/workspace/dotfiles/Brewfile
+
     pi-build
-    nvim +PlugClean +PlugUpgrade +PlugUpdate +MasonToolsClean +MasonUpdate +MasonToolsUpdate +10sleep! +qall
+    nvim +PlugClean +PlugUpgrade +PlugUpdate +MasonToolsClean +MasonUpdate +MasonToolsUpdate +15sleep! +qall
     command -v gcloud && gcloud components update || true
 }
 
