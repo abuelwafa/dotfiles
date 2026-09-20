@@ -38,28 +38,6 @@ function check_system_reboot() {
 	echo
 }
 
-function mac_setup() {
-	# install appropriate gnu utils on macos
-	# install GNU version of sed (for MACOS)
-	# MacOS doesn't have the watch command
-
-	# install docker cli through homebrew
-	# install colima
-	local os_name
-	os_name="$(uname -s)"
-	if [[ "${os_name}" == "Darwin" ]]; then
-		echo "=> Starting Mac specific setup"
-		echo "=> Installing GNU version of sed"
-		echo "=> Installing watch command"
-		echo "=> Installing GNU core utils"
-		echo "=> installing Colima and docker cli"
-		brew install gnu-sed watch coreutils colima docker openssl@3
-	else
-		echo "Skipping Mac specific setup."
-	fi
-	echo
-}
-
 function configure_ufw() {
     sudo ufw default deny incoming
     sudo ufw enable
@@ -148,7 +126,6 @@ function setup_neovim() {
 	ln --force -s ~/workspace/dotfiles/nvim/init.lua ~/.config/nvim/init.lua
 	mkdir -p ~/.nvim/_temp
 	mkdir -p ~/.nvim/_backup
-	brew install tree-sitter-cli
 	luarocks config lua_version 5.5
 	luarocks install mimetypes
 	luarocks install xml2lua
@@ -346,7 +323,6 @@ main() {
 
 	setup_trivy
 	setup_opencode
-	mac_setup
 	install_nerdfonts
 	install_lima
 

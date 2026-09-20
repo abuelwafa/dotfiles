@@ -5,16 +5,13 @@ tap "dbcli/tap", trusted: true
 tap "derailed/k9s", trusted: true
 tap "dgunzy/tap", trusted: true
 tap "fluxcd/tap", trusted: true
-tap "jesseduffield/lazydocker"
-tap "kdash-rs/kdash", trusted: true
-tap "modem-dev/tap"
 tap "nikitabobko/tap"
 tap "owenrumney/tools"
 tap "shubh-io/tap"
 tap "tinted-theming/tinted"
 
 brew "act"
-brew "openssl@3"
+brew "openssl@3" if OS.mac?
 brew "sqlite"
 brew "python@3.14"
 brew "tree"
@@ -27,9 +24,9 @@ brew "cmake"
 brew "cmatrix"
 brew "cmus"
 brew "cocoapods"
-brew "coreutils"
-brew "dive"
-brew "docker"
+brew "coreutils" if OS.mac?
+brew "dive" # https://github.com/wagoodman/dive
+brew "docker" if OS.mac?
 brew "doggo"
 brew "dust"
 brew "egctl"
@@ -41,13 +38,13 @@ brew "gh"
 brew "git"
 brew "git-delta"
 brew "glow"
-brew "gnu-sed"
+brew "gnu-sed" if OS.mac?
 brew "gnupg"
 brew "go"
 brew "goaccess"
 brew "graphviz"
 brew "grype"
-brew "hcloud"
+# brew "hcloud"
 brew "helm"
 brew "hey"
 brew "htop"
@@ -70,18 +67,18 @@ brew "lefthook"
 brew "libpq"
 brew "qemu"
 brew "lima-additional-guestagents"
-brew "litecli"
+brew "dbcli/tap/litecli"
 brew "llama.cpp"
 brew "lnav"
-brew "lua@5.4"
+brew "lua"
 brew "luarocks"
 brew "mas"
 brew "minikube"
 brew "mutt"
-brew "mycli"
+# brew "mycli"
 brew "neovim"
 brew "nmap"
-brew "node@24"
+brew "node@26"
 brew "opentofu"
 brew "osv-scanner"
 brew "pgcli"
@@ -92,18 +89,18 @@ brew "ripgrep"
 brew "shellcheck"
 brew "socket_vmnet"
 brew "sops"
-brew "superfile"
+# brew "superfile"
 brew "syft"
 brew "task"
-brew "terragrunt"
+# brew "terragrunt"
 brew "tflint"
 brew "tmux"
 brew "viddy"
 brew "vim"
-brew "watch"
+brew "watch" if OS.mac?
 brew "watchman"
 brew "yamllint"
-brew "yarn"
+# brew "yarn"
 brew "yq"
 brew "derailed/k9s/k9s"
 brew "dgunzy/tap/flux9s"
@@ -111,6 +108,32 @@ brew "fluxcd/tap/flux", trusted: true
 brew "jesseduffield/lazydocker/lazydocker", trusted: true
 brew "kdash-rs/kdash/kdash", trusted: true
 # brew "modem-dev/tap/hunk", trusted: true
+# egctl
+# viddy
+# hey
+# cloc
+# cloudflared
+# doppler
+# direnv
+# watchman
+# ast-grep
+# fd
+# rbenv
+# ruby-build
+# cmus
+# mutt
+# act
+# llm
+# iftop
+# tflint
+# minikube
+# ffmpeg
+# graphviz
+# wget
+# step
+# lnav
+# goaccess
+
 go "golang.org/x/tools/gopls"
 go "honnef.co/go/tools/cmd/staticcheck"
 go "github.com/asciimoo/wuzz"
@@ -138,6 +161,10 @@ cask "font-jetbrains-mono-nerd-font"
 # cask "lazytrivy"
 
 # MAC only apps
+# Installing GNU version of sed
+# macos doesn't have the watch command
+# Installing GNU core utils
+# installing Colima and docker cli
 cask "coteditor"
 mas "Microsoft Excel", id: 462058435
 mas "WireGuard", id: 1451685025
@@ -146,5 +173,5 @@ mas "Xcode", id: 497799835
 cask "stats"
 brew "lima"
 cask "meld"
-brew "colima", restart_service: :changed
+brew "colima" if OS.mac?, restart_service: :changed
 # cask "aerospace"
