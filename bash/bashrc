@@ -3,13 +3,13 @@
 # curl -fL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/bash/bashrc > ~/.bashrc
 
 function banner() {
-    echo
-    echo "   ▄▄   █                    ▀▀█                    ▄▀▀         "
-    echo "   ██   █▄▄▄   ▄   ▄   ▄▄▄     █   ▄     ▄  ▄▄▄   ▄▄█▄▄   ▄▄▄   "
-    echo "  █  █  █▀ ▀█  █   █  █▀  █    █   ▀▄ ▄ ▄▀ ▀   █    █    ▀   █  "
-    echo "  █▄▄█  █   █  █   █  █▀▀▀▀    █    █▄█▄█  ▄▀▀▀█    █    ▄▀▀▀█  "
-    echo " █    █ ██▄█▀  ▀▄▄▀█  ▀█▄▄▀    ▀▄▄   █ █   ▀▄▄▀█    █    ▀▄▄▀█  "
-    echo
+	echo
+	echo "   ▄▄   █                    ▀▀█                    ▄▀▀         "
+	echo "   ██   █▄▄▄   ▄   ▄   ▄▄▄     █   ▄     ▄  ▄▄▄   ▄▄█▄▄   ▄▄▄   "
+	echo "  █  █  █▀ ▀█  █   █  █▀  █    █   ▀▄ ▄ ▄▀ ▀   █    █    ▀   █  "
+	echo "  █▄▄█  █   █  █   █  █▀▀▀▀    █    █▄█▄█  ▄▀▀▀█    █    ▄▀▀▀█  "
+	echo " █    █ ██▄█▀  ▀▄▄▀█  ▀█▄▄▀    ▀▄▄   █ █   ▀▄▄▀█    █    ▀▄▄▀█  "
+	echo
 }
 
 export PATH=/usr/sbin/:${PATH}
@@ -44,7 +44,7 @@ alias .......='cd ../../../../../..'
 alias ........='cd ../../../../../../..'
 
 function rule() {
-    printf "%$(tput cols)s\n" | tr " " "-" # ━
+	printf "%$(tput cols)s\n" | tr " " "-" # ━
 }
 
 # to make sudo work with aliases
@@ -73,27 +73,27 @@ alias gnewbranch='git checkout -b'
 alias gclean='git clean -ifdx'
 
 function gstash() {
-    if [[ -z "$1" ]]; then
-        git stash list
-    else
-        git stash show stash@"{""$1""}" -p
-    fi
+	if [[ -z "$1" ]]; then
+		git stash list
+	else
+		git stash show stash@"{""$1""}" -p
+	fi
 }
 
 function gdropstash() {
-    if [[ -z "$1" ]]; then
-        echo "Specify the id of the stash you want to drop."
-    else
-        git stash drop stash@"{""$1""}"
-    fi
+	if [[ -z "$1" ]]; then
+		echo "Specify the id of the stash you want to drop."
+	else
+		git stash drop stash@"{""$1""}"
+	fi
 }
 
 function gpopstash() {
-    if [[ -z "$1" ]]; then
-        echo "Specify the id of the stash you want to apply."
-    else
-        git stash pop stash@"{""$1""}"
-    fi
+	if [[ -z "$1" ]]; then
+		echo "Specify the id of the stash you want to apply."
+	else
+		git stash pop stash@"{""$1""}"
+	fi
 }
 alias gsavestash='git stash push --include-untracked'
 
@@ -102,8 +102,8 @@ alias mv='mv -i'
 alias remove='rm -rf'
 
 alias sctl='systemctl'
-if command -v nerdctl &>/dev/null 2>&1; then
-    alias docker="sudo nerdctl"
+if command -v nerdctl &> /dev/null 2>&1; then
+	alias docker="sudo nerdctl"
 fi
 
 alias python='python3'
@@ -132,7 +132,7 @@ alias yamltojson='yq -o json'
 alias jsontoyaml='yq -p json -o yaml'
 
 function serve() {
-    docker run --rm -p "$1":80/tcp -v "$(pwd)":/usr/share/nginx/html:ro nginx:stable-alpine
+	docker run --rm -p "$1":80/tcp -v "$(pwd)":/usr/share/nginx/html:ro nginx:stable-alpine
 }
 
 alias lzd="lazydocker"
@@ -141,133 +141,133 @@ alias is_reboot_required='[ ! -f /var/run/reboot-required ] && echo "FALSE" || e
 
 # function for downloading files from urls
 function download() {
-    if [[ -n "$2" ]]; then
-        curl -# "$1" -o "$2"
-    else
-        curl -O -# "$1"
-    fi
+	if [[ -n "$2" ]]; then
+		curl -# "$1" -o "$2"
+	else
+		curl -O -# "$1"
+	fi
 }
 
 # parses jwt token and passes the output to fx
 function jwtparse() {
-    echo -n "Enter JWT token: "
+	echo -n "Enter JWT token: "
 
-    read -r token
+	read -r token
 
-    local payload
-    payload="$(echo -n "${token}" | cut -d "." -f 2)"
-    local result="${payload}"
+	local payload
+	payload="$(echo -n "${token}" | cut -d "." -f 2)"
+	local result="${payload}"
 
-    # pad the end of string by appending = to make
-    # the encoded string length equals to multiples of 4
-    local padlen=$((${#payload} % 4))
-    if [[ ${padlen} -eq 2 ]]; then
-        result="${payload}"'=='
-    elif [[ ${padlen} -eq 3 ]]; then
-        result="${payload}"'='
-    fi
+	# pad the end of string by appending = to make
+	# the encoded string length equals to multiples of 4
+	local padlen=$((${#payload} % 4))
+	if [[ ${padlen} -eq 2 ]]; then
+		result="${payload}"'=='
+	elif [[ ${padlen} -eq 3 ]]; then
+		result="${payload}"'='
+	fi
 
-    if command -v fx &>/dev/null 2>&1; then
-        echo -n "${result}" | base64 -d | fx
-    elif command -v jq &>/dev/null 2>&1; then
-        echo -n "${result}" | base64 -d | jq '.' | ${PAGER}
-    else
-        echo -n "${result}" | base64 -d | ${PAGER}
-    fi
+	if command -v fx &> /dev/null 2>&1; then
+		echo -n "${result}" | base64 -d | fx
+	elif command -v jq &> /dev/null 2>&1; then
+		echo -n "${result}" | base64 -d | jq '.' | ${PAGER}
+	else
+		echo -n "${result}" | base64 -d | ${PAGER}
+	fi
 }
 
 backup-file() {
-    cp "$1" "$1.bak-$(date +%s)"
+	cp "$1" "$1.bak-$(date +%s)"
 }
 
 function pg_connect() {
-    echo -n "Enter DB host: "
-    read -r db_host
+	echo -n "Enter DB host: "
+	read -r db_host
 
-    echo -n "Enter DB name: "
-    read -r db_name
+	echo -n "Enter DB name: "
+	read -r db_name
 
-    echo -n "Enter DB user: "
-    read -r db_user
+	echo -n "Enter DB user: "
+	read -r db_user
 
-    echo -n "Enter DB password: "
-    read -r -s db_password
-    echo
+	echo -n "Enter DB password: "
+	read -r -s db_password
+	echo
 
-    echo -n "Enter DB port(5432): "
-    read -r db_port
+	echo -n "Enter DB port(5432): "
+	read -r db_port
 
-    local app
-    if command -v pgcli &>/dev/null 2>&1; then
-        app="pgcli"
-    elif command -v psql &>/dev/null 2>&1; then
-        app="psql"
-    else
-        echo "Error: Neither pgcli or psql are not installed. Exiting."
-        exit 1
-    fi
+	local app
+	if command -v pgcli &> /dev/null 2>&1; then
+		app="pgcli"
+	elif command -v psql &> /dev/null 2>&1; then
+		app="psql"
+	else
+		echo "Error: Neither pgcli or psql are not installed. Exiting."
+		exit 1
+	fi
 
-    local cmd="${app} postgresql://${db_user}:${db_password}@${db_host}:${db_port}/${db_name}"
+	local cmd="${app} postgresql://${db_user}:${db_password}@${db_host}:${db_port}/${db_name}"
 
-    eval "${cmd}"
+	eval "${cmd}"
 }
 
 # compressing and extracting zip files
 # new alternative: just use zip and unzip
 function extract() {
-    echo "Extracting $1"
-    tar -xzf "$1"
-    echo "Done extracting $1..."
+	echo "Extracting $1"
+	tar -xzf "$1"
+	echo "Done extracting $1..."
 }
 function compress() {
-    echo "Compressing $1"
-    tar -cvzf "$1"
-    echo "Done compressing..."
+	echo "Compressing $1"
+	tar -cvzf "$1"
+	echo "Done compressing..."
 }
 
 # enable bash completions
 _ENABLE_KUBE_PROMPT="false"
-if command -v kubectl &>/dev/null 2>&1; then
-    alias kctl='kubectl'
-    alias k='kubectl'
-    complete -o default -F __start_kubectl kctl
-    complete -o default -F __start_kubectl k
-    if [[ "${ENABLE_KUBE_PROMPT:-false}" == "true" ]]; then
-        _ENABLE_KUBE_PROMPT="true"
-    fi
+if command -v kubectl &> /dev/null 2>&1; then
+	alias kctl='kubectl'
+	alias k='kubectl'
+	complete -o default -F __start_kubectl kctl
+	complete -o default -F __start_kubectl k
+	if [[ "${ENABLE_KUBE_PROMPT:-false}" == "true" ]]; then
+		_ENABLE_KUBE_PROMPT="true"
+	fi
 fi
 
-if command -v kustomize &>/dev/null 2>&1; then
-    source <(kustomize completion bash)
+if command -v kustomize &> /dev/null 2>&1; then
+	source <(kustomize completion bash)
 fi
 
 # enable fluxcd completions
-if command -v flux &>/dev/null 2>&1; then
-    source <(flux completion bash)
+if command -v flux &> /dev/null 2>&1; then
+	source <(flux completion bash)
 fi
 
 # enable helm completion
-if command -v helm &>/dev/null 2>&1; then
-    source <(helm completion bash)
+if command -v helm &> /dev/null 2>&1; then
+	source <(helm completion bash)
 fi
 
-if command -v hcloud &>/dev/null 2>&1; then
-    source <(hcloud completion bash)
+if command -v hcloud &> /dev/null 2>&1; then
+	source <(hcloud completion bash)
 fi
 
 # disable the default virtualenv prompt change
 export VIRTUAL_ENV_DISABLE_PROMPT=1
 
 function virtualenv_info() {
-    # Get Virtual Env
-    if [[ -n "${VIRTUAL_ENV}" ]]; then
-        # Strip out the path and just leave the env name
-        venv="${VIRTUAL_ENV##*/}"
-    else
-        # In case you don't have one activated
-        venv=''
-    fi
-    [[ -n "${venv}" ]] && echo -ne "(venv:${venv}) "
+	# Get Virtual Env
+	if [[ -n "${VIRTUAL_ENV}" ]]; then
+		# Strip out the path and just leave the env name
+		venv="${VIRTUAL_ENV##*/}"
+	else
+		# In case you don't have one activated
+		venv=''
+	fi
+	[[ -n "${venv}" ]] && echo -ne "(venv:${venv}) "
 }
 
 # ------------------------------------
@@ -307,101 +307,101 @@ venv_color='\[\e[38;5;214m\]'
 txtrst='\[\e[0m\]'
 
 function system_reboot_prompt() {
-    if [[ -f /var/run/reboot-required ]]; then
-        echo -ne " \e[1;30;41m [ REBOOT REQUIRED ] \e[0m "
-    fi
+	if [[ -f /var/run/reboot-required ]]; then
+		echo -ne " \e[1;30;41m [ REBOOT REQUIRED ] \e[0m "
+	fi
 }
 
 function in_ssh_prompt() {
-    if [[ -n "${SSH_CLIENT}" ]] || [[ -n "${SSH_TTY}" ]]; then
-        echo -ne " \e[1;30;41m (SSH) \e[0m "
-    fi
+	if [[ -n "${SSH_CLIENT}" ]] || [[ -n "${SSH_TTY}" ]]; then
+		echo -ne " \e[1;30;41m (SSH) \e[0m "
+	fi
 }
 
 _ENABLE_NODE_PROMPT="false"
 if [[ "${ENABLE_NODE_PROMPT:-false}" == "true" ]]; then
-    if command -v node &>/dev/null 2>&1; then
-        _ENABLE_NODE_PROMPT="true"
-    fi
+	if command -v node &> /dev/null 2>&1; then
+		_ENABLE_NODE_PROMPT="true"
+	fi
 fi
 function print_node_prompt() {
-    if [[ "${_ENABLE_NODE_PROMPT}" == "true" ]]; then
-        echo -ne " \e[48;5;22;38;5;15m Node: $(node -v) \e[0m "
-    fi
+	if [[ "${_ENABLE_NODE_PROMPT}" == "true" ]]; then
+		echo -ne " \e[48;5;22;38;5;15m Node: $(node -v) \e[0m "
+	fi
 }
 
 function kube_prompt() {
-    if [[ "${_ENABLE_KUBE_PROMPT}" == "true" ]]; then
-        local context
-        # ref: https://unix.stackexchange.com/questions/786103/in-bash-how-to-capture-stdout-and-the-exit-code-of-a-command-when-the-e-flag-i
-        exit_code=0
-        context="$(kubectl config view --minify -o jsonpath="{.contexts[0]}" 2>&1)" || exit_code=$?
-        if [[ "${exit_code}" == 0 ]]; then
-            local context_name
-            context_name="$(echo "${context}" | jq -r '.name')"
-            local namespace
-            namespace="$(echo "${context}" | jq -r '.context.namespace')"
-            echo -n "[ 󱃾 ${context_name:--}:${namespace:--} ] "
-            # echo -ne "\e[1;0;36;38;5;4m[ 󱃾 ${context_name:--}:${namespace:--} ] "
-            # echo -ne "\e[48;5;4;38;5;0m 󱃾 ${context_name}:${namespace} \e[m "
-        fi
-    fi
+	if [[ "${_ENABLE_KUBE_PROMPT}" == "true" ]]; then
+		local context
+		# ref: https://unix.stackexchange.com/questions/786103/in-bash-how-to-capture-stdout-and-the-exit-code-of-a-command-when-the-e-flag-i
+		exit_code=0
+		context="$(kubectl config view --minify -o jsonpath="{.contexts[0]}" 2>&1)" || exit_code=$?
+		if [[ "${exit_code}" == 0 ]]; then
+			local context_name
+			context_name="$(echo "${context}" | jq -r '.name')"
+			local namespace
+			namespace="$(echo "${context}" | jq -r '.context.namespace')"
+			echo -n "[ 󱃾 ${context_name:--}:${namespace:--} ] "
+			# echo -ne "\e[1;0;36;38;5;4m[ 󱃾 ${context_name:--}:${namespace:--} ] "
+			# echo -ne "\e[48;5;4;38;5;0m 󱃾 ${context_name}:${namespace} \e[m "
+		fi
+	fi
 }
 
 _ENABLE_GCP_PROMPT="false"
 if [[ "${ENABLE_GCP_PROMPT:-false}" == "true" ]]; then
-    if command -v gcloud &>/dev/null 2>&1; then
-        _ENABLE_GCP_PROMPT="true"
-    fi
+	if command -v gcloud &> /dev/null 2>&1; then
+		_ENABLE_GCP_PROMPT="true"
+	fi
 fi
 
 function gcp_prompt() {
-    if [[ "${_ENABLE_GCP_PROMPT}" == "true" ]]; then
-        local config
-        config="$(gcloud config configurations describe default --format=json)"
-        local project
-        project="$(echo "${config}" | jq -r '.properties.core.project')"
-        local account
-        account="$(echo "${config}" | jq -r '.properties.core.account')"
-        echo -ne "\e[1;1;36;38;5;33m[   ${account}  ${project:---} ]\e[0m "
-    fi
+	if [[ "${_ENABLE_GCP_PROMPT}" == "true" ]]; then
+		local config
+		config="$(gcloud config configurations describe default --format=json)"
+		local project
+		project="$(echo "${config}" | jq -r '.properties.core.project')"
+		local account
+		account="$(echo "${config}" | jq -r '.properties.core.account')"
+		echo -ne "\e[1;1;36;38;5;33m[   ${account}  ${project:---} ]\e[0m "
+	fi
 }
 
 _ENABLE_AWS_PROMPT="false"
 if [[ "${ENABLE_AWS_PROMPT:-false}" == "true" ]]; then
-    if command -v aws &>/dev/null 2>&1; then
-        _ENABLE_AWS_PROMPT="true"
-    fi
+	if command -v aws &> /dev/null 2>&1; then
+		_ENABLE_AWS_PROMPT="true"
+	fi
 fi
 
 function aws_prompt() {
-    if [[ "${_ENABLE_AWS_PROMPT}" == "true" ]]; then
-        local account
-        account="$(echo -ne account)"
-        local region
-        region="$(echo -ne region)"
-        echo -ne "\e[1;1;36;38;5;202m[ 󰸏  ${account} : ${region} ]\e[0m "
-    fi
+	if [[ "${_ENABLE_AWS_PROMPT}" == "true" ]]; then
+		local account
+		account="$(echo -ne account)"
+		local region
+		region="$(echo -ne region)"
+		echo -ne "\e[1;1;36;38;5;202m[ 󰸏  ${account} : ${region} ]\e[0m "
+	fi
 }
 
 set_bash_prompt() {
-    local prompt_string
-    prompt_string="\n"                            # extra space between commands
-    prompt_string="${bldgreen}$(rule)${txtrst}\n" # horizontal line
-    prompt_string="${prompt_string}${debian_chroot:+(${debian_chroot})}${blue}\u@\H${txtrst} "
-    prompt_string="${prompt_string}\$(in_ssh_prompt)"
-    prompt_string="${prompt_string}\$(system_reboot_prompt)"
-    prompt_string="${prompt_string}\$(print_node_prompt)"
-    prompt_string="${prompt_string}\n"
-    prompt_string="${prompt_string}${yellow}\w${purple}"
-    prompt_string="${prompt_string}\$(which git &>/dev/null && __git_ps1)${txtrst} "
-    prompt_string="${prompt_string}\$(aws_prompt)${txtrst}"
-    prompt_string="${prompt_string}\$(gcp_prompt)${txtrst}"
-    prompt_string="${prompt_string}\n"
-    prompt_string="${prompt_string}${venv_color}\$(virtualenv_info)${txtrst}"
-    prompt_string="${prompt_string}${blue}\$(kube_prompt)${txtrst}"
-    prompt_string="${prompt_string}${cyan}-> ${txtrst}"
-    PS1="${prompt_string}"
+	local prompt_string
+	prompt_string="\n"                            # extra space between commands
+	prompt_string="${bldgreen}$(rule)${txtrst}\n" # horizontal line
+	prompt_string="${prompt_string}${debian_chroot:+(${debian_chroot})}${blue}\u@\H${txtrst} "
+	prompt_string="${prompt_string}\$(in_ssh_prompt)"
+	prompt_string="${prompt_string}\$(system_reboot_prompt)"
+	prompt_string="${prompt_string}\$(print_node_prompt)"
+	prompt_string="${prompt_string}\n"
+	prompt_string="${prompt_string}${yellow}\w${purple}"
+	prompt_string="${prompt_string}\$(which git &>/dev/null && __git_ps1)${txtrst} "
+	prompt_string="${prompt_string}\$(aws_prompt)${txtrst}"
+	prompt_string="${prompt_string}\$(gcp_prompt)${txtrst}"
+	prompt_string="${prompt_string}\n"
+	prompt_string="${prompt_string}${venv_color}\$(virtualenv_info)${txtrst}"
+	prompt_string="${prompt_string}${blue}\$(kube_prompt)${txtrst}"
+	prompt_string="${prompt_string}${cyan}-> ${txtrst}"
+	PS1="${prompt_string}"
 }
 
 export GIT_PS1_SHOWCONFLICTSTATE=1
@@ -412,43 +412,43 @@ PROMPT_COMMAND=set_bash_prompt
 # run the ssh agent
 SSH_ENV="${HOME}/.ssh/.agent_env"
 function initialize_ssh_agent() {
-    ssh-agent -s | sed 's/^echo/#echo/' >"${SSH_ENV}"
-    chmod 600 "${SSH_ENV}"
-    source "${SSH_ENV}" &>/dev/null
-    ssh-add ~/.ssh/id_ed25519
+	ssh-agent -s | sed 's/^echo/#echo/' > "${SSH_ENV}"
+	chmod 600 "${SSH_ENV}"
+	source "${SSH_ENV}" &> /dev/null
+	ssh-add ~/.ssh/id_ed25519
 }
 
 function start_ssh_agent() {
-    if [[ -f "${SSH_ENV}" ]]; then
-        source "${SSH_ENV}" &>/dev/null
-        ps -ef | grep "${SSH_AGENT_PID}" | grep -e "ssh-agent" >/dev/null || {
-            initialize_ssh_agent
-        }
-    else
-        initialize_ssh_agent
-    fi
+	if [[ -f "${SSH_ENV}" ]]; then
+		source "${SSH_ENV}" &> /dev/null
+		ps -ef | grep "${SSH_AGENT_PID}" | grep -e "ssh-agent" > /dev/null || {
+			initialize_ssh_agent
+		}
+	else
+		initialize_ssh_agent
+	fi
 }
 
 function update_setup() {
-    sudo apt update
+	sudo apt update
 
-    sudo apt upgrade
+	sudo apt upgrade
 
-    sudo apt autoremove
+	sudo apt autoremove
 
-    curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/bash/bashrc >~/.bash_aliases
+	curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/bash/bashrc > ~/.bash_aliases
 
-    curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/vim/.vimrc >~/.vimrc
-    sudo update-alternatives --set editor "$(command -v vim.basic)"
+	curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/vim/.vimrc > ~/.vimrc
+	sudo update-alternatives --set editor "$(command -v vim.basic)"
 
-    curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/tmux/tmux-minimal.conf >~/.tmux.conf
+	curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/tmux/tmux-minimal.conf > ~/.tmux.conf
 
-    # check if system reboot is required
-    [[ -f /var/run/reboot-required ]] && echo "=> System reboot is required."
+	# check if system reboot is required
+	[[ -f /var/run/reboot-required ]] && echo "=> System reboot is required."
 }
 
 if [[ -v ENABLE_AUTOMATIC_SSH_AGENT ]]; then
-    start_ssh_agent
+	start_ssh_agent
 fi
 
 # machine specific config/overrides

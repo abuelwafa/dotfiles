@@ -39,39 +39,8 @@ function check_system_reboot() {
 }
 
 function configure_ufw() {
-    sudo ufw default deny incoming
-    sudo ufw enable
-}
-
-function install_lima() {
-	read -p "Install Lima for managing virtual machines? choose yes only if the system supports virtualization. (y/n): " -r setup_lima
-	echo
-	if [[ ${setup_lima} =~ ^[Yy]$ ]]; then
-		echo "=> Installing Lima, and additional guest agents"
-		brew install lima lima-additional-guestagents
-	else
-		echo "Skipping install of lima"
-	fi
-	echo
-}
-
-function install_nerdfonts() {
-	read -p "Install nerdfonts through homebrew? if you are in a desktop environment (y/n): " -r setup_nerdfonts
-	echo
-	if [[ ${setup_nerdfonts} =~ ^[Yy]$ ]]; then
-		brew install --cask \
-			font-meslo-lg-nerd-font \
-			font-jetbrains-mono-nerd-font
-		# font-fira-mono-nerd-font \
-		# font-hack-nerd-font \
-		# font-inconsolata-go-nerd-font \
-		# font-roboto-mono-nerd-font \
-		# font-ubuntu-mono-nerd-font \
-		# font-ubuntu-sans-nerd-font \
-	else
-		echo "Skipping install of nerd fonts"
-	fi
-	echo
+	sudo ufw default deny incoming
+	sudo ufw enable
 }
 
 function setup_sdkman() {
@@ -188,8 +157,8 @@ main() {
 	echo "=> Setting up DB connections file"
 	if [[ ! -f ~/workspace/db-connections/connections.json ]]; then
 		mkdir -p ~/workspace/db-connections
-		echo '[{ "name": "postgres-local", "url": "postgresql://postgres:postgres@localhost:5432/postgres" }]' |
-			tee ~/workspace/db-connections/connections.json &> /dev/null
+		echo '[{ "name": "postgres-local", "url": "postgresql://postgres:postgres@localhost:5432/postgres" }]' \
+			| tee ~/workspace/db-connections/connections.json &> /dev/null
 	fi
 
 	# increase inotify watchers
@@ -323,8 +292,6 @@ main() {
 
 	setup_trivy
 	setup_opencode
-	install_nerdfonts
-	install_lima
 
 	check_system_reboot
 	configure_ufw

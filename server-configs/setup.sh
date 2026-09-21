@@ -55,8 +55,8 @@ function setup_kubectl() {
 		echo "=> installing Kubernetes CLL"
 
 		sudo mkdir -p /etc/apt/keyrings
-		curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.36/deb/Release.key |
-			sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+		curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.36/deb/Release.key \
+			| sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
 		sudo chmod 644 /etc/apt/keyrings/kubernetes-apt-keyring.gpg
 
 		if [[ -f "/etc/apt/sources.list.d/kubernetes.list" ]]; then
@@ -146,7 +146,7 @@ function harden_ssh() {
 		local ssh_listen_port
 		read -p "SSH listen port: " -r ssh_listen_port
 
-		cat <<-EOF | sudo tee /etc/ssh/sshd_config.d/99-override.conf &> /dev/null
+		cat <<- EOF | sudo tee /etc/ssh/sshd_config.d/99-override.conf &> /dev/null
 			# disable root login
 			PermitRootLogin no
 
@@ -258,7 +258,7 @@ function setup_wireguard_client() {
 		read -p "VPN server public key: " -r vpn_server_public_key
 		read -p "Client assigned IP: " -r vpn_client_ip
 		read -p "Client allowed IPs: " -r vpn_client_allowed_ips
-		cat <<-EOF | sudo tee /etc/wireguard/wg0.conf &> /dev/null
+		cat <<- EOF | sudo tee /etc/wireguard/wg0.conf &> /dev/null
 			[Interface]
 			Address = ${vpn_client_ip}/32
 			PrivateKey = $(sudo cat /etc/wireguard/wg0.key)
@@ -278,7 +278,7 @@ function setup_wireguard_client() {
 		# to fix ssh service error after restarts
 		sudo mkdir -p /etc/systemd/system/ssh.service.d
 		sudo touch /etc/systemd/system/ssh.service.d/override.conf
-		cat <<-EOF | sudo tee /etc/systemd/system/ssh.service.d/override.conf &> /dev/null
+		cat <<- EOF | sudo tee /etc/systemd/system/ssh.service.d/override.conf &> /dev/null
 			[Unit]
 			After=network.target auditd.service wg-quick@wg0.service
 			Requires=wg-quick@wg0.service
@@ -316,7 +316,7 @@ function setup_wireguard_server() {
 		echo
 		read -p "VPN listen port: " -r vpn_listen_port
 		read -p "Wireguard subnets(example 10.0.0.0/8) [use commas for multiple subnets]: " -r vpn_network_subnet
-		cat <<-EOF | sudo tee /etc/wireguard/wg0.conf &> /dev/null
+		cat <<- EOF | sudo tee /etc/wireguard/wg0.conf &> /dev/null
 			[Interface]
 			Address = ${vpn_network_subnet}
 			ListenPort = ${vpn_listen_port}
@@ -402,7 +402,7 @@ function setup_prometheus_node_exporter() {
 		fi
 
 		sudo touch /etc/systemd/system/prometheus-node-exporter.service
-		sudo tee -a /etc/systemd/system/prometheus-node-exporter.service &> /dev/null <<-EOF
+		sudo tee -a /etc/systemd/system/prometheus-node-exporter.service &> /dev/null <<- EOF
 			[Unit]
 			Description=Prometheus Node Exporter
 			After=network-online.target
@@ -524,7 +524,7 @@ function setup_tmux() {
 			cp ~/.tmux.conf ~/.tmux.conf-bak-"$(date +%s)"
 			echo '=> old ~/.tmux.conf have been backed up'
 		fi
-		curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/tmux/tmux-minimal.conf >~/.tmux.conf
+		curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/tmux/tmux-minimal.conf > ~/.tmux.conf
 	else
 		echo "Skipping setup of TMUX"
 	fi
@@ -855,7 +855,7 @@ main() {
 		cp ~/.vimrc ~/.vimrc-bak-"$(date +%s)"
 		echo '=> old ~/.vimrc have been backed up'
 	fi
-	curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/vim/.vimrc >~/.vimrc
+	curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/vim/.vimrc > ~/.vimrc
 	sudo update-alternatives --set editor "$(command -v vim.basic)"
 
 	echo

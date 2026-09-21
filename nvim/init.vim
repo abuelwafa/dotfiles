@@ -39,7 +39,7 @@ Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-git'
 Plug 'moll/vim-bbye'
 Plug 'ntpeters/vim-better-whitespace'
-Plug 'prisma/vim-prisma'
+" Plug 'prisma/vim-prisma'
 Plug 'brianhuster/live-preview.nvim'
 Plug 'MeanderingProgrammer/render-markdown.nvim'
 Plug 'christoomey/vim-system-copy'
@@ -383,6 +383,9 @@ require("conform").setup({
     notify_on_error = true,
     format_on_save = { timeout_ms = 1000, lsp_fallback = true },
     formatters = {
+        shfmt = {
+            append_args = { "--space-redirects", "--case-indent", "--binary-next-line" }
+        },
         sql_formatter = {
             prepend_args = {
                 "--config",
@@ -400,11 +403,13 @@ require("conform").setup({
         typescript = { "prettierd" },
         typescriptreact = { "prettierd" },
         css = { "stylelint" },
-        tf = { "terraform_fmt" },
+        tf = { "tofu_fmt" },
         yaml = { "yamlfmt" },
         html = { "djlint" },
         java = { "google-java-format" },
         xml = { "xmlformat" },
+        sh = { "shfmt" },
+        bash = { "shfmt" },
     },
 })
 
@@ -498,7 +503,6 @@ require'nvim-treesitter'.install({
     'po',
     'powershell',
     'printf',
-    'prisma',
     'promql',
     'python',
     'ruby',
@@ -549,7 +553,7 @@ vim.api.nvim_create_autocmd('FileType', {
         'jsp', 'julia', 'kivy', 'kotlin', 'lisp', 'lite', 'llvm', 'lsp_markdown', 'lua',
         'luatemplate', 'mail', 'mailaliases', 'mailcap', 'make', 'man', 'manconf', 'manual',
         'markdown', 'mediawiki', 'mermaid', 'meson', 'msql', 'muttrc', 'mysql', 'netrc', 'nginx',
-        'ninja', 'objc', 'objcpp', 'ocaml', 'openvpn', 'perl', 'php', 'plsql', 'prisma', 'ps1',
+        'ninja', 'objc', 'objcpp', 'ocaml', 'openvpn', 'perl', 'php', 'plsql', 'ps1',
         'python', 'qml', 'query', 'ruby', 'rust', 'sass', 'scala', 'scss', 'sh', 'snippets',
         'spec', 'sql', 'sqlanywhere', 'sqlforms', 'sqlhana', 'sqlinformix', 'sqlj', 'sqloracle',
         'sshconfig', 'sshdconfig', 'strace', 'structurizr', 'stylus', 'sudoers', 'svg',
@@ -659,7 +663,6 @@ local ensure_installed = {
     'mdx_analyzer',
     'omnisharp',
     'prettierd',
-    'prismals',
     'pyright',
     'ruff',
     'rust-analyzer',

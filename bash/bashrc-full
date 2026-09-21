@@ -68,67 +68,67 @@ alias watchman-clean='watchman watch-del-all'
 alias pod-clean='pod cache clean --all'
 
 function ssh_connect() {
-    local selected_host
-    selected_host="$(cat "${HOME}"/.ssh/config | grep --color=never -E -e "^Host ([^*]+)$" | sed 's/Host //' | fzf)"
+	local selected_host
+	selected_host="$(cat "${HOME}"/.ssh/config | grep --color=never -E -e "^Host ([^*]+)$" | sed 's/Host //' | fzf)"
 
-    if [[ ! -z "${selected_host}" ]]; then
-        eval "ssh ${selected_host}"
-    fi
+	if [[ ! -z "${selected_host}" ]]; then
+		eval "ssh ${selected_host}"
+	fi
 }
 
 function pg_select() {
-    local db_name
-    db_name="$(cat "${HOME}"/workspace/db-connections/connections.json | jq -r '.[] | .name' | fzf)"
+	local db_name
+	db_name="$(cat "${HOME}"/workspace/db-connections/connections.json | jq -r '.[] | .name' | fzf)"
 
-    local connection_string
-    connection_string="$(cat "${HOME}"/workspace/db-connections/connections.json | jq -r "map(select(.name == \"${db_name}\")) | .[0].url")"
+	local connection_string
+	connection_string="$(cat "${HOME}"/workspace/db-connections/connections.json | jq -r "map(select(.name == \"${db_name}\")) | .[0].url")"
 
-    if [[ ${connection_string} =~ ^postgres ]]; then
-        local cmd="pgcli ${connection_string}"
-        eval "${cmd}"
-    elif [[ ${connection_string} =~ ^mysql ]]; then
-        local cmd="mycli ${connection_string}"
-        eval "${cmd}"
-    elif [[ ${connection_string} =~ ^sqlite ]]; then
-        local cmd="litecli ${connection_string}"
-        eval "${cmd}"
-    else
-        >&2 echo "Connection string does not point to a postgresql database"
-    fi
+	if [[ ${connection_string} =~ ^postgres ]]; then
+		local cmd="pgcli ${connection_string}"
+		eval "${cmd}"
+	elif [[ ${connection_string} =~ ^mysql ]]; then
+		local cmd="mycli ${connection_string}"
+		eval "${cmd}"
+	elif [[ ${connection_string} =~ ^sqlite ]]; then
+		local cmd="litecli ${connection_string}"
+		eval "${cmd}"
+	else
+		>&2 echo "Connection string does not point to a postgresql database"
+	fi
 }
 
 unalias lzd
 alias lzd='docker run --rm -it --pull always -v /var/run/docker.sock:/var/run/docker.sock -v ~/workspace/dotfiles/lazydocker-config.yml:/.config/jesseduffield/lazydocker/config.yml lazyteam/lazydocker'
 
-if command -v rbenv &>/dev/null; then
-    eval "$(rbenv init - zsh)"
+if command -v rbenv &> /dev/null; then
+	eval "$(rbenv init - zsh)"
 fi
 
 if [[ "${os_name}" == "Darwin" ]]; then
-    export ANDROID_HOME="${HOME}/Library/Android/sdk"
-    export PATH="${HOMEBREW_PREFIX}/opt/gnu-sed/libexec/gnubin:${PATH}"
-    alias ql='qlmanage -p'
-    alias copy='pbcopy'
-    alias sed='gsed'
-    alias date='gdate'
+	export ANDROID_HOME="${HOME}/Library/Android/sdk"
+	export PATH="${HOMEBREW_PREFIX}/opt/gnu-sed/libexec/gnubin:${PATH}"
+	alias ql='qlmanage -p'
+	alias copy='pbcopy'
+	alias sed='gsed'
+	alias date='gdate'
 
-    # point docker host to the docker socket from colima
-    export DOCKER_HOST="unix://${HOME}/.colima/default/docker.sock"
-    # export KIND_EXPERIMENTAL_PROVIDER=nerdctl.lima
+	# point docker host to the docker socket from colima
+	export DOCKER_HOST="unix://${HOME}/.colima/default/docker.sock"
+	# export KIND_EXPERIMENTAL_PROVIDER=nerdctl.lima
 
-    unalias pomodoro-start
-    alias pomodoro-start='tclock timer -d 45m -M -e "say -v Ava \"Work session finished...   Take some rest\""'
+	unalias pomodoro-start
+	alias pomodoro-start='tclock timer -d 45m -M -e "say -v Ava \"Work session finished...   Take some rest\""'
 
-    alias speak='say -v "Ava (Premium)" --rate 220'
+	alias speak='say -v "Ava (Premium)" --rate 220'
 fi
 
 if [[ "${os_name}" == "Linux" ]]; then
-    export ANDROID_HOME="${HOME}/Android/Sdk"
-    alias open='xdg-open'
-    alias copy='xclip -i -selection clipboard'
-    if [[ "${TERM}" = "xterm" ]]; then
-        export TERM=xterm-256color
-    fi
+	export ANDROID_HOME="${HOME}/Android/Sdk"
+	alias open='xdg-open'
+	alias copy='xclip -i -selection clipboard'
+	if [[ "${TERM}" = "xterm" ]]; then
+		export TERM=xterm-256color
+	fi
 fi
 
 unset os_name
@@ -138,13 +138,13 @@ export PATH="${PATH}:${ANDROID_HOME}/emulator"
 export PATH="${PATH}:${ANDROID_HOME}/platform-tools"
 
 # source bash completion scripts from homebrew
-[[ -r "${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh" ]] &&
-    source "${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh"
+[[ -r "${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh" ]] \
+	&& source "${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh"
 
 # setup limactl complettions
-if command -v limactl &>/dev/null 2>&1; then
-    source <(limactl completion bash)
-    complete -o default -F __start_limactl lima
+if command -v limactl &> /dev/null 2>&1; then
+	source <(limactl completion bash)
+	complete -o default -F __start_limactl lima
 fi
 
 # add lua user tree to path
@@ -152,12 +152,12 @@ eval "$(luarocks path --bin)"
 
 # source cargo bin directory
 if [[ -f "${HOME}/.cargo/env" ]]; then
-    source "${HOME}/.cargo/env"
+	source "${HOME}/.cargo/env"
 fi
 
 # source go bin directory
 if [[ -d "${HOME}/go/bin" ]]; then
-    export PATH="${PATH}:${HOME}/go/bin"
+	export PATH="${PATH}:${HOME}/go/bin"
 fi
 
 export K9S_CONFIG_DIR=~/workspace/dotfiles/k9s
@@ -167,41 +167,41 @@ export SDKMAN_DIR="${HOME}/.sdkman"
 [[ -s "${HOME}/.sdkman/bin/sdkman-init.sh" ]] && source "${HOME}/.sdkman/bin/sdkman-init.sh"
 
 function pi() {
-    # assert and exit if we are on the home directory, if we are outside
-    # the home directory, or if we are in direct descendant directory from home.
-    # the last rule automatically rules out any other sensitive or broad directories
-    # like .ssh, .kube, workspace, ...etc
-    if [[ "${PWD}" == "${HOME}" ]] || [[ ! "$(echo "${PWD}" | cut -d / -f 1-3)" == "${HOME}" ]] || [[ "$(dirname "${PWD}")" == "${HOME}" ]]; then
-        echo "EROR: Running PI within a sensitive or a very broad directory. Aborting..."
-        return 1
-    fi
+	# assert and exit if we are on the home directory, if we are outside
+	# the home directory, or if we are in direct descendant directory from home.
+	# the last rule automatically rules out any other sensitive or broad directories
+	# like .ssh, .kube, workspace, ...etc
+	if [[ "${PWD}" == "${HOME}" ]] || [[ ! "$(echo "${PWD}" | cut -d / -f 1-3)" == "${HOME}" ]] || [[ "$(dirname "${PWD}")" == "${HOME}" ]]; then
+		echo "EROR: Running PI within a sensitive or a very broad directory. Aborting..."
+		return 1
+	fi
 
-    docker run --init --rm -it \
-        -v "${PWD}:/home/node/workspace" \
-        --mount type=bind,src="${HOME}"/workspace/dotfiles/pi,dst=/home/node/.pi,readonly \
-        -v "${HOME}/workspace/pi-sessions:/home/node/pi-sessions" \
-        pi-sandboxed "$@"
+	docker run --init --rm -it \
+		-v "${PWD}:/home/node/workspace" \
+		--mount type=bind,src="${HOME}"/workspace/dotfiles/pi,dst=/home/node/.pi,readonly \
+		-v "${HOME}/workspace/pi-sessions:/home/node/pi-sessions" \
+		pi-sandboxed "$@"
 }
 
 alias pi-build='(cd ~/workspace/dotfiles/pi/pi-sandboxed && docker build -t pi-sandboxed -f Dockerfile .)'
 
 function update_machine_config() {
-    local os_name
-    os_name="$(uname -s)"
+	local os_name
+	os_name="$(uname -s)"
 
-    if [[ "${os_name}" == "Linux" ]]; then
-        sudo apt update && sudo apt upgrade -y
-        sudo apt autoclean && sudo apt autoremove -y
-    fi
+	if [[ "${os_name}" == "Linux" ]]; then
+		sudo apt update && sudo apt upgrade -y
+		sudo apt autoclean && sudo apt autoremove -y
+	fi
 
-    (cd ~/workspace/dotfiles && git fetch --all --prune && git pull --rebase)
+	(cd ~/workspace/dotfiles && git fetch --all --prune && git pull --rebase)
 
-    brew bundle cleanup --force --file ~/workspace/dotfiles/Brewfile
-    brew bundle install --upgrade --file ~/workspace/dotfiles/Brewfile
+	brew bundle cleanup --force --file ~/workspace/dotfiles/Brewfile
+	brew bundle install --upgrade --file ~/workspace/dotfiles/Brewfile
 
-    pi-build
-    nvim +PlugClean +PlugUpgrade +PlugUpdate +MasonToolsClean +MasonUpdate +MasonToolsUpdate +15sleep! +qall
-    command -v gcloud && gcloud components update || true
+	pi-build
+	nvim +PlugClean +PlugUpgrade +PlugUpdate +MasonToolsClean +MasonUpdate +MasonToolsUpdate +15sleep! +qall
+	command -v gcloud && gcloud components update || true
 }
 
 # machine specific config/overrides

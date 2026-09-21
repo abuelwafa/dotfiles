@@ -1,4 +1,3 @@
-tap "homebrew/services"
 tap "anchore/syft", trusted: true
 tap "anomalyco/tap", trusted: true
 tap "dbcli/tap", trusted: true
@@ -24,7 +23,7 @@ brew "cmake"
 brew "cmatrix"
 brew "cmus"
 brew "cocoapods"
-brew "coreutils" if OS.mac?
+brew "coreutils" if OS.mac? # GNU core utils
 brew "dive" # https://github.com/wagoodman/dive
 brew "docker" if OS.mac?
 brew "doggo"
@@ -38,7 +37,7 @@ brew "gh"
 brew "git"
 brew "git-delta"
 brew "glow"
-brew "gnu-sed" if OS.mac?
+brew "gnu-sed" if OS.mac? # GNU version of sed
 brew "gnupg"
 brew "go"
 brew "goaccess"
@@ -66,7 +65,9 @@ brew "lazysql"
 brew "lefthook"
 brew "libpq"
 brew "qemu"
+brew "lima"
 brew "lima-additional-guestagents"
+brew "colima", restart_service: :changed if OS.mac?
 brew "dbcli/tap/litecli"
 brew "llama.cpp"
 brew "lnav"
@@ -87,17 +88,16 @@ brew "pkgconf"
 brew "pre-commit"
 brew "ripgrep"
 brew "shellcheck"
-brew "socket_vmnet"
 brew "sops"
 # brew "superfile"
 brew "syft"
 brew "task"
 # brew "terragrunt"
-brew "tflint"
+# brew "tflint"
 brew "tmux"
 brew "viddy"
 brew "vim"
-brew "watch" if OS.mac?
+brew "watch" if OS.mac? # macos doesn't have the watch command
 brew "watchman"
 brew "yamllint"
 # brew "yarn"
@@ -133,6 +133,7 @@ brew "kdash-rs/kdash/kdash", trusted: true
 # step
 # lnav
 # goaccess
+# kubeconform
 
 go "golang.org/x/tools/gopls"
 go "honnef.co/go/tools/cmd/staticcheck"
@@ -143,7 +144,7 @@ cargo "tree-sitter-cli"
 
 #------------------------------------------------------
 cask "headlamp"
-cask "discord", args: { appdir: "/Applications" }
+# cask "discord", args: { appdir: "/Applications" }
 cask "obs", args: { appdir: "/Applications" }
 cask "spotify", args: { appdir: "/Applications" }
 cask "firefox", args: { appdir: "/Applications" }
@@ -159,19 +160,11 @@ cask "font-jetbrains-mono-nerd-font"
 # cask "font-ubuntu-sans-nerd-font"
 
 # cask "lazytrivy"
-
-# MAC only apps
-# Installing GNU version of sed
-# macos doesn't have the watch command
-# Installing GNU core utils
-# installing Colima and docker cli
 cask "coteditor"
 mas "Microsoft Excel", id: 462058435
 mas "WireGuard", id: 1451685025
 mas "The Unarchiver", id: 425424353
 mas "Xcode", id: 497799835
 cask "stats"
-brew "lima"
 cask "meld"
-brew "colima" if OS.mac?, restart_service: :changed
 # cask "aerospace"
