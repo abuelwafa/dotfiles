@@ -1,12 +1,12 @@
 [general]
-working_directory = "./workspace/scratchpad"
+working_directory = "./workspace"
 import = []
 
 [window]
 decorations = "None"
 blur = true
 opacity = 0.97
-startup_mode = "Maximized"
+startup_mode = "Fullscreen"
 option_as_alt = "OnlyLeft"
 decorations_theme_variant = "Dark"
 resize_increments = true

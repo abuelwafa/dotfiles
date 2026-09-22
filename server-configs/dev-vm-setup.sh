@@ -152,6 +152,7 @@ main() {
 
 	mkdir -p ~/workspace/scratchpad
 	mkdir -p ~/temp
+	mkdir -p ~/workspace/temp
 	touch ~/.machine-config
 
 	echo "=> Setting up DB connections file"
