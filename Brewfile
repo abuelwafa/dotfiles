@@ -26,6 +26,8 @@ brew "cocoapods"
 brew "coreutils" if OS.mac? # GNU core utils
 brew "dive" # https://github.com/wagoodman/dive
 brew "docker" if OS.mac?
+brew "docker-compose" if OS.mac?
+brew "docker-buildx" if OS.mac?
 brew "doggo"
 brew "dust"
 brew "egctl"

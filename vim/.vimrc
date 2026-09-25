@@ -275,10 +275,13 @@ inoremap <leader>v <esc>:set<space>paste<cr>
 :autocmd FileType js,javascript,typescript,javascriptreact,typescriptreact inoremap afkj () => {}<esc>i<cr><esc>O
 :autocmd FileType js,javascript,typescript,javascriptreact,typescriptreact inoremap logkj console.log()<esc>i
 :autocmd FileType js,javascript,typescript,javascriptreact,typescriptreact imap imkj import  from '
+autocmd FileType python imap imkj from  import
 :autocmd FileType js,javascript,typescript,javascriptreact,typescriptreact inoremap ifkj if () {<cr>}<esc>k$2hi
-inoremap xx $
-inoremap vv ``<esc>i
-inoremap VV ~
+autocmd FileType python,go,rust inoremap ifkj if  {<cr>}<esc>k$hi
+
+" inoremap xx $
+" inoremap vv ``<esc>i
+" inoremap VV ~
 
 " mappings for speed buffer switching
 nnoremap <leader>b :bprevious<CR>

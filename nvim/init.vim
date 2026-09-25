@@ -1447,6 +1447,7 @@ autocmd FileType js,javascript,blade,typescript,javascriptreact,typescriptreact,
 autocmd FileType js,javascript,typescript,javascriptreact,typescriptreact inoremap afkj () => {}<esc>i<cr><esc>O
 autocmd FileType js,javascript,typescript,javascriptreact,typescriptreact inoremap logkj console.log()<esc>i
 autocmd FileType go imap logkj fmt.Println(
+autocmd FileType go inoremap afkj func __() {}<esc>i<cr><esc>O
 autocmd FileType js,javascript,typescript,javascriptreact,typescriptreact imap imkj import  from '
 autocmd FileType python imap imkj from  import
 autocmd FileType js,javascript,typescript,javascriptreact,typescriptreact inoremap ifkj if () {<cr>}<esc>k$2hi
