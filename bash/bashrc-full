@@ -183,7 +183,7 @@ function pi() {
 		pi-sandboxed "$@"
 }
 
-alias pi-build='(cd ~/workspace/dotfiles/pi/pi-sandboxed && docker build -t pi-sandboxed -f Dockerfile .)'
+alias pi-build='(cd ~/workspace/dotfiles/pi-sandboxed && docker build -t pi-sandboxed -f Dockerfile .)'
 
 function update_machine_config() {
 	local os_name

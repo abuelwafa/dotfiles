@@ -12,10 +12,10 @@
 #
 # on a bare debian install, the above command will not work. out of the box.
 # if using a non root user, you can use the following one liner to install prerequisites
-# su -c "apt update && apt install curl sudo && usermod -aG sudo $USER" - root && newgrp sudo && /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/server-configs/dev-vm-setup.sh)"
+# su -c "apt update && apt install curl sudo && usermod -aG sudo,adm,systemd-journal $USER" -l root && newgrp sudo -c "$(curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/server-configs/dev-vm-setup.sh)"
 #
 # if using the root user,
-# apt update && apt install curl sudo && useradd --create-home --user-group --groups sudo --shell $(which bash) my_username && newgrp sudo && su -c '/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/server-configs/dev-vm-setup.sh)"' - my_username
+# apt update && apt install curl sudo && useradd --create-home --user-group --groups sudo --shell $(which bash) my_username && newgrp sudo && su -c '/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/server-configs/dev-vm-setup.sh)"' -l my_username
 
 set -o errexit
 set -o nounset
@@ -126,6 +126,7 @@ main() {
 		openssh-server \
 		openssh-client \
 		unattended-upgrades \
+		man \
 		vim \
 		curl \
 		git \
