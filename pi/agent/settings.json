@@ -25,11 +25,14 @@
   "sessionDir": "~/pi-sessions",
   "quietStartup": true,
   "fullscreenExitOutput": "transcript",
-  "lastChangelogVersion": "0.87.1",
+  "lastChangelogVersion": "1.0.0",
   "packages": [
     "npm:pi-web-access",
     "npm:pi-mcp-adapter",
     "npm:@gotgenes/pi-permission-system",
     "npm:@juicesharp/rpiv-ask-user-question"
+  ],
+  "extensions": [
+    "-builtin:mcp"
   ]
 }

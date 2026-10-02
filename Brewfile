@@ -1,13 +1,7 @@
-tap "anchore/syft", trusted: true
-tap "anomalyco/tap", trusted: true
-tap "dbcli/tap", trusted: true
-tap "derailed/k9s", trusted: true
-tap "dgunzy/tap", trusted: true
-tap "fluxcd/tap", trusted: true
-tap "nikitabobko/tap"
-tap "owenrumney/tools"
-tap "shubh-io/tap"
-tap "tinted-theming/tinted"
+# tap "nikitabobko/tap"
+# tap "owenrumney/tools"
+# tap "shubh-io/tap"
+# tap "tinted-theming/tinted"
 
 brew "act"
 brew "openssl@3" if OS.mac?
@@ -69,7 +63,7 @@ brew "qemu"
 brew "lima"
 brew "lima-additional-guestagents"
 brew "colima", restart_service: :changed if OS.mac?
-brew "dbcli/tap/litecli"
+brew "dbcli/tap/litecli", trusted: true
 brew "llama.cpp"
 brew "lnav"
 brew "lua"
@@ -91,20 +85,21 @@ brew "ripgrep"
 brew "shellcheck"
 brew "sops"
 # brew "superfile"
-brew "syft"
+brew "anchore/syft/syft", trusted: true
 brew "task"
 # brew "terragrunt"
 # brew "tflint"
 brew "tmux"
 brew "viddy"
+# brew "anomalyco/tap/opencode-v2", trusted: true
 brew "vim"
 brew "watch" if OS.mac? # macos doesn't have the watch command
 brew "watchman"
 brew "yamllint"
 # brew "yarn"
 brew "yq"
-brew "derailed/k9s/k9s"
-brew "dgunzy/tap/flux9s"
+brew "derailed/k9s/k9s", trusted: true
+brew "dgunzy/tap/flux9s", trusted: true
 brew "fluxcd/tap/flux", trusted: true
 brew "jesseduffield/lazydocker/lazydocker", trusted: true
 brew "kdash-rs/kdash/kdash", trusted: true
@@ -151,8 +146,9 @@ cask "spotify", args: { appdir: "/Applications" }
 cask "firefox", args: { appdir: "/Applications" }
 
 cask "espanso"
-cask "font-meslo-lg-nerd-font"
-cask "font-jetbrains-mono-nerd-font"
+# TODO: install fonts only in case of desktop environment
+# cask "font-meslo-lg-nerd-font"
+# cask "font-jetbrains-mono-nerd-font"
 # cask "font-fira-mono-nerd-font"
 # cask "font-hack-nerd-font"
 # cask "font-inconsolata-go-nerd-font"

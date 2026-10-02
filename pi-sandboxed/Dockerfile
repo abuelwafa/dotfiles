@@ -34,7 +34,7 @@ COPY --from=locale-base /usr/lib/locale/locale-archive /usr/lib/locale/locale-ar
 RUN npm install -g npm@latest
 
 # hadolint ignore=DL3059
-RUN npm install -g --ignore-scripts @earendil-works/pi-coding-agent@0.99.2
+RUN npm install -g --ignore-scripts @earendil-works/pi-coding-agent@1.0.0
 
 # install Go
 COPY --from=golang:1.27-trixie /usr/local/go /usr/local/go

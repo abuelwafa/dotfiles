@@ -12,7 +12,7 @@
 #
 # on a bare debian install, the above command will not work. out of the box.
 # if using a non root user, you can use the following one liner to install prerequisites
-# su -c "apt update && apt install curl sudo && usermod -aG sudo,adm,systemd-journal $USER" -l root && newgrp sudo -c "$(curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/server-configs/dev-vm-setup.sh)"
+# su -c "apt update && apt install -y curl sudo && usermod -aG sudo,adm,systemd-journal $USER" -l root && newgrp sudo -c "$(curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/server-configs/dev-vm-setup.sh)"
 #
 # if using the root user,
 # apt update && apt install curl sudo && useradd --create-home --user-group --groups sudo --shell $(which bash) my_username && newgrp sudo && su -c '/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/server-configs/dev-vm-setup.sh)"' -l my_username
@@ -49,6 +49,9 @@ function setup_sdkman() {
 	if [[ ${install_sdkman} =~ ^[Yy]$ ]]; then
 		echo "=> Installing SDKMAN"
 		curl -s "https://get.sdkman.io" | bash
+
+		source ~/.sdkman/bin/sdkman-init.sh
+
 		sdk install java
 		sdk install gradle
 		sdk install kotlin
@@ -60,36 +63,6 @@ function setup_sdkman() {
 	echo
 }
 
-function setup_trivy() {
-	read -p "Setup and configure trivy and lazytrivy? (y/n): " -r install_trivy
-	echo
-	if [[ ${install_trivy} =~ ^[Yy]$ ]]; then
-		echo "=> Installing trivy and lazytrivy"
-		brew install trivy
-		echo "=> Installing lazytrivy"
-		go install github.com/owenrumney/lazytrivy@latest
-	else
-		echo "Skipping install of trivy"
-	fi
-	echo
-}
-
-function setup_opencode() {
-	read -p "Setup and configure Opencode? (y/n): " -r install_opencode
-	echo
-	if [[ ${install_opencode} =~ ^[Yy]$ ]]; then
-		echo "=> Installing Opencode"
-		brew install anomalyco/tap/opencode
-
-		echo "=> Configuring Opencode."
-		echo "   ESC to cancel. to do it later, run opencode auth login"
-		opencode auth login || true
-	else
-		echo "Skipping install of opencode"
-	fi
-	echo
-}
-
 function setup_neovim() {
 	mkdir -p ~/.config/nvim
 	ln --force -s ~/workspace/dotfiles/nvim/init.lua ~/.config/nvim/init.lua
@@ -97,7 +70,7 @@ function setup_neovim() {
 	mkdir -p ~/.nvim/_backup
 	luarocks config lua_version 5.5
 	luarocks install mimetypes
-	luarocks install xml2lua
+	# luarocks install xml2lua
 	echo "=> Openning neovim to install plugins and language servers. Exit when finished."
 	sleep 4
 	nvim +PlugUpgrade +PlugUpdate +MasonUpdate +MasonToolsUpdate +20sleep! +qall
@@ -207,7 +180,6 @@ main() {
 
 	# install homebrew
 	setup_homebrew
-	brew bundle install --upgrade --file ~/workspace/dotfiles/Brewfile
 
 	# linking config files
 	ln --force -s ~/workspace/dotfiles/bash/bashrc-full ~/.bash_aliases
@@ -284,16 +256,17 @@ main() {
 	# install Github CLI dash extenstion
 	echo "=> Installing Github CLI dash extenstion"
 	gh extension install dlvhdr/gh-dash
+	mkdir -p ~/.config/gh-dash
 	ln --force -s ~/workspace/dotfiles/gh-dash.config.yaml ~/.config/gh-dash/config.yml
+
+	# brew bundle
+	brew bundle install --upgrade --file ~/workspace/dotfiles/Brewfile
 
 	# setup neovim
 	echo "=> Configuring Neovim"
 	setup_neovim
 
 	mkdir -p ~/workspace/pi-sessions
-
-	setup_trivy
-	setup_opencode
 
 	check_system_reboot
 	configure_ufw
