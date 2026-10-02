@@ -134,7 +134,7 @@ brew "kdash-rs/kdash/kdash", trusted: true
 go "golang.org/x/tools/gopls"
 go "honnef.co/go/tools/cmd/staticcheck"
 go "github.com/asciimoo/wuzz"
-go "github.com/google/yamlfmt/cmd/yamlfmt"
+go "github.com/google/yamlfmt/cmd/yamlfmt@latest"
 cargo "clock-tui"
 cargo "tree-sitter-cli"
 

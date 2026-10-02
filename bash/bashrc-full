@@ -8,8 +8,8 @@
 #
 
 os_name="$(uname -s)"
-[[ "${os_name}" == "Linux" ]] && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-[[ "${os_name}" == "Darwin" ]] && eval "$(/opt/homebrew/bin/brew shellenv)"
+[[ "${os_name}" == "Linux" ]] && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv bash)"
+[[ "${os_name}" == "Darwin" ]] && eval "$(/opt/homebrew/bin/brew shellenv bash)"
 
 # shellcheck source=./bashrc
 source ~/workspace/dotfiles/bash/bashrc
@@ -202,6 +202,12 @@ function update_machine_config() {
 	pi-build
 	nvim +PlugClean +PlugUpgrade +PlugUpdate +MasonToolsClean +MasonUpdate +MasonToolsUpdate +15sleep! +qall
 	command -v gcloud && gcloud components update || true
+
+	if command -v sdk; then
+		sdk selfupdate
+		sdk update
+		sdk upgrade
+	fi
 }
 
 # machine specific config/overrides

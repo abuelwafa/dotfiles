@@ -50,7 +50,9 @@ function setup_sdkman() {
 		echo "=> Installing SDKMAN"
 		curl -s "https://get.sdkman.io" | bash
 
+		set +u # sdkman init script relies on default bash behaviour
 		source ~/.sdkman/bin/sdkman-init.sh
+		set -u
 
 		sdk install java
 		sdk install gradle
@@ -79,11 +81,13 @@ function setup_neovim() {
 
 function setup_homebrew() {
 	echo "=> Setting up Homebrew"
+	eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv bash)"
 	if ! command -v brew &> /dev/null 2>&1; then
 		NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-		eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+		eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv bash)"
 	else
-		echo "   brew is already installed. Updating..."
+		echo "   brew is already installed. Skipping..."
+		echo
 	fi
 }
 
@@ -249,18 +253,18 @@ main() {
 	echo "=> Installing tclock"
 	cargo install clock-tui
 
+	# brew bundle
+	brew bundle install --upgrade --file ~/workspace/dotfiles/Brewfile
+
 	# install yamlfmt
-	echo "=> Installing yamlfmt"
-	go install github.com/google/yamlfmt/cmd/yamlfmt@latest
+	# echo "=> Installing yamlfmt"
+	# go install github.com/google/yamlfmt/cmd/yamlfmt@latest
 
 	# install Github CLI dash extenstion
 	echo "=> Installing Github CLI dash extenstion"
 	gh extension install dlvhdr/gh-dash
 	mkdir -p ~/.config/gh-dash
 	ln --force -s ~/workspace/dotfiles/gh-dash.config.yaml ~/.config/gh-dash/config.yml
-
-	# brew bundle
-	brew bundle install --upgrade --file ~/workspace/dotfiles/Brewfile
 
 	# setup neovim
 	echo "=> Configuring Neovim"
