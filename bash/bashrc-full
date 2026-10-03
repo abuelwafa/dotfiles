@@ -200,10 +200,13 @@ function update_machine_config() {
 	brew bundle install --upgrade --file ~/workspace/dotfiles/Brewfile
 
 	pi-build
-	nvim +PlugClean +PlugUpgrade +PlugUpdate +MasonToolsClean +MasonUpdate +MasonToolsUpdate +15sleep! +qall
+
+	nvim +PlugClean +PlugUpgrade +PlugUpdate +MasonToolsClean +MasonUpdate +MasonToolsUpdate +25sleep! +qall
+
 	command -v gcloud && gcloud components update || true
 
-	if command -v sdk; then
+	if command -v sdk &> /dev/null; then
+		echo "=> Upgrading sdkman components"
 		sdk selfupdate
 		sdk update
 		sdk upgrade

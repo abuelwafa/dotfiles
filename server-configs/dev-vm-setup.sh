@@ -44,25 +44,16 @@ function configure_ufw() {
 }
 
 function setup_sdkman() {
-	read -p "Setup and configure SDKMAN with java, kotlin and gradle? (y/n): " -r install_sdkman
+	echo "=> Installing SDKMAN"
+	curl -s "https://get.sdkman.io" | bash
 	echo
-	if [[ ${install_sdkman} =~ ^[Yy]$ ]]; then
-		echo "=> Installing SDKMAN"
-		curl -s "https://get.sdkman.io" | bash
 
-		set +u # sdkman init script relies on default bash behaviour
-		source ~/.sdkman/bin/sdkman-init.sh
-		set -u
-
-		sdk install java
-		sdk install gradle
-		sdk install kotlin
-		sdk install groovy
-		sdk install maven
-	else
-		echo "Skipping install of SDKMAN"
-	fi
-	echo
+	# after setup, you can install the following components using :
+	# sdk install java
+	# sdk install gradle
+	# sdk install kotlin
+	# sdk install groovy
+	# sdk install maven
 }
 
 function setup_neovim() {

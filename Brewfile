@@ -38,7 +38,6 @@ brew "gnupg"
 brew "go"
 brew "goaccess"
 brew "graphviz"
-brew "grype"
 # brew "hcloud"
 brew "helm"
 brew "hey"
@@ -47,7 +46,7 @@ brew "iftop"
 brew "iredis"
 brew "jq"
 brew "just"
-brew "kanata"
+# brew "kanata" if OS.mac?
 brew "kind"
 brew "kompose"
 brew "kubectx"
@@ -60,8 +59,8 @@ brew "lazysql"
 brew "lefthook"
 brew "libpq"
 brew "qemu"
-brew "lima"
-brew "lima-additional-guestagents"
+brew "lima" if ENV["DISPLAY"]
+brew "lima-additional-guestagents" if ENV["DISPLAY"]
 brew "colima", restart_service: :changed if OS.mac?
 brew "dbcli/tap/litecli", trusted: true
 brew "llama.cpp"
@@ -79,12 +78,12 @@ brew "opentofu"
 brew "osv-scanner"
 brew "pgcli"
 brew "pipx"
-brew "pkgconf"
 brew "pre-commit"
 brew "ripgrep"
 brew "shellcheck"
 brew "sops"
 # brew "superfile"
+brew "grype"
 brew "anchore/syft/syft", trusted: true
 brew "task"
 # brew "terragrunt"
@@ -134,7 +133,7 @@ brew "kdash-rs/kdash/kdash", trusted: true
 go "golang.org/x/tools/gopls"
 go "honnef.co/go/tools/cmd/staticcheck"
 go "github.com/asciimoo/wuzz"
-go "github.com/google/yamlfmt/cmd/yamlfmt@latest"
+go "github.com/google/yamlfmt/cmd/yamlfmt"
 cargo "clock-tui"
 cargo "tree-sitter-cli"
 
@@ -144,17 +143,12 @@ cask "headlamp"
 cask "obs", args: { appdir: "/Applications" }
 cask "spotify", args: { appdir: "/Applications" }
 cask "firefox", args: { appdir: "/Applications" }
+cask "handy", args: { appdir: "/Applications" } if OS.mac?
 
-cask "espanso"
-# TODO: install fonts only in case of desktop environment
-# cask "font-meslo-lg-nerd-font"
-# cask "font-jetbrains-mono-nerd-font"
-# cask "font-fira-mono-nerd-font"
-# cask "font-hack-nerd-font"
-# cask "font-inconsolata-go-nerd-font"
-# cask "font-roboto-mono-nerd-font"
-# cask "font-ubuntu-mono-nerd-font"
-# cask "font-ubuntu-sans-nerd-font"
+cask "espanso" if ENV["DISPLAY"]
+
+cask "font-meslo-lg-nerd-font" if ENV["DISPLAY"]
+# cask "font-jetbrains-mono-nerd-font" if ENV["DISPLAY"]
 
 # cask "lazytrivy"
 cask "coteditor"
