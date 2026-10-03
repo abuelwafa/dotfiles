@@ -197,11 +197,14 @@ function update_machine_config() {
 	(cd ~/workspace/dotfiles && git fetch --all --prune && git pull --rebase)
 
 	brew bundle cleanup --force --file ~/workspace/dotfiles/Brewfile
-	brew bundle install --upgrade --file ~/workspace/dotfiles/Brewfile
+	HOMEBREW_NO_ASK=1 \
+		HOMEBREW_DISPLAY_INSTALL_TIMES=1 \
+		HOMEBREW_DOWNLOAD_CONCURRENCY=4 \
+		brew bundle install -v --upgrade --file ~/workspace/dotfiles/Brewfile
 
 	pi-build
 
-	nvim +PlugClean +PlugUpgrade +PlugUpdate +MasonToolsClean +MasonUpdate +MasonToolsUpdate +25sleep! +qall
+	nvim +PlugClean +PlugUpgrade +PlugUpdate +MasonToolsClean +MasonUpdate +MasonToolsUpdate +15sleep! +qall
 
 	command -v gcloud && gcloud components update || true
 

@@ -58,15 +58,13 @@ function setup_sdkman() {
 
 function setup_neovim() {
 	mkdir -p ~/.config/nvim
-	ln --force -s ~/workspace/dotfiles/nvim/init.lua ~/.config/nvim/init.lua
+	ln --force -s ~/workspace/dotfiles/nvim/init.lua ~/.config/nvim/init.vim
 	mkdir -p ~/.nvim/_temp
 	mkdir -p ~/.nvim/_backup
 	luarocks config lua_version 5.5
 	luarocks install mimetypes
 	# luarocks install xml2lua
-	echo "=> Openning neovim to install plugins and language servers. Exit when finished."
-	sleep 4
-	nvim +PlugUpgrade +PlugUpdate +MasonUpdate +MasonToolsUpdate +20sleep! +qall
+	nvim +PlugClean +PlugUpgrade +PlugUpdate +MasonToolsClean +MasonUpdate +MasonToolsUpdate +60sleep! +qall
 	echo
 }
 
@@ -240,12 +238,11 @@ main() {
 		source "${HOME}/.cargo/env"
 	fi
 
-	# install tclock
-	echo "=> Installing tclock"
-	cargo install clock-tui
-
 	# brew bundle
-	brew bundle install --upgrade --file ~/workspace/dotfiles/Brewfile
+	HOMEBREW_NO_ASK=1 \
+		HOMEBREW_DISPLAY_INSTALL_TIMES=1 \
+		HOMEBREW_DOWNLOAD_CONCURRENCY=2 \
+		brew bundle install -v --upgrade --file ~/workspace/dotfiles/Brewfile
 
 	# install yamlfmt
 	# echo "=> Installing yamlfmt"
