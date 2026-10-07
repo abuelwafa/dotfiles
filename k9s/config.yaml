@@ -7,7 +7,7 @@ k9s:
   maxConnRetry: 5
   readOnly: false
   noExitOnCtrlC: false
-  defaultView: "pods"
+  defaultView: "deployments"
   namespace:
     active: all
   ui:

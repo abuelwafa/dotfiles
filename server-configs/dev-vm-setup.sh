@@ -15,7 +15,7 @@
 # su -c "apt update && apt install -y curl sudo && usermod -aG sudo,adm,systemd-journal $USER" -l root && newgrp sudo -c "$(curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/server-configs/dev-vm-setup.sh)"
 #
 # if using the root user,
-# apt update && apt install curl sudo && useradd --create-home --user-group --groups sudo --shell $(which bash) my_username && newgrp sudo && su -c '/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/server-configs/dev-vm-setup.sh)"' -l my_username
+# apt update && apt install curl sudo && useradd --create-home --user-group --groups sudo --shell $(which bash) my_username && newgrp sudo -c "exit" && su -c 'bash -c "$(curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/server-configs/dev-vm-setup.sh)"' -l my_username
 
 set -o errexit
 set -o nounset
@@ -41,6 +41,41 @@ function check_system_reboot() {
 function configure_ufw() {
 	sudo ufw default deny incoming
 	sudo ufw enable
+}
+
+function setup_i3() {
+	read -p "Setup i3 window manager? (y/n): " -r configure_i3
+	echo
+	if [[ "${configure_i3}" =~ ^[Yy]$ ]]; then
+		sudo apt install -y \
+			xorg \
+			i3 \
+			network-manager \
+			brightnessctl \
+			scrot \
+			xclip \
+			feh \
+			chromium
+
+		echo "exec i3" > ~/.xinitrc
+		ln --force -s ~/workspace/dotfiles/i3 ~/.config/i3
+
+		echo >> ~/.profile
+		cat <<- 'EOF' | ~/.profile &> /dev/null
+			if [[ -z "${DISPLAY}" ]] && [[ "${XDG_VTNR}" == "1" ]]; then
+				exec startx
+			fi
+		EOF
+
+		echo "=> i3 window manager has been installed and activated upon login."
+		echo "   Make sure to run update_machine_config from within i3 terminal to install GUI applications skipped during console installation."
+	fi
+	echo
+}
+
+function install_alacritty() {
+	sudo apt install cmake g++ pkg-config libfontconfig1-dev libxcb-xfixes0-dev libxkbcommon-dev python3
+	cargo install alacritty
 }
 
 function setup_sdkman() {
@@ -115,7 +150,6 @@ main() {
 		python3-venv \
 		python3-pip \
 		python3-dev
-	# libfuse2t64 # only on desktop environments
 
 	mkdir -p ~/workspace/scratchpad
 	mkdir -p ~/temp
@@ -260,8 +294,21 @@ main() {
 
 	mkdir -p ~/workspace/pi-sessions
 
+	# linux specific setup
+	if [[ -n "${DISPLAY}" ]]; then
+		sudo apt install -y libfuse2t64
+
+		# setup alacritty
+		# install headlamp for linux
+		# setup tinted-theming
+
+		# install web browser
+	fi
+
 	check_system_reboot
 	configure_ufw
+
+	setup_i3
 
 	echo -e "\n\e[90;102;2m INFO \e[m Review the values in ~/.machine-config."
 	echo -e "\n\e[90;102;2m INFO \e[m Logout and login again for all configuration changes to take effect."

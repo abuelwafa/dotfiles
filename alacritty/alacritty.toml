@@ -3,10 +3,10 @@ working_directory = "./workspace"
 import = []
 
 [window]
-decorations = "None"
+decorations = "Full"
 blur = true
 opacity = 0.97
-startup_mode = "Fullscreen"
+startup_mode = "Maximized"
 option_as_alt = "OnlyLeft"
 decorations_theme_variant = "Dark"
 resize_increments = true

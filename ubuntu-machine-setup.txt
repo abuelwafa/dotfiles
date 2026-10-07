@@ -31,10 +31,6 @@ nordvpn status
 nordvpn help
 ===============================================================
 # i3 setup - optional -
-# follow the instructions to add the i3 apt
-# repository from the i3 website. then install and link config
-sudo apt install i3
-ln -s ~/workspace/dotfiles/i3 ~/.config/i3
 
 # i3 status bar config
 ln -s ~/workspace/dotfiles/i3status ~/.config/i3status

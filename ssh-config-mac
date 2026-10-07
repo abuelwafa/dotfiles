@@ -3,3 +3,13 @@ Host *
   UseKeychain yes
   IdentityFile ~/.ssh/id_ed25519
   PreferredAuthentications publickey
+
+# --------------------
+# host template
+# --------------------
+Host human_friendly_hostname
+    HostName 0.0.0.0
+    User username
+    Port 22
+    # LocalForward 127.0.0.1:3000 127.0.0.1:3000
+    # ProxyJump jump_host_name

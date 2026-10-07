@@ -14,6 +14,10 @@ git clone https://github.com/bigH/git-fuzzy.git
 # link alacritty config
 =============================================================
 MACOS
+install command line tools:
+xcode-select --install
+=============================================================
+MACOS
 # system preferences configurations:
 - enable firewall in the settings
 - keyboard settings: increase the key repeating frequency (delay untill repeat: short, key repeat: fat)
@@ -39,20 +43,15 @@ MACOS
 download the ios simulator from Xcode preferences
 =============================================================
 install from their respective websites (as needed)
-Google Chrome
 Zoom/teams
-VSCode
 slack (from snap store for Ubuntu)
 Dropbox
 Thunderbird from thunderbird.net
 OBS from https://obsproject.com/
 DBeaver from debeaver.io (mac -> homebrew, Ubuntu -> snap store )
 vlc videolan.org/vlc (snap store for Ubuntu)
-Discord
 android studio and android sdk
 Spotify (snap store for Ubuntu)
-=============================================================
-# install latest stable ruby using rvm
 =============================================================
 # base16_theme: run the base16 theme command with the colorscheme you want
 base16_gruvbox-dark-hard

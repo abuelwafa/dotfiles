@@ -63,7 +63,7 @@ brew "lima" if ENV["DISPLAY"]
 brew "lima-additional-guestagents" if ENV["DISPLAY"]
 brew "colima", restart_service: :changed if OS.mac?
 brew "dbcli/tap/litecli", trusted: true
-brew "llama.cpp"
+# brew "llama.cpp"
 brew "lnav"
 brew "lua"
 brew "luarocks"
@@ -104,7 +104,6 @@ brew "jesseduffield/lazydocker/lazydocker", trusted: true
 brew "kdash-rs/kdash/kdash", trusted: true
 # brew "modem-dev/tap/hunk", trusted: true
 # egctl
-# viddy
 # hey
 # cloc
 # cloudflared
@@ -137,25 +136,32 @@ go "github.com/google/yamlfmt/cmd/yamlfmt"
 cargo "clock-tui"
 cargo "tree-sitter-cli"
 
-#------------------------------------------------------
-cask "headlamp"
+# cask "lazytrivy"
+
+cask "espanso" if ENV["DISPLAY"]
+
+# ------------------------------------------------------
+# MACOS only apps
 # cask "discord", args: { appdir: "/Applications" }
-cask "obs", args: { appdir: "/Applications" }
+# cask "obs", args: { appdir: "/Applications" }
 cask "spotify", args: { appdir: "/Applications" }
 cask "firefox", args: { appdir: "/Applications" }
 cask "handy", args: { appdir: "/Applications" } if OS.mac?
-
-cask "espanso" if ENV["DISPLAY"]
+cask "google-chrome" if ENV["DISPLAY"]
+cask "headlamp" if OS.mac?
+# cask "visual-studio-code"
 
 cask "font-meslo-lg-nerd-font" if ENV["DISPLAY"]
 # cask "font-jetbrains-mono-nerd-font" if ENV["DISPLAY"]
 
-# cask "lazytrivy"
 cask "coteditor"
+cask "alt-tab"
 mas "Microsoft Excel", id: 462058435
 mas "WireGuard", id: 1451685025
 mas "The Unarchiver", id: 425424353
-mas "Xcode", id: 497799835
+# mas "Xcode", id: 497799835
 cask "stats"
 cask "meld"
+cask "thunderbird" if ENV["DISPLAY"]
 # cask "aerospace"
+# brew "syncthing"
