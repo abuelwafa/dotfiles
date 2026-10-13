@@ -14,7 +14,30 @@
     },
     "bash": {
       "*": "ask",
-      "sudo *": "deny"
+      "sudo *": "deny",
+      "go install *": "deny",
+      "go get *": "deny",
+      "apt *": "deny",
+      "npm *": "deny",
+      "pip *": "deny",
+      "sleep *": "allow",
+      "which *": "allow"
+    },
+    "read": {
+      "*": "ask",
+      "/home/node/workspace/**": "allow"
+    },
+    "write": {
+      "*": "ask",
+      "/home/node/workspace/**": "allow",
+      "/dev/null": "allow"
+    },
+    "ask_user_question": "allow",
+    "web_search": "allow",
+    "todo": "allow",
+    "skill": {
+      "*": "ask",
+      "grilling": "allow"
     },
     "external_directory": "ask"
   }

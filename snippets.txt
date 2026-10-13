@@ -109,6 +109,9 @@ openssl req -in myreq.pem -noout -verify -key mykey.pem
 # check info
 openssl req -in myreq.pem -noout -text
 
+# generate random string
+openssl rand -base64 24
+
 ====================================================================================================
 GCloud commands
 -----------------

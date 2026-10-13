@@ -4,7 +4,7 @@
 # tap "tinted-theming/tinted"
 
 brew "act"
-brew "openssl@3" if OS.mac?
+brew "openssl" if OS.mac?
 brew "sqlite"
 brew "python@3.14"
 brew "tree"
@@ -86,10 +86,12 @@ brew "sops"
 brew "grype"
 brew "anchore/syft/syft", trusted: true
 brew "task"
-# brew "terragrunt"
+brew "terragrunt"
 # brew "tflint"
 brew "tmux"
 brew "viddy"
+brew "csvlens"
+# brew "visidata"
 # brew "anomalyco/tap/opencode-v2", trusted: true
 brew "vim"
 brew "watch" if OS.mac? # macos doesn't have the watch command
@@ -134,6 +136,9 @@ go "honnef.co/go/tools/cmd/staticcheck"
 # go "github.com/asciimoo/wuzz"
 go "github.com/google/yamlfmt/cmd/yamlfmt"
 cargo "clock-tui"
+# cargo "binsider"
+# cargo "openapi-tui"
+# cargo "yozefu"
 cargo "tree-sitter-cli"
 
 # cask "lazytrivy"

@@ -23,7 +23,6 @@ call plug#begin()
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
 Plug 'ANGkeith/telescope-terraform-doc.nvim'
-Plug 'lpoto/telescope-docker.nvim'
 Plug 'nvim-telescope/telescope-file-browser.nvim'
 Plug 'nvim-telescope/telescope-ui-select.nvim'
 Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release' }
@@ -39,7 +38,6 @@ Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-git'
 Plug 'moll/vim-bbye'
 Plug 'ntpeters/vim-better-whitespace'
-" Plug 'prisma/vim-prisma'
 Plug 'brianhuster/live-preview.nvim'
 Plug 'MeanderingProgrammer/render-markdown.nvim'
 Plug 'christoomey/vim-system-copy'
@@ -70,7 +68,6 @@ Plug 'folke/trouble.nvim'
 Plug 'j-hui/fidget.nvim'
 Plug 'windwp/nvim-autopairs'
 Plug 'nvim-tree/nvim-tree.lua'
-" Plug 'nvim-neo-tree/neo-tree.nvim'
 Plug 'nvim-tree/nvim-web-devicons'
 Plug 'windwp/nvim-ts-autotag'
 
@@ -675,6 +672,7 @@ local ensure_installed = {
     'templ',
     -- 'terraform',
     -- 'terraform-ls',
+    'terragrunt-ls',
     'tofu-ls',
     'tflint',
     'typescript-language-server',
@@ -1026,7 +1024,6 @@ local function grep_in()
 end
 
 require('telescope').load_extension('terraform_doc')
-require("telescope").load_extension("docker")
 require("telescope").load_extension("file_browser")
 require("telescope").load_extension("ui-select")
 require("telescope").load_extension("rest")
