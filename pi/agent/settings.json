@@ -1,4 +1,5 @@
 {
+  "$schema": "https://pi.dev/schemas/settings.schema.json",
   "defaultProvider": null,
   "defaultModel": "claude-opus-5",
   "defaultThinkingLevel": "xhigh",
@@ -25,7 +26,7 @@
   "sessionDir": "~/pi-sessions",
   "quietStartup": true,
   "fullscreenExitOutput": "transcript",
-  "lastChangelogVersion": "1.1.0",
+  "lastChangelogVersion": "1.2.0",
   "packages": [
     "npm:pi-web-access",
     "npm:pi-mcp-adapter",
