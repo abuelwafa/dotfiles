@@ -91,7 +91,7 @@ brew "terragrunt"
 brew "tmux"
 brew "viddy"
 brew "csvlens"
-# brew "visidata"
+brew "visidata"
 # brew "anomalyco/tap/opencode-v2", trusted: true
 brew "vim"
 brew "watch" if OS.mac? # macos doesn't have the watch command

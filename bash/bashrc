@@ -27,6 +27,7 @@ export WATCH_INTERVAL=1
 # if time format variable is set, timestamps are saved into the history file as well
 export HISTFILESIZE=
 export HISTSIZE=
+export HISTCONTROL=ignoreboth
 export HISTTIMEFORMAT="[%F %T] "
 
 alias cls='clear'

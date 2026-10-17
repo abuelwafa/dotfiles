@@ -24,14 +24,21 @@ function main() {
 	echo "=> Setting up Prometheus Node Exporter"
 	echo "======================================="
 
+	echo "=> Checking script dependencies"
+	for cmd in jq tar curl; do
+		command -v "${cmd}" > /dev/null 2>&1 || {
+			echo "=> ERROR: This script depends on ${cmd}. Exiting" >&2
+			exit 1
+		}
+	done
+
 	echo "=> Setting up user account/group for monitoring"
 	# create group and user account if they doesn't exist
 	getent group monitoring &> /dev/null || sudo groupadd monitoring
 	id -u node_exporter &> /dev/null || sudo useradd \
 		--no-create-home \
-		--no-user-group \
+		--gid monitoring \
 		--shell /usr/sbin/nologin \
-		--groups monitoring \
 		node_exporter
 
 	echo "=> Downloading Prometheus Node Exporter"
@@ -39,31 +46,35 @@ function main() {
 	hardware_name="$(uname --machine)"
 
 	local cpu_arch
-	if [[ "${hardware_name}" == "arm64" ]]; then
+	if [[ "${hardware_name}" == "aarch64" ]] || [[ "${hardware_name}" == "arm64" ]]; then
 		cpu_arch="arm64"
-	else
+	elif [[ "${hardware_name}" == "amd64" ]] || [[ "${hardware_name}" == "x86_64" ]]; then
 		cpu_arch="amd64"
+	else
+		echo "=> ERROR: Unknown CPU architecture: ${hardware_name}" >&2
+		exit 1
 	fi
 
 	local tag_name # v2.0.3
 	tag_name="$(curl -fsSL https://api.github.com/repos/prometheus/node_exporter/releases/latest | jq -r '.tag_name')"
+	[[ -n "${tag_name}" && "${tag_name}" != "null" ]] || {
+		echo "=> ERROR: Failed to resolve latest release" >&2
+		exit 1
+	}
 	echo "=> Found Prometheus Node Exporter version ${tag_name}"
 
-	local node_exporter_version # 2.0.3
-	node_exporter_version="$(echo "${tag_name}" | cut -d 'v' -f 2)"
-
 	local file_name
-	file_name="node_exporter-${node_exporter_version}.linux-${cpu_arch}"
+	file_name="node_exporter-${tag_name#v}.linux-${cpu_arch}"
 
 	local download_url
 	download_url="https://github.com/prometheus/node_exporter/releases/download/${tag_name}/${file_name}.tar.gz"
 
 	curl -fSLO "${download_url}" --output-dir /tmp
 	echo "=> Extracting downloaded archive"
-	tar --extract -C /tmp -zvv -f "/tmp/${file_name}.tar.gz"
+	tar --extract -C /tmp -zv -f "/tmp/${file_name}.tar.gz"
 	sudo mv "/tmp/${file_name}/node_exporter" /usr/local/bin/node_exporter
-	sudo chmod ug+x /usr/local/bin/node_exporter
-	sudo chown node_exporter:monitoring /usr/local/bin/node_exporter
+	sudo chown root:root /usr/local/bin/node_exporter
+	sudo chmod 755 /usr/local/bin/node_exporter
 
 	# cleaning up
 	echo "=> Cleaning up downloaded files"
@@ -71,16 +82,15 @@ function main() {
 	rm -rf "/tmp/${file_name}.tar.gz"
 
 	echo "=> Setting up systemd service"
-	sudo mkdir -p /etc/prometheus-node-exporter
 
 	local service_file="/etc/systemd/system/prometheus-node-exporter.service"
-	sudo touch "${service_file}"
-	sudo tee "${service_file}" &> /dev/null <<- EOF
+	sudo tee "${service_file}" &> /dev/null <<- 'EOF'
 		[Unit]
 		Description=Prometheus Node Exporter
 		After=network-online.target
 		Requires=network-online.target
 		Wants=network-online.target
+		StartLimitIntervalSec=0
 
 		[Service]
 		Type=simple
@@ -88,36 +98,27 @@ function main() {
 		Group=monitoring
 		Restart=on-failure
 		RestartSec=3
-		StartLimitInterval=0 # disables rate limiting
-		ProtecHome=read-only
-		NoNewPriviliges=yes
+		ProtectHome=read-only
+		NoNewPrivileges=yes
 		ProtectSystem=strict
 		ProtectControlGroups=true
 		ProtectKernelModules=true
 		ProtectKernelTunables=yes
 		SyslogIdentifier=node_exporter
-		ExecStart=/usr/local/bin/node_exporter --web.listen-address=127.0.0.1:9100
+		LimitNOFILE=65536
+		ExecStart=/usr/local/bin/node_exporter \
+			--web.listen-address=127.0.0.1:9100
 
 		[Install]
 		WantedBy=multi-user.target
 	EOF
 
+	sudo chmod 644 "${service_file}"
 	echo "=> Created systemd service file ${service_file}"
 
-	# adjust ownership and permissions
-	sudo chmod 664 "${service_file}"
-	sudo chown --recursive node_exporter:monitoring /etc/prometheus
-
 	sudo systemctl daemon-reload
-
-	if systemctl is-active prometheus-node-exporter --quiet; then
-		sudo systemctl restart prometheus-node-exporter
-	else
-		sudo systemctl start prometheus-node-exporter
-	fi
-	if ! systemctl is-enabled prometheus-node-exporter --quiet; then
-		sudo systemctl enable prometheus-node-exporter
-	fi
+	sudo systemctl enable prometheus-node-exporter
+	sudo systemctl restart prometheus-node-exporter
 
 	echo
 	echo -e "=> \e[90;102;2m INFO \e[m Prometheus Node exporter has been setup successfully."

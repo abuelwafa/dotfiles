@@ -21,7 +21,11 @@
       "npm *": "deny",
       "pip *": "deny",
       "sleep *": "allow",
-      "which *": "allow"
+      "which *": "allow",
+      "grep *": "allow",
+      "head *": "allow",
+      "tail *": "allow",
+      "cut *": "allow"
     },
     "read": {
       "*": "ask",
