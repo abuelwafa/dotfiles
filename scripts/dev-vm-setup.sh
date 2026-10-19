@@ -17,10 +17,9 @@
 # if using the root user,
 # apt update && apt install curl sudo && useradd --create-home --user-group --groups sudo --shell $(which bash) my_username && newgrp sudo -c "exit" && su -c 'bash -c "$(curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/server-configs/dev-vm-setup.sh)"' -l my_username
 
-set -o errexit
-set -o nounset
-set -o pipefail
+set -euo pipefail
 shopt -s globstar nullglob
+# Debug script by setting TRACE=1
 if [[ "${TRACE-0}" == "1" ]]; then
 	set -o xtrace
 fi
@@ -44,10 +43,11 @@ function configure_ufw() {
 }
 
 function setup_i3() {
-	read -p "Setup i3 window manager? (y/n): " -r configure_i3
+	read -p "Setup i3 window manager and related applications? (y/n): " -r configure_i3
 	echo
 	if [[ "${configure_i3}" =~ ^[Yy]$ ]]; then
 		sudo apt install -y \
+			libfuse2t64 \
 			xorg \
 			i3 \
 			network-manager \
@@ -67,15 +67,59 @@ function setup_i3() {
 			fi
 		EOF
 
+		git clone https://github.com/tinted-theming/tinted-shell.git ~/applications/tinted-shell
+
+		setup_alacritty
+		setup_firefox
+		# install headlamp
+		# install obs
+		# install thunderbird
+
 		echo "=> i3 window manager has been installed and activated upon login."
 		echo "   Make sure to run update_machine_config from within i3 terminal to install GUI applications skipped during console installation."
 	fi
 	echo
 }
 
-function install_alacritty() {
-	sudo apt install cmake g++ pkg-config libfontconfig1-dev libxcb-xfixes0-dev libxkbcommon-dev python3
+function setup_firefox() {
+	echo "=> Installing Firefox"
+	sudo install -d -m 0755 /etc/apt/keyrings
+	wget -q https://packages.mozilla.org/apt/repo-signing-key.gpg -O- | sudo tee /etc/apt/keyrings/packages.mozilla.org.asc > /dev/null
+
+	echo "deb [signed-by=/etc/apt/keyrings/packages.mozilla.org.asc] https://packages.mozilla.org/apt mozilla main" | sudo tee -a /etc/apt/sources.list.d/mozilla.list > /dev/null
+
+	sudo tee /etc/apt/sources.list.d/mozilla.sources > /dev/null <<- 'EOF'
+		Types: deb
+		URIs: https://packages.mozilla.org/apt
+		Suites: mozilla
+		Components: main
+		Signed-By: /etc/apt/keyrings/packages.mozilla.org.asc
+	EOF
+
+	sudo tee /etc/apt/preferences.d/mozilla > /dev/null <<- 'EOF'
+		Package: *
+		Pin: origin packages.mozilla.org
+		Pin-Priority: 1000
+	EOF
+
+	sudo apt-get update
+	sudo apt-get install -y firefox
+	echo
+}
+
+function setup_alacritty() {
+	echo "=> Install Alacritty"
+	sudo apt install \
+		cmake \
+		g++ \
+		pkg-config \
+		libfontconfig1-dev \
+		libxcb-xfixes0-dev \
+		libxkbcommon-dev \
+		python3
+
 	cargo install alacritty
+	echo
 }
 
 function setup_sdkman() {
@@ -154,6 +198,7 @@ main() {
 	mkdir -p ~/workspace/scratchpad
 	mkdir -p ~/temp
 	mkdir -p ~/workspace/temp
+	mkdir -p ~/applications
 	touch ~/.machine-config
 
 	echo "=> Setting up DB connections file"
@@ -182,7 +227,7 @@ main() {
 	fi
 
 	# clone essential repos
-	echo "=> Cloning dotfiles repository"
+	echo "=> Cloning dotfiles"
 	if [[ -d ~/workspace/dotfiles ]]; then
 		echo "=> Dotfiles repository already exists. updating..."
 
@@ -221,10 +266,6 @@ main() {
 		echo 'export GIT_COMMITTER_EMAIL="mohamed.abuelwafa@gmail.com"' | tee -a ~/.machine-config &> /dev/null
 		echo 'export GIT_AUTHOR_EMAIL="mohamed.abuelwafa@gmail.com"' | tee -a ~/.machine-config &> /dev/null
 	fi
-
-	# if ! grep -q -e "export OPENAI_API_KEY" ~/.machine-config; then
-	# 	# echo 'export OPENAI_API_KEY="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"' | tee -a ~/.machine-config &> /dev/null
-	# fi
 
 	if ! grep -q -e "export ENABLE_AUTOMATIC_SSH_AGENT" ~/.machine-config; then
 		echo 'export ENABLE_AUTOMATIC_SSH_AGENT="TRUE"' | tee -a ~/.machine-config &> /dev/null
@@ -295,15 +336,8 @@ main() {
 	mkdir -p ~/workspace/pi-sessions
 
 	# linux specific setup
-	if [[ -n "${DISPLAY}" ]]; then
-		sudo apt install -y libfuse2t64
-
-		# setup alacritty
-		# install headlamp for linux
-		# setup tinted-theming
-
-		# install web browser
-	fi
+	# if [[ -n "${DISPLAY}" ]]; then
+	# fi
 
 	check_system_reboot
 	configure_ufw

@@ -7,7 +7,6 @@
 # █    █ ██▄█▀  ▀▄▄▀█  ▀█▄▄▀    ▀▄▄   █ █   ▀▄▄▀█    █    ▀▄▄▀█
 #
 # small description on what this script does.
-# Check help and usage information through ./setup_backend --help
 # /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/scripts/template.sh)"
 
 set -euo pipefail
@@ -265,21 +264,21 @@ function setup_containerd() {
 		hardware_name="$(uname --machine)"
 
 		local cpu_arch
-		if [[ "${hardware_name}" == "arm64" ]]; then
+		if [[ "${hardware_name}" == "aarch64" ]] || [[ "${hardware_name}" == "arm64" ]]; then
 			cpu_arch="arm64"
-		else
+		elif [[ "${hardware_name}" == "amd64" ]] || [[ "${hardware_name}" == "x86_64" ]]; then
 			cpu_arch="amd64"
+		else
+			echo "=> ERROR: Unknown CPU architecture: ${hardware_name}" >&2
+			exit 1
 		fi
 
 		local tag_name # v2.0.3
 		tag_name="$(curl -fsSL https://api.github.com/repos/containerd/containerd/releases/latest | jq -r '.tag_name')"
 		echo "=> found containerd version ${tag_name}"
 
-		local containerd_version # 2.0.3
-		containerd_version="$(echo "${tag_name}" | cut -d 'v' -f 2)"
-
 		local file_name
-		file_name="containerd-${containerd_version}-linux-${cpu_arch}.tar.gz"
+		file_name="containerd-${tag_name#v}-linux-${cpu_arch}.tar.gz"
 
 		local download_url
 		download_url="https://github.com/containerd/containerd/releases/download/${tag_name}/${file_name}"
@@ -305,86 +304,38 @@ function setup_containerd() {
 }
 
 function setup_nerdctl_minimal() {
-	read -p "Setup and configure nerdctl (minimal)? (y/n): " -r install_nerdctl_minimal
-	echo
-	if [[ ${install_nerdctl_minimal} =~ ^[Yy]$ ]]; then
-		echo '=> Installing nerdctl (minimal version)'
+	echo '=> Installing nerdctl (minimal version)'
 
-		local hardware_name
-		hardware_name="$(uname --machine)"
+	local hardware_name
+	hardware_name="$(uname --machine)"
 
-		local cpu_arch
-		if [[ "${hardware_name}" == "arm64" ]]; then
-			cpu_arch="arm64"
-		else
-			cpu_arch="amd64"
-		fi
-
-		local tag_name # v2.0.3
-		tag_name="$(curl -fsSL https://api.github.com/repos/containerd/nerdctl/releases/latest | jq -r '.tag_name')"
-		echo "=> found nerdctl version ${tag_name}"
-
-		local nerdctl_version # 2.0.3
-		nerdctl_version="$(echo "${tag_name}" | cut -d 'v' -f 2)"
-
-		local file_name
-		file_name="nerdctl-${nerdctl_version}-linux-${cpu_arch}.tar.gz"
-
-		local download_url
-		download_url="https://github.com/containerd/nerdctl/releases/download/${tag_name}/${file_name}"
-
-		curl -fSLO "${download_url}" --output-dir /tmp
-		# sudo tar --extract -C /usr/local -zvv -f "$file_name"
-		# sudo systemctl enable --now containerd
-
-		echo "=> cleaning up"
-		rm /tmp/"${file_name}"
-		echo "=> nerdctl has been successfully installed"
+	local cpu_arch
+	if [[ "${hardware_name}" == "aarch64" ]] || [[ "${hardware_name}" == "arm64" ]]; then
+		cpu_arch="arm64"
+	elif [[ "${hardware_name}" == "amd64" ]] || [[ "${hardware_name}" == "x86_64" ]]; then
+		cpu_arch="amd64"
 	else
-		echo "Skipping install of nerdctl"
+		echo "=> ERROR: Unknown CPU architecture: ${hardware_name}" >&2
+		exit 1
 	fi
-	echo
-}
 
-function setup_nerdctl_full() {
-	read -p "Setup and configure full nerdctl (nerdctl + containerd + CNI)? (y/n): " -r install_containerd
-	echo
-	if [[ ${install_containerd} =~ ^[Yy]$ ]]; then
-		echo '=> Installing nerdctl (full version)'
+	local tag_name # v2.0.3
+	tag_name="$(curl -fsSL https://api.github.com/repos/containerd/nerdctl/releases/latest | jq -r '.tag_name')"
+	echo "=> found nerdctl version ${tag_name}"
 
-		local hardware_name
-		hardware_name="$(uname --machine)"
+	local file_name
+	file_name="nerdctl-${tag_name#v}-linux-${cpu_arch}.tar.gz"
 
-		local cpu_arch
-		if [[ "${hardware_name}" == "arm64" ]]; then
-			cpu_arch="arm64"
-		else
-			cpu_arch="amd64"
-		fi
+	local download_url
+	download_url="https://github.com/containerd/nerdctl/releases/download/${tag_name}/${file_name}"
 
-		local tag_name # v2.0.3
-		tag_name="$(curl -fsSL https://api.github.com/repos/containerd/nerdctl/releases/latest | jq -r '.tag_name')"
-		echo "=> found nerdctl version ${tag_name}"
+	curl -fSLO "${download_url}" --output-dir /tmp
+	# sudo tar --extract -C /usr/local -zvv -f "$file_name"
+	# sudo systemctl enable --now containerd
 
-		local nerdctl_version # 2.0.3
-		nerdctl_version="$(echo "${tag_name}" | cut -d 'v' -f 2)"
-
-		local file_name
-		file_name="nerdctl-full-${nerdctl_version}-linux-${cpu_arch}.tar.gz"
-
-		local download_url
-		download_url="https://github.com/containerd/nerdctl/releases/download/${tag_name}/${file_name}"
-
-		curl -fSLO "${download_url}" --output-dir /tmp
-		sudo tar --extract -C /usr/local -zvv -f /tmp/"${file_name}"
-		sudo systemctl enable --now containerd
-
-		echo "=> cleaning up"
-		rm /tmp/"${file_name}"
-		echo "=> nerdctl has been successfully installed"
-	else
-		echo "Skipping install of containerd/nerdctl"
-	fi
+	echo "=> cleaning up"
+	rm /tmp/"${file_name}"
+	echo "=> nerdctl has been successfully installed"
 	echo
 }
 

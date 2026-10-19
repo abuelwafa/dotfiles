@@ -194,6 +194,10 @@ function update_machine_config() {
 		sudo apt autoclean && sudo apt autoremove -y
 	fi
 
+	if [[ "${os_name}" == "Darwin" ]]; then
+		sudo softwareupdate -iaR
+	fi
+
 	(cd ~/workspace/dotfiles && git fetch --all --prune && git pull --rebase)
 
 	brew bundle cleanup --force --file ~/workspace/dotfiles/Brewfile

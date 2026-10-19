@@ -12,18 +12,14 @@
 #
 # This script assumes curl and sudo already installed and the current user is already in the sudo group.
 
-set -o errexit
-set -o nounset
-set -o pipefail
+set -euo pipefail
 shopt -s globstar nullglob
+# Debug script by setting TRACE=1
 if [[ "${TRACE-0}" == "1" ]]; then
 	set -o xtrace
 fi
 
-shopt -s globstar nullglob
-
 function setup_chrome() {
-	echo "=> Installing Google Chrome browser"
 	if ! command -v google-chrome; then
 		curl -fSLO https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb --output-dir ~/workspace/temp
 		sudo dpkg -i ~/workspace/temp/google-chrome-stable_current_amd64.deb
@@ -33,25 +29,8 @@ function setup_chrome() {
 	fi
 }
 
-function setup_thunderbird() {
-	# https://support.mozilla.org/en-US/kb/installing-thunderbird-linux
-	echo "Installing Thunderbird"
-}
-
-function setup_alacritty() {
-	git clone https://github.com/alacritty/alacritty.git ~/applications/alacritty
-
-	mkdir -p ~/.config/alacritty
-	ln -s ~/workspace/dotfiles/alacritty/alacritty.toml ~/.config/alacritty/alacritty.toml
-}
-
 function main() {
 	mkdir -p ~/applications
-
-	echo "=> running base server config"
-	/bin/bash -c "$(
-		curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/server-configs/dev-vm-setup.sh
-	)"
 
 	brew install \
 		lima \
@@ -60,8 +39,6 @@ function main() {
 		font-meslo-lg-nerd-font \
 		xclip \
 		libgnome-desktop-3-dev
-
-	git clone https://github.com/tinted-theming/tinted-shell.git ~/applications/tinted-shell
 
 	echo
 
@@ -83,6 +60,7 @@ function main() {
 	read -p "Press Enter to continue..." -r
 	echo
 
+	echo "=> Install Google Chrome browser"
 	echo "=> Done. Enjoy your newly configured desktop."
 }
 

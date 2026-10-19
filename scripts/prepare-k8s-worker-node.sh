@@ -9,16 +9,15 @@
 # bash script for setting up k8s worker node on Debian servers
 # /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/scripts/prepare-k8s-worker-node.sh)"
 
-set -o errexit
-set -o nounset
-set -o pipefail
+set -euo pipefail
 shopt -s globstar nullglob
+# Debug script by setting TRACE=1
 if [[ "${TRACE-0}" == "1" ]]; then
 	set -o xtrace
 fi
 
 function create_kubeadm_config() {
-	cat <<-EOF | sudo tee /etc/kubernetes/kubeadm-config.yaml &>/dev/null
+	cat <<-'EOF' | sudo tee /etc/kubernetes/kubeadm-config.yaml &>/dev/null
 		apiVersion: kubeadm.k8s.io/v1beta4
 		kind: ClusterConfiguration
 		esVersion: v1.33.1

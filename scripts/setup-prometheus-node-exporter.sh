@@ -7,11 +7,11 @@
 # █    █ ██▄█▀  ▀▄▄▀█  ▀█▄▄▀    ▀▄▄   █ █   ▀▄▄▀█    █    ▀▄▄▀█
 #
 # Installs the lates version of prometheus wihin a systemd service
-# Check help and usage information through ./setup_backend --help
 # /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/scripts/setup-prometheus-node-exporter.sh)"
 
 set -euo pipefail
 shopt -s globstar nullglob
+# Debug script by setting TRACE=1
 if [[ "${TRACE-0}" == "1" ]]; then
 	set -o xtrace
 fi

@@ -659,6 +659,7 @@ local ensure_installed = {
     'lua_ls',
     'mdx_analyzer',
     'omnisharp',
+    'pint',
     'prettierd',
     'pyright',
     'ruff',
