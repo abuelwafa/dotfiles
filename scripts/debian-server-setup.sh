@@ -15,7 +15,7 @@
 # su -c "apt update && apt install -y curl sudo && usermod -aG sudo,adm,systemd-journal $USER" -l root && newgrp sudo -c "$(curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/scripts/debian-server-setup.sh)"
 #
 # if using the root user,
-# apt update && apt install curl sudo && useradd --create-home --user-group --groups sudo --shell $(which bash) my_username && newgrp sudo -c "exit" && su -c 'bash -c "$(curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/scripts/debian-server-setup.sh)"' -l my_username
+# apt update && apt install curl sudo && useradd --create-home --user-group --groups sudo,adm,systemd-journal --shell $(which bash) my_username && newgrp sudo -c "exit" && su -c 'bash -c "$(curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/scripts/debian-server-setup.sh)"' -l my_username
 
 set -euo pipefail
 shopt -s globstar nullglob

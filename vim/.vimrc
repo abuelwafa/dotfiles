@@ -142,12 +142,13 @@ set signcolumn=yes
 set updatetime=50
 
 set background=dark
-colorscheme ron
-hi Cursorline term=NONE cterm=NONE ctermbg=235 guibg=#262626
-hi CursorlineNR term=NONE cterm=NONE ctermbg=235 guibg=#262626
+" murphy, ron, koehler
+colorscheme murphy
+" hi Cursorline term=NONE cterm=NONE ctermbg=235 guibg=#262626
+" hi CursorlineNR term=NONE cterm=NONE ctermbg=235 guibg=#262626
 " change background color to black or none for transparent, better for my eyes
-hi Normal term=NONE cterm=NONE ctermbg=black
-" hi Normal term=NONE cterm=NONE ctermbg=NONE
+" hi Normal term=NONE cterm=NONE ctermbg=black
+hi Normal term=NONE cterm=NONE ctermbg=NONE
 
 hi! link Search IncSearch
 

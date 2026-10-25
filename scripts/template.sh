@@ -33,39 +33,6 @@ function main() {
 
 main "$@"
 
-function setup_certbot() {
-	echo "=> Setting up Certbot and LetsEncrypt"
-
-	local new_hostname
-	new_hostname=$1
-
-	apt-get install -y libaugeas-dev gcc
-	apt-get remove -y certbot
-
-	rm -rf /opt/certbot || true
-	rm /usr/bin/certbot || true
-
-	python3 -m venv /opt/certbot/
-	/opt/certbot/bin/pip install certbot
-	ln -s /opt/certbot/bin/certbot /usr/bin/certbot
-
-	echo
-	echo "=> IF certificates are obtained through the http challenge, make sure to allow the http port in firewall"
-	echo "   ufw allow http && ufw reload"
-	# command -v ufw > /dev/null 2>&1 && ufw allow http && ufw reload
-
-	echo
-	echo "==> Obtaining Certificate"
-	# TODO: this will fail if port 80 not enabled in firewall settings
-	certbot certonly \
-		--standalone \
-		--non-interactive \
-		--agree-tos \
-		-d "${new_hostname}"
-
-	echo
-}
-
 function create_adminstrative_account() {
 	local username
 	username=$1
@@ -97,57 +64,6 @@ function create_adminstrative_account() {
 	chmod --changes 700 "/home/${username}/.ssh"
 	chmod --changes 600 "/home/${username}/.ssh/authorized_keys"
 
-	echo
-}
-
-function setup_nginx() {
-	read -p "Setup and configure Nginx? (y/n): " -r install_nginx
-	echo
-	if [[ ${install_nginx} =~ ^[Yy]$ ]]; then
-		echo "=> installing Nginx"
-		sudo apt-get install -y nginx nginx-extras
-		command -v ufw > /dev/null 2>&1 && sudo ufw allow http && sudo ufw reload
-
-		# generate a strong diffie-hellman group
-		mkdir -p /etc/nginx/dhparam
-		if [[ ! -f "/etc/nginx/dhparam/dhparam.pem" ]]; then
-			openssl dhparam -out /etc/nginx/dhparam/dhparam.pem 4096
-		fi
-
-		cat <<- EOF | tee /etc/nginx/sites-available/main_site.nginx &> /dev/null
-			upstream ___ {
-
-			}
-
-			server {
-				server_name;
-				client_max_body_size 2m;
-
-				proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
-				proxy_set_header X-Forwarded-Proto \$scheme;
-				proxy_set_header X-Real-IP \$remote_addr;
-				proxy_set_header Host \$host;
-
-				proxy_redirect off;
-				proxy_pass http://gunicorn;
-			}
-		EOF
-
-		rm /etc/nginx/sites-enabled/default || true
-		ln --force -s /etc/nginx/sites-available/main_site.nginx /etc/nginx/sites-enabled/
-		echo "=> make sure to rename and revise the nginx config at /etc/nginx/sites-available/main_site.nginx"
-
-		if systemctl is-active nginx --quiet; then
-			systemctl reload nginx
-		else
-			systemctl start nginx
-		fi
-		if ! systemctl is-enabled nginx --quiet; then
-			systemctl enable nginx
-		fi
-	else
-		echo "Skipping install of Nginx"
-	fi
 	echo
 }
 

@@ -3,6 +3,7 @@ Host *
   UseKeychain yes
   IdentityFile ~/.ssh/id_ed25519
   PreferredAuthentications publickey
+  ExitOnForwardFailure yes
 
 # --------------------
 # host template

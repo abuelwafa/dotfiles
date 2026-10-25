@@ -1,5 +1,28 @@
-function setup_wireguard_client() {
+#!/usr/bin/env bash
+#
+#   ▄▄   █                    ▀▀█                    ▄▀▀
+#   ██   █▄▄▄   ▄   ▄   ▄▄▄     █   ▄     ▄  ▄▄▄   ▄▄█▄▄   ▄▄▄
+#  █  █  █▀ ▀█  █   █  █▀  █    █   ▀▄ ▄ ▄▀ ▀   █    █    ▀   █
+#  █▄▄█  █   █  █   █  █▀▀▀▀    █    █▄█▄█  ▄▀▀▀█    █    ▄▀▀▀█
+# █    █ ██▄█▀  ▀▄▄▀█  ▀█▄▄▀    ▀▄▄   █ █   ▀▄▄▀█    █    ▀▄▄▀█
+#
+# Interactive script that installs and configures wireguard peer (client).
+# /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/scripts/setup-wireguard-client.sh)"
+
+set -euo pipefail
+shopt -s globstar nullglob
+# Debug script by setting TRACE=1
+if [[ "${TRACE-0}" == "1" ]]; then
+	set -o xtrace
+fi
+
+function main() {
+	local start_time
+	start_time=$(date +%s)
+
+	echo "======================================="
 	echo "=> Setting up Wireguard VPN"
+	echo "======================================="
 	echo "=> installing Wireguard"
 	sudo apt-get install -y wireguard wireguard-tools
 
@@ -42,7 +65,7 @@ function setup_wireguard_client() {
 	# to fix ssh service error after restarts
 	sudo mkdir -p /etc/systemd/system/ssh.service.d
 	sudo touch /etc/systemd/system/ssh.service.d/override.conf
-	cat <<- EOF | sudo tee /etc/systemd/system/ssh.service.d/override.conf &> /dev/null
+	cat <<- 'EOF' | sudo tee /etc/systemd/system/ssh.service.d/override.conf &> /dev/null
 		[Unit]
 		After=network.target auditd.service wg-quick@wg0.service
 		Requires=wg-quick@wg0.service
@@ -51,4 +74,10 @@ function setup_wireguard_client() {
 	sudo systemctl restart ssh
 
 	echo
+
+	echo
+	echo -e "=> \e[90;102;2m INFO \e[m Finished running script."
+	echo "=> Done in $(($(date +%s) - start_time)) seconds"
 }
+
+main "$@"

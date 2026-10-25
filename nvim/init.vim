@@ -22,7 +22,6 @@ autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
 call plug#begin()
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
-Plug 'ANGkeith/telescope-terraform-doc.nvim'
 Plug 'nvim-telescope/telescope-file-browser.nvim'
 Plug 'nvim-telescope/telescope-ui-select.nvim'
 Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release' }
@@ -261,8 +260,9 @@ vim.cmd('autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatopt
 -- available mappings
 -- R
 -- Z
+-- ZZ  <- overrides default vim mapping
 -- g
--- ,
+-- c-r  <- overrides default vim mapping
 -- nmap <leader>,
 -- <leader>,
 -- <leader>i
@@ -1024,7 +1024,6 @@ local function grep_in()
     })
 end
 
-require('telescope').load_extension('terraform_doc')
 require("telescope").load_extension("file_browser")
 require("telescope").load_extension("ui-select")
 require("telescope").load_extension("rest")
@@ -1212,7 +1211,7 @@ end
 
 require('lualine').setup {
     options = {
-        theme = 'powerline_dark', -- other values: powerline, powerline_dark, gruvbox_dark, everforest
+        theme = 'powerline', -- other values: powerline, powerline_dark, gruvbox_dark, everforest
         icons_enabled = true,
         section_separators = { left = '', right = '' },
         component_separators = { left = '', right = '' },
@@ -1470,7 +1469,7 @@ nnoremap <silent> <leader>h <c-w>H
 nnoremap <silent> <leader>u <c-w>K
 
 nnoremap <C-p> <cmd>lua require"telescope.builtin".find_files({ hidden = true, no_ignore = true })<CR>
-nnoremap <leader>o <cmd>Telescope buffers<CR>
+nnoremap , <cmd>Telescope buffers initial_mode=normal<CR>
 nnoremap <C-f> <cmd>Telescope live_grep<CR>
 nnoremap <C-o> <cmd>Telescope file_browser path=%:p:h select_buffer=true initial_mode=normal hidden=true no_ignore=true<CR>
 

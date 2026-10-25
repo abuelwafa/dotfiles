@@ -6,7 +6,7 @@
 #  █▄▄█  █   █  █   █  █▀▀▀▀    █    █▄█▄█  ▄▀▀▀█    █    ▄▀▀▀█
 # █    █ ██▄█▀  ▀▄▄▀█  ▀█▄▄▀    ▀▄▄   █ █   ▀▄▄▀█    █    ▀▄▄▀█
 #
-# Installs the lates version of prometheus wihin a systemd service
+# Installs the lates version of prometheus and run as a systemd service
 # /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/scripts/setup-prometheus.sh)"
 
 set -euo pipefail
