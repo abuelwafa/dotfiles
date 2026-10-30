@@ -2,10 +2,10 @@
   "name": "pi-extensions",
   "private": true,
   "dependencies": {
-    "@gotgenes/pi-permission-system": "^41.0.0",
+    "@gotgenes/pi-permission-system": "^42.0.0",
     "@juicesharp/rpiv-ask-user-question": "^2.15.0",
     "@juicesharp/rpiv-todo": "^2.15.0",
-    "pi-mcp-adapter": "^6.0.0",
-    "pi-web-access": "^0.44.0"
+    "pi-mcp-adapter": "^7.0.0",
+    "pi-web-access": "^0.46.0"
   }
 }

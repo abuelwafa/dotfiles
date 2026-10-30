@@ -160,6 +160,7 @@ cask "font-meslo-lg-nerd-font" if ENV["DISPLAY"]
 # cask "font-jetbrains-mono-nerd-font" if ENV["DISPLAY"]
 
 cask "coteditor"
+cask "iterm2"
 cask "alt-tab"
 mas "Microsoft Excel", id: 462058435
 mas "WireGuard", id: 1451685025

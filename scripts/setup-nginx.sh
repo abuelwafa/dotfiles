@@ -61,6 +61,9 @@ function main() {
 
 			add_header Strict-Transport-Security "max-age=63072000; includeSubDomains" always;
 
+			server_tokens off;
+			more_clear_headers Server;
+
 			access_log /var/log/nginx/example.com.access.log;
 			error_log /var/log/nginx/example.com.error.log;
 
