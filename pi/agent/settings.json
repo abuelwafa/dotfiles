@@ -26,7 +26,7 @@
   "sessionDir": "~/pi-sessions",
   "quietStartup": true,
   "fullscreenExitOutput": "transcript",
-  "lastChangelogVersion": "1.4.0",
+  "lastChangelogVersion": "1.5.0",
   "packages": [
     "npm:pi-web-access",
     "npm:pi-mcp-adapter",
@@ -36,5 +36,10 @@
   ],
   "extensions": [
     "-builtin:mcp"
-  ]
+  ],
+  "extensionChangelogVersions": {
+    "{\"source\":\"npm:pi-web-access\",\"scope\":\"user\"}": "0.47.0",
+    "{\"source\":\"npm:pi-mcp-adapter\",\"scope\":\"user\"}": "7.0.1",
+    "{\"source\":\"npm:@gotgenes/pi-permission-system\",\"scope\":\"user\"}": "42.0.0"
+  }
 }

@@ -138,6 +138,8 @@ function serve() {
 
 alias lzd="lazydocker"
 
+# alias docker="sudo nerdctl"
+
 alias is_reboot_required='[ ! -f /var/run/reboot-required ] && echo "FALSE" || echo "TRUE"'
 
 # function for downloading files from urls

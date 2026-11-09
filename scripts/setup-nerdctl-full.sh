@@ -56,7 +56,7 @@ function main() {
 	echo "=> nerdctl has been successfully installed"
 	echo
 	echo
-	echo -e "=> \e[90;102;2m INFO \e[m Finished running script."
+	echo -e "=> \e[90;102;2m INFO \e[m Finished Setting up Nerdctl."
 	echo "=> Done in $(($(date +%s) - start_time)) seconds"
 }
 

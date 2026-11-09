@@ -24,7 +24,7 @@ function main() {
 	echo "=> Installing Nginx"
 	echo "======================================="
 	echo "=> installing apt packages"
-	sudo apt-get install -y nginx nginx-extras
+	sudo apt-get install -y nginx libnginx-mod-http-headers-more-filter
 	command -v ufw > /dev/null 2>&1 && sudo ufw allow http && sudo ufw reload
 
 	# generate a strong diffie-hellman group

@@ -139,7 +139,6 @@ cargo "clock-tui"
 # cargo "binsider"
 # cargo "openapi-tui"
 # cargo "yozefu"
-cargo "tree-sitter-cli"
 
 # cask "lazytrivy"
 

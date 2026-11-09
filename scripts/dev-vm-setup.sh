@@ -323,6 +323,10 @@ main() {
 	# echo "=> Installing yamlfmt"
 	# go install github.com/google/yamlfmt/cmd/yamlfmt@latest
 
+	# TODO authenticate to github cli
+	# TODO add the ssh key to github if not present
+	# https://cli.github.com/manual/gh_ssh-key_add
+
 	# install Github CLI dash extenstion
 	echo "=> Installing Github CLI dash extenstion"
 	gh extension install dlvhdr/gh-dash

@@ -8,7 +8,7 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends locales \
     && localedef -i en_US -c -f UTF-8 en_US.UTF-8
 
-FROM node:26.8-trixie-slim
+FROM node:26.13-trixie-slim
 
 # hadolint ignore=DL3008
 RUN apt-get update \
@@ -34,10 +34,13 @@ COPY --from=locale-base /usr/lib/locale/locale-archive /usr/lib/locale/locale-ar
 RUN npm install -g npm@latest
 
 # hadolint ignore=DL3059
-RUN npm install -g --ignore-scripts @earendil-works/pi-coding-agent@1.4.0
+RUN npm install -g --ignore-scripts @earendil-works/pi-coding-agent@1.5.0
+
+# copy pi config
+COPY --chown=node:node . /home/node/.pi
 
 # install Go
-COPY --from=golang:1.27-trixie /usr/local/go /usr/local/go
+COPY --from=golang:1.27.3-trixie /usr/local/go /usr/local/go
 ENV PATH=/usr/local/go/bin:$PATH
 
 RUN ln -s /usr/bin/fdfind /usr/bin/fd
