@@ -154,10 +154,14 @@ cask "handy", args: { appdir: "/Applications" } if OS.mac?
 cask "google-chrome" if ENV["DISPLAY"]
 cask "headlamp" if OS.mac?
 # cask "visual-studio-code"
+# brew "rgcr/formulae/m-cli" if OS.mac?
 
 cask "font-meslo-lg-nerd-font" if ENV["DISPLAY"]
 # cask "font-jetbrains-mono-nerd-font" if ENV["DISPLAY"]
 
+cask "slack"
+# zoom
+# cask "microsoft-teams"
 cask "coteditor"
 cask "iterm2"
 cask "alt-tab"
@@ -170,3 +174,21 @@ cask "meld"
 cask "thunderbird" if ENV["DISPLAY"]
 # cask "aerospace"
 # brew "syncthing"
+# cask 'audacity'
+# cask 'gimp'
+# cask 'inkscape'
+# brew 'handbrake'      # Video transcoder
+# cask 'shotcut'        # Video editor
+# cask 'copyq'          # Clipboard manager (cross platform)
+# cask 'calibre'        # E-Book reader
+# cask 'transmission'
+# cask 'vlc'
+# brew 'pandoc'         # Universal file converter
+# brew 'youtube-dl'
+# cask '1password'      # Password manager (proprietary)
+# cask 'standard-notes' # Encrypted synced notes
+# cask 'mountain-duck'  # Mount remote storage locations
+# cask 'vorta'          # GUI for BorgBackup
+# cask 'little-snitch'  # Firewall app viewing / blocking traffic
+# cask 'keka'           # File archiver and extractor
+# cask "obsidian"

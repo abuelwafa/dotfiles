@@ -34,7 +34,7 @@ COPY --from=locale-base /usr/lib/locale/locale-archive /usr/lib/locale/locale-ar
 RUN npm install -g npm@latest
 
 # hadolint ignore=DL3059
-RUN npm install -g --ignore-scripts @earendil-works/pi-coding-agent@1.5.0
+RUN npm install -g --ignore-scripts @earendil-works/pi-coding-agent@1.5.2
 
 # copy pi config
 COPY --chown=node:node . /home/node/.pi

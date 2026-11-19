@@ -7,7 +7,7 @@
 # █    █ ██▄█▀  ▀▄▄▀█  ▀█▄▄▀    ▀▄▄   █ █   ▀▄▄▀█    █    ▀▄▄▀█
 #
 # harden ssh on a linux server.
-# /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/scripts/template.sh)"
+# /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/abuelwafa/dotfiles/master/scripts/harden-ssh.sh)"
 
 set -euo pipefail
 shopt -s globstar nullglob
@@ -40,31 +40,19 @@ function main() {
 	echo "======================================="
 	echo "=> Hardening SSH"
 	echo "======================================="
-	local ssh_allowed_users
-	read -p "Enter usernames allowed to SSH (space separated list): " -r ssh_allowed_users
-
-	local ssh_listen_address_rule
-	ssh_listen_address_rule=""
-	local ssh_listen_address
-	PS3="Select listen address (choose Ignore to keep the default behaviour which is listening on any address): "
-	local hostnames
-	hostnames=$(hostname -I)
-	local options=(${hostnames[@]} "Ignore")
-
-	select opt in "${options[@]}"; do
-		if [[ "$(_in_array "${opt}" "${hostnames[@]}")" == "1" ]]; then
-			ssh_listen_address_rule="ListenAddress ${opt}"
-			ssh_listen_address=${opt}
-			break
-		elif [[ "${opt}" == "Ignore" ]]; then
-			break
-		else
-			echo "Invalid option! Please select properly."
-		fi
-	done
+	# make sure we the script is not run as root
+	if [[ "$(whoami)" == "root" ]]; then
+		echo "ERROR: => This script must be run as non-root with sudo priviliges"
+		exit 1
+	fi
 
 	local ssh_listen_port
-	read -p "SSH listen port: " -r ssh_listen_port
+	ssh_listen_port=$(python -c "import random; print random.randint(32000, 65535)")
+
+	echo
+	echo "==> The new listen port for SSH is: ${ssh_listen_port}"
+	read -p "Press Enter to continue..." -r
+	echo
 
 	cat <<- EOF | sudo tee /etc/ssh/sshd_config.d/99-override.conf &> /dev/null
 		# disable root login
@@ -73,14 +61,16 @@ function main() {
 		# disable password authentication
 		PasswordAuthentication no
 
-		# restrict users allowed to use SSH
-		AllowUsers ${ssh_allowed_users}
+		# restrict users allowed to use SSH. space separated list of users/groups
+		AllowUsers $(whoami)
+		# AllowGroups mygroup
 
 		# change the SSH port
 		Port ${ssh_listen_port}
 
-		# change listen address of the server
-		${ssh_listen_address_rule}
+		# change listen address of the server. (0.0.0.0 means listen on all IPv4 addressess)
+		# if unspecified, SSH listens on all interfaces. can be specified multiple times
+		ListenAddress 0.0.0.0
 	EOF
 
 	# enable the ssh port for ssh in firewall
@@ -91,8 +81,11 @@ function main() {
 	fi
 
 	# restart the ssh service
-	echo -e "\n\e[90;103;2m WARNING \e[m Restarting SSH service. Check that your SSH connection still works in another terminal.\n"
+	echo -e "\n\e[90;103;2m WARNING \e[m Restarting SSH service. Check that your SSH connection still works in another terminal session.\n"
 	sudo systemctl restart ssh
+	echo
+
+	echo "=> Revise/Adjust the values in the configuration file /etc/ssh/sshd_config.d/99-override.conf"
 	echo
 
 	echo

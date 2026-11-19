@@ -129,9 +129,11 @@ postgres snippets
 
 \c
 \conninfo
-\l  --> list databases
+\l+  --> list databases with additional info
 \dt --> list tables
 \d table_name  --> describe table: show schema, indexes, and references
+\dx --> list extensions
+\du+ --> list roles(users)
 \q  --> quit
 \!shell_command     --| example |-->  \!clear
 \e --> edit query in editor
@@ -141,3 +143,12 @@ postgres snippets
 SHOW config_file;
 
 \df --> list functions
+
+-- Database Size
+SELECT pg_size_pretty(pg_database_size('Database Name'));
+
+-- Table Size
+SELECT pg_size_pretty(pg_relation_size('table_name'));
+
+# show postgres version
+select version();
